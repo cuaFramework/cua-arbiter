@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <style type="text/css" media="screen">
+    body {
+        overflow: hidden;
+    }
+
+    #editor {
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+  </style>
+</head>
+<body>
+<casename hidden>{{ request.path }}</casename>
+<pre id="editor"></pre>
+
+<script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+<script>
+    var caseNmaePathList=document.getElementsByTagName("casename")[0].innerText.split("/");
+    var caseNmaePath = caseNmaePathList[caseNmaePathList.length-3].split(':')[0].split('.').join('/')+'.py';
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/ambiance");
+    editor.session.setMode("ace/mode/python");
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/static/'+caseNmaePath, true);
+xhr.onreadystatechange = () =>
+{if (xhr.readyState === 4) {
+         editor.setValue(xhr.responseText);
+
+        }}
+         xhr.send(null);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+body {
+    text-align: center;
+    background: #376348;
+    vertical-align:middle;
+}
+
+.login {
+    margin:auto;
+    width: 400px;
+    height: 320px;
+	position:absolute;
+	z-index:99;
+    top: 25%;
+    left: 40%;
+}
+#login-form {
+    vertical-align: middle;
+    text-align: center;
+}
+

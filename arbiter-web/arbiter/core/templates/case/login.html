@@ -1,0 +1,60 @@
+{% load static %}
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>登录</title>
+        <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/login.css' %}"/>
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<body>
+<script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/login.js' %}" type="text/javascript" charset="utf-8"></script>
+
+
+    {% if errors %}
+        <ul>
+            {% for error in errors %}
+             <span style="color: red;">
+                {{error}}
+             </span>
+              {% endfor %}
+        </ul>
+    {% endif %}
+
+<div class="root">
+    <div class="login">
+    <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="username" name="username" type="text" class="validate">
+          <label for="username">用户名</label>
+        </div>
+        </div>
+        <div class="row">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">vpn_key</i>
+          <input id="password" name="password" type="password" class="validate">
+          <label for="password">密码</label>
+        </div>
+        </div>
+          <button class="btn waves-effect waves-light" type="submit" name="login-btn">登 录</button>
+    </form>
+    </div><!--login div end-->
+    <canvas></canvas>
+</div><!-- root end-->
+
+</body>
+</html>

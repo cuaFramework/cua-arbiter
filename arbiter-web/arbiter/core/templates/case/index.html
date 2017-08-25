@@ -1,0 +1,128 @@
+{% load static %}
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>自动化测试</title>
+    <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/index.css' %}"/>
+    {% block head %}
+    {% endblock head %}
+</head>
+<body>
+<script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
+
+<div id="top">
+     <span style='font-family:楷体;'>WELCOME,{{ request.session.username }} | <a href="/arbiter/logout" class="logout">注销</a> </span>
+
+</div><!--top end-->
+<div>
+<div id="slide-nav" >
+    <ul id="nav-mobile" class="side-nav fixed green darken-3">
+        <li class="">
+            <div class="user-view">
+                <div>
+                    <img src="{% static 'arbiter/imgs/team_logo.png' %}">
+                </div>
+
+            </div>
+            {# <a href="#!user"><img class="circle" src=></a>#}
+
+        </li>
+        <li class="no-padding green darken-4">
+            {% if model_list %}
+            {% for model in model_list %}
+
+            <ul class="collapsible collapsible-accordion">
+                <li class="bold"><a class="collapsible-header waves-effect waves-teal">{{ model }}</a>
+                    <div class="collapsible-body">
+                        {% if case_list %}
+                        <ul>
+                            {% for key,value in case_list.items %}
+                            {% if model in key %}
+                            <li class="green darken-2"><a href="#" case-role="{% url 'arbiter:detail' key %}">{{value}}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <ul>
+                            <li> no data</li>
+                        </ul>
+                        {% endif %}
+
+                    </div>
+                </li>
+            </ul>
+            {% endfor %}
+            {% endif %}
+        </li>
+    </ul>
+</div>
+<div id="root">
+    <div id="root-guide">
+        显示指导
+    </div>
+    <div id="root-case" class="indigo lighten-5" >
+     <casename hidden>{{ request.path }}</casename>
+
+        <div id="top-nav">
+                <span id="case_sumary_name">请点击选择用例</span>
+                <span id="casepath" casepath="" hidden  ></span>
+                 <div id="case_operation" >
+                    <a id="edit" class="waves-effect waves-light btn green">
+                    <i id="save-edit-icon"class="material-icons run-edit-i" >mode_edit</i><span>编辑</span></a>
+                     <a id="run" class="waves-effect waves-light btn green"><i id="run-icon"
+                        class="material-icons run-edit-i" >near_me</i><span>运行</span></a>
+            </div>
+
+        </div>
+        <div id="code" >
+            <pre id="code-content"></pre>
+
+      <!-- Modal Structure -->
+            <div id="modal_log" class="modal">
+                <div class="modal-content">
+                <p>Pass</p>
+                <ul id="insert">
+                    {#      <li><a>{{ log }}</a></li>#}
+                </ul>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"><i class="material-icons">clear</i></a>
+                </div>
+            </div>
+            <!---->
+             <div id="modal-save" class="modal">
+                <div class="modal-content">
+                    <div id="pro-center">
+                        <div id="pro-message"></div>
+                        <div id="pro-loading">
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-save-footer">
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"><i class="material-icons">clear</i></a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>//root end
+</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+
+</script>
+</html>

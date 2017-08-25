@@ -1,0 +1,17 @@
+Django==1.11
+psycopg2==2.7.1
+bleach==2.0.0
+Markdown==2.6.8
+cloudinary==1.7.0
+django-redis==4.7.0
+dj-database-url==0.4.2
+channels==1.1.5
+requests
+bs4
+asgi_redis
+cryptography==1.9
+lxml
+Twisted[tls,http2]
+nose
+pymysql
+mongoengine
