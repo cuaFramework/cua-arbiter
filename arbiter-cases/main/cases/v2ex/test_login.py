@@ -29,10 +29,10 @@ class TestLogin():
         pass
 
     def test_login(self):
-        '''V2EX登陆测试1'''
+        '''V2EX登陆测试'''
         '''上面写什么名字就显示什么名字'''
         logger = utils.arbiter_logger.log(__name__)
-        logger.info("登陆")
+        logger.info("登陆玩")
         post_ids = self.login_page.get_login_params()
         username_key =  post_ids['username']
         pwd_key = post_ids['pwd']
