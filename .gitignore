@@ -1,0 +1,16 @@
+# Eclipse Project Files #
+
+.classpath
+.project
+.settings
+
+# IntelliJ IDEA Files #
+
+*.iml
+*.ipr
+*.iws
+*.idea
+*.history
+shell/casemanager/__pycache__/
+shell/casemanager/core/__pycache__/
+shell/casemanager/core/migrations/__pycache__/
