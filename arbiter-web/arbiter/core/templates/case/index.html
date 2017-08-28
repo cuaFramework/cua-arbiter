@@ -22,7 +22,7 @@
 <script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
 
 <div id="top">
-     <span style='font-family:楷体;'>WELCOME,{{ request.session.username }} | <a href="/arbiter/logout" class="logout">注销</a> </span>
+     <span style='font-family:楷体;'>WELCOME,{{ request.user }} | <a href="/arbiter/logout" class="logout">注销</a> </span>
 
 </div><!--top end-->
 <div>

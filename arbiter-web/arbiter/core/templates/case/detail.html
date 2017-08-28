@@ -2,51 +2,25 @@
 {% load staticfiles %}
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-<script type="text/javascript">
-        function WebSocketTest(caseNmaePath) {
-            if ("WebSocket" in window) {
-
-
-                socket = new WebSocket("ws://" + window.location.host + "/casemanager/");
-                socket.onmessage = function (e) {
-
-                    var insertText = "<li><a>"+e.data+"</a></li>";
-                     document.getElementById("insert").innerHTML+=insertText
-                }
-                socket.onopen = function () {
-                    socket.send("runCase "+caseNmaePath);
-                }
-                // Call onopen directly if socket is already open
-                if (socket.readyState == WebSocket.OPEN)
-                    socket.onopen();
-            }
-
-            else {
-                // 浏览器不支持 WebSocket
-                alert("您的浏览器不支持 WebSocket!");
-            }
-        }
-    </script>
     {% block head %}
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script src="{% static 'arbiter/js/vue.js' %}" type="text/javascript" charset="utf-8"></script>
     {% endblock head %}
 </head>
 <body>
-    <casename hidden>{{ request.path }}</casename>
- <div id="runner">
-         <a href="javascript:WebSocketTest()">运行</a>
-      </div>
-    <div id="editor">
-         <a href="editor/">编辑</a>
-      </div>
 
-<ul id="insert">
+<div id="app">
+    {% templatetag openvariable %}message{% templatetag closevariable %}
+</div>
 
-{#    <li><a>{{ log }}#}</a></li>
-
-</ul>
-
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+</script>
 </body>
 </html>

@@ -31,10 +31,10 @@
               {% endfor %}
         </ul>
     {% endif %}
-
+<h6 id="LoginInfo" class="text-danger"></h6>
 <div class="root">
     <div class="login">
-    <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data">
+    <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data" onsubmit="return login()">
         {% csrf_token %}
         <div class="row">
         <div class="input-field col s12">

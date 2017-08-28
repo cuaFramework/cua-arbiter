@@ -6,6 +6,8 @@ cloudinary==1.7.0
 django-redis==4.7.0
 dj-database-url==0.4.2
 channels==1.1.5
+djangorestframework-jwt
+djangorestframework
 requests
 bs4
 asgi_redis
