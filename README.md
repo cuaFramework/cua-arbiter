@@ -8,3 +8,10 @@ monogodb保存日志
 
 ![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/pic.png)
 ![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/demo.gif)
+
+部署步骤：
+1.down code
+2.cd arbiter-web
+3.pip install -r requirements.txt
+4.edit confirgrations python manage.py runserver
+5.run,  see localhost:8000

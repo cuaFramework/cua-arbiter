@@ -3,6 +3,8 @@ from subprocess import Popen, PIPE, STDOUT
 from channels.sessions import channel_session
 
 from arbiter.models import Run_Log
+import json
+import redis
 
 # message.reply_channel    一个客户端通道的对象
 # message.reply_channel.send(chunk)  用来唯一返回这个客户端
@@ -11,6 +13,13 @@ from arbiter.models import Run_Log
 
 
 isEditFilesName = []#全局变量，保存正在被编辑的文件名
+#redis 配置
+redis_host = '10.104.104.26'
+redis_port = 6379
+redis_db = 11
+#logstash 在redis key值
+logstash_key = 'logstash-test-list'
+re = redis.Redis(host=redis_host, port=redis_port,db=redis_db)#redis 连接
 # 当连接上时，发回去一个connect字符串
 @channel_session
 def ws_connect(message):
@@ -52,17 +61,21 @@ def ws_message(message):
         message.reply_channel.send({
             "text": "**********************************************结束执行***********************************************"
         }, immediately=True)
-
+        #向redis中发送值
+        case_name = case_name.lower()
+        data = {'case':case_name,'author': 'hui','logData': log_content}
+        logData = json.dumps(data)
+        re.lpush(logstash_key,logData)
         #将日志存入mysql
         # mysql 存入格式和内容需要完善
         #dic = {'case_info':case_name,'content': log_content, 'begin_time': '','run_time': 10}
         #Run_Log.objects.create(**dic)
 
         #mongodb
-        Run_Log.objects.create(case_info=case_name)
-        log = Run_Log(case_info=case_name)
-        log.content ="log_content"
-        log.save()
+        #Run_Log.objects.create(case_info=case_name)
+        #log = Run_Log(case_info=case_name)
+        #log.content ="log_content"
+        #log.save()
 
     if (cmd.split(' ')[0] == 'validateEdit'):
 

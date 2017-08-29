@@ -20,7 +20,7 @@ urlpatterns = [
     # url(r'^jet/', include('jet.urls', 'jet')), # Django JET URLS
     # url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^arbiter/logmanage/', include("arbiter.logmanage.urls", namespace="arbiter-logmanage")),
     url(r'^arbiter/', include("arbiter.core.urls", namespace="arbiter")),
-
 
 ]
