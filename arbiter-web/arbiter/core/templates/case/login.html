@@ -3,6 +3,7 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
+<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon" />
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -20,17 +21,8 @@
 <script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/login.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/snow.js' %}" type="text/javascript" charset="utf-8"></script>
 
-
-    {% if errors %}
-        <ul>
-            {% for error in errors %}
-             <span style="color: red;">
-                {{error}}
-             </span>
-              {% endfor %}
-        </ul>
-    {% endif %}
 <h6 id="LoginInfo" class="text-danger"></h6>
 <div class="root">
     <div class="login">

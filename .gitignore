@@ -8,6 +8,4 @@
 *.history
 
 __pycache__
-arbiter-cases/main
-
-
+arbiter-cases/

@@ -3,11 +3,12 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
+<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon" />
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>自动化测试</title>
+    <title>arbiter</title>
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
           media="screen,projection"/>
@@ -18,11 +19,12 @@
 <body>
 <script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
 
 <div id="top">
-     <span style='font-family:楷体;'>WELCOME,{{ request.user }} | <a href="/arbiter/logout" class="logout">注销</a> </span>
+     <span style='font-family:楷体;'>欢迎, {% templatetag openvariable %}message{% templatetag closevariable %} | <a id= 'logout'href="/arbiter/logout" class="logout">注销</a> </span>
 
 </div><!--top end-->
 <div>

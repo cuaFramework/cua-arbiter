@@ -1,4 +1,36 @@
+   function deleteAllCookies() {
+    let cookies = document.cookie.split(";");
+
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i];
+        let eqPos = cookie.indexOf("=");
+        let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+}
+   function getusername() {
+    let storage = window.localStorage;
+                let username = storage['username'];
+             return username?username:"guest";
+
+        }
     $(document).ready(()=> {
+    let username = getusername();
+    let top_username = new Vue({
+        el: '#top',
+        data: {
+            message:username
+        }
+    });
+        $("#logout").click((e)=> {
+
+        e.preventDefault(e);
+        deleteAllCookies();
+        let storage = window.localStorage;
+        storage.clear();
+        window.location.href = ".";
+        });
+
         $(".collapsible-body li").click(()=> {
             //guide 显示到隐藏，root-case从隐藏到显示
             $("#root-guide").hide();
@@ -31,6 +63,11 @@
                     codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
                     //文件加载成功后，监听按钮点击
                     $("#run").unbind('click').click(function () {
+                          const storage = window.localStorage;
+                        if(!storage['token'])
+                        {
+                            window.location.href = "login";
+                        }
                        RunWebSocketTest();
                         $('#modal_log').modal('open');
                     });
@@ -39,6 +76,11 @@
 
                     //编辑
                     edit_selector.unbind('click').click(function () {
+                        const storage = window.localStorage;
+                        if(!storage['token'])
+                        {
+                            window.location.href = "login";
+                        }
                         let codeContent = ace.edit("code-content");
                         if(edit_selector.find("span").text()==="编辑"){
                             ValidateEditWebSocket();/*Todo 根据返回的结果处理*/

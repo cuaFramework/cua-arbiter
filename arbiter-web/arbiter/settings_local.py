@@ -17,7 +17,7 @@ from mongoengine import connect
 
 mongodb_host = '10.104.104.39'
 mongodb_port = 10001
-redis_url = 'redis://10.104.104.26:6379/10'
+redis_url = 'redis://10.104.104.26:6379/4'
 mysql_host = '10.104.104.58'
 mysql_port = '3306'
 
