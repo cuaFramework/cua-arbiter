@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.contrib import  admin
 from django.db import models
+from django.contrib.auth.models import Group
 from mongoengine import *
 
 # Create your models here.
@@ -21,6 +22,5 @@ class Run_Log (Document):
     # operator = models.CharField(max_length=20,null=True)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('username','password')
-
 
 admin.site.register(User,UserAdmin)

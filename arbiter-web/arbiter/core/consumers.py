@@ -1,10 +1,9 @@
-import os
-from subprocess import getoutput, Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT
 
-from channels import Group
 from channels.sessions import channel_session
-from .models import Run_Log
-from mongoengine import *
+
+from arbiter.models import Run_Log
+
 # message.reply_channel    一个客户端通道的对象
 # message.reply_channel.send(chunk)  用来唯一返回这个客户端
 

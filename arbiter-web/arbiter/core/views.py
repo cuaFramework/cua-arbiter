@@ -1,19 +1,18 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
-from subprocess import Popen, PIPE, STDOUT
-import os, time
-from functools import wraps
-import json
 import codecs
+import json
+import os
+import time
+from subprocess import Popen, PIPE, STDOUT
+
 from django import forms
+from django.core.files import File
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
-from .models import User
-from django.core.files import File
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 class UserForm(forms.Form):
@@ -89,17 +88,17 @@ class restful(APIView):
     # 设置permission_classes为必须登陆才能访问下列接口
     permission_classes = (IsAuthenticated,)
 
-    @api_view(['GET'])
+    @api_view(['POST'])
     def get_user_detail(request):
         response_data = {}
         response_data['username'] = request.user.username
-        response_data['role'] = list(request.user.get_all_permissions())
+        response_data['role'] = list(request.user.groups.values_list('name',flat=True))
         return JsonResponse(response_data)
 
     # 注销
     @api_view(['POST'])
     def logout(request):
-        request.user.auth_token.delete()
+        Token.objects.get(user_id=request.user.id).delete()
 
         response_data = {}
         response_data['success'] = True
