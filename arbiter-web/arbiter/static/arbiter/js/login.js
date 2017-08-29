@@ -20,17 +20,17 @@ function login() {
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
                         }
-                    }).then(function (response) {
+                    }).then(response => {
                     if (response.status !== 200) {
                         console.log("存在一个问题，状态码为：" + response.status);
-                        return;
+                        return false;
                     }
                     else
                         return response.json();
 
                 }).then(
-                    json=>{
-                          storage["username"] = json["username"]
+                    json => {
+                        storage["username"] = json["username"];
                         window.location.href = ".";
                     }
                 );
@@ -41,7 +41,7 @@ function login() {
 
             }
         },
-        error: function (msg) {
+        error: function () {
             $("#LoginInfo").text("账号或密码错误");
         }
     });
@@ -49,48 +49,27 @@ function login() {
 }
 
 $(function () {
-    var canvas = document.querySelector('canvas'),
-        ctx = canvas.getContext('2d')
+    let canvas = document.querySelector('canvas');
+    let ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     ctx.lineWidth = .3;
-    ctx.strokeStyle = (new Color(150)).style;
+    ctx.strokeStyle = (new Color()).style;
 
-    var dots = {
+    let dots = {
         nb: 40,
         distance: 50,
         d_radius: 100,
         array: []
     };
 
-    function colorValue(min) {
-        return Math.floor(Math.random() * 255 + min);
-    }
-
-    function createColorStyle(r, g, b) {
+    function createColorStyle() {
         return 'rgba(0,0,0,0.1)';
     }
 
-    function mixComponents(comp1, weight1, comp2, weight2) {
-        return (comp1 * weight1 + comp2 * weight2) / (weight1 + weight2);
-    }
+    function Color() {
 
-    function averageColorStyles(dot1, dot2) {
-        var color1 = dot1.color,
-            color2 = dot2.color;
-
-        var r = mixComponents(color1.r, dot1.radius, color2.r, dot2.radius),
-            g = mixComponents(color1.g, dot1.radius, color2.g, dot2.radius),
-            b = mixComponents(color1.b, dot1.radius, color2.b, dot2.radius);
-        return createColorStyle(Math.floor(r), Math.floor(g), Math.floor(b));
-    }
-
-    function Color(min) {
-        min = min || 0;
-        this.r = colorValue(min);
-        this.g = colorValue(min);
-        this.b = colorValue(min);
-        this.style = createColorStyle(this.r, this.g, this.b);
+        this.style = createColorStyle();
     }
 
     function Dot() {
@@ -115,23 +94,22 @@ $(function () {
     };
 
     function createDots() {
-        for (i = 0; i < dots.nb; i++) {
+        for (let i = 0; i < dots.nb; i++) {
             dots.array.push(new Dot());
         }
     }
 
     function moveDots() {
-        for (i = 0; i < dots.nb; i++) {
+        for (let i = 0; i < dots.nb; i++) {
 
-            var dot = dots.array[i];
+            let dot = dots.array[i];
 
             if (dot.y < 0 || dot.y > canvas.height) {
-                dot.vx = dot.vx;
+
                 dot.vy = -dot.vy;
             }
             else if (dot.x < 0 || dot.x > canvas.width) {
                 dot.vx = -dot.vx;
-                dot.vy = dot.vy;
             }
             dot.x += dot.vx;
             dot.y += dot.vy;
@@ -139,8 +117,8 @@ $(function () {
     }
 
     function drawDots() {
-        for (i = 0; i < dots.nb; i++) {
-            var dot = dots.array[i];
+        for (let i = 0; i < dots.nb; i++) {
+            let dot = dots.array[i];
             dot.draw();
         }
     }
