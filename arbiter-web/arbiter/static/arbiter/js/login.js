@@ -1,11 +1,12 @@
 /**
  * Created by Administrator on 2017/8/6.
  */
+
 function login() {
 
     $.ajax({
         type: "POST",
-        url: "api-token-auth/",
+        url: "api-token-auth",
         data: $("#login-form").serialize(),
         success: function (msg) {
 

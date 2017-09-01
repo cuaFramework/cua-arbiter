@@ -8,11 +8,13 @@ from django import forms
 from django.core.files import File
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from rest_framework import permissions
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.views import APIView
+from .models import CaseList
 
 
 class UserForm(forms.Form):
@@ -82,9 +84,17 @@ def spiltPath(name):
     case_dir = temp.replace('.', '/')
     return case_dir
 
+class restful(APIView):
+    # permission_classes = (AllowAny,)
+
+    @api_view(['POST'])
+    @permission_classes([permissions.AllowAny,])
+    def get_caselist(request):
+        return JsonResponse( CaseList.getList())
+
 
 # 接口验证
-class restful(APIView):
+class auth_restful(APIView):
     # 设置permission_classes为必须登陆才能访问下列接口
     permission_classes = (IsAuthenticated,)
 

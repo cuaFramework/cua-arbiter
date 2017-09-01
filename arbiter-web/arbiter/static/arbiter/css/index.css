@@ -1,37 +1,24 @@
-#top {
-    width: auto;
-    height: 30px;
-    background: #80d8ff;
-    white-space: nowrap;
+.col {
+
+    padding: 0 !important;
 }
-#top span{
-    float: right;
-}
+
 #slide-nav {
     white-space: nowrap;
 }
 
-#root {
-    display: flex;
-    flex-flow: column wrap;
-    margin-left: 300px;
-}
+/*#root {*/
+/*display: flex;*/
+/*flex-flow: column wrap;*/
+/*margin-left: 300px;*/
+/*}*/
+
 #root-guide {
 
 }
+
 #root-case {
     display: none;
-}
-
-#top-nav {
-    margin-top: 30px;
-    font-family:微软雅黑;
-    height: 45px;
-    width: 100%;
-    top: 0;
-    left: 300px;
-    position:fixed;
-    vertical-align: middle;
 }
 
 #case_sumary_name {
@@ -40,35 +27,16 @@
     font-weight: bold;
 }
 
-#case_operation {
-    float: right;
-    margin-right: 320px;
-    margin-bottom: 10px;
-
-}
-
-#case_operation >a {
-    margin-right: 30px;
-    margin-top: 2px;
-    margin-bottom: 3px;
-
-}
-#case_operation > a > i {
-    vertical-align: middle;
-}
-#case_operation > a > span {
-    vertical-align: middle;
-}
-
 #code {
     height: 800px;
-    margin-top: 45px;
 }
+
 #code-content {
     width: 100%;
     height: 100%;
     size: 14px;
 }
+
 #modal_log {
     height: auto;
     width: 75%;
@@ -79,30 +47,15 @@
     height: 300px;
     width: 480px;
 }
+
 .modal-save-footer {
     display: none;
 }
+
 /*进度条部分*/
 #pro-center {
     margin: 50px auto;
     width: 400px;
-}
-
-#pro-loading {
-    width: 400px;
-    height: 48px;
-    background: url(../imgs/bg-pro.png) no-repeat;
-}
-
-#pro-loading div {
-    width: 0px;
-    height: 48px;
-    background: url(../imgs/progress.png) no-repeat;
-    color: #fff;
-    text-align: center;
-    font-family: Tahoma;
-    font-size: 18px;
-    line-height: 48px;
 }
 
 #pro-message {

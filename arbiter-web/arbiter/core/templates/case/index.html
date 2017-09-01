@@ -2,131 +2,185 @@
 {% load i18n %}
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<html lang="{% get_current_language as LANGUAGE_CODE %}" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon"/>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
     <title>arbiter</title>
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
           media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/index.css' %}"/>
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/navbar.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/index.css' %}"/>
     {% block head %}
     {% endblock head %}
 </head>
-<body>
+<body style="display: none;">
 <script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/vue.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
-{#<div class="navbar-fixed">#}
+<script src="{% static 'arbiter/js/header.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <div class="had-container">
     <div class="row">
         <div id="arbiter-navbar">
-            <nav class="col s10 offset-s2 top-nav">
+            <nav class="col s10 offset-s2 top-nav teal">
                 <div class="nav-wrapper">
-                    <a href="#" class="brand-logo">Logo</a>
+                    <a href="#" id="case_sumary_name"></a>
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a href="sass.html">Sass</a></li>
-                        <li><a href="badges.html">Components</a></li>
+                        <li><a target="_blank" href="./">总览</a></li>
+                        <li><a target="_blank" href="./">用例管理</a></li>
+                        <li><a target="_blank" href="./logmanage">日志管理</a></li>
                         <li><a href="#" data-activates="nav-mobile" class="button-collapse11"><i
                                 class="material-icons">menu</i></a></li>
                     </ul>
                 </div>
             </nav>
         </div>
-        <div id="slide-nav">
-            <ul id="nav-mobile" class="col s2 side-nav fixed green darken-3">
-                <li class="">
-                    <div class="user-view">
-                        <div>
-                            <img src="{% static 'arbiter/imgs/team_logo.png' %}">
-                        </div>
-
+        <div>
+            <ul id="nav-slide" class="col s2 side-nav fixed ">
+                <li>
+                    <div id="username" class="user-view center-align">
+                        <a href="#!user">
+                            <img v-if="message.islogin" class="circle" style="margin:0 auto"
+                                 src="{% static 'arbiter/imgs/team_logo.png' %}">
+                        </a>
+                        <a :href="message.href">
+                            <span :class="message.classes"
+                                  data-activates='usr_dropdown'>{% templatetag openvariable %}message.username{% templatetag closevariable %}
+                                 <i v-if="message.islogin" class="material-icons dp20">arrow_drop_down</i>
+                            </span>
+                        </a>
+                        <ul id='usr_dropdown' class='dropdown-content'>
+                            <li><a href="#">设置(没做)</a></li>
+                            <li class="divider"></li>
+                            <li><a id='logout' href="/arbiter/logout!" class="logout">注销</a></li>
+                        </ul>
                     </div>
-                    {# <a href="#!user"><img class="circle" src=></a>#}
-
                 </li>
-                <li class="no-padding green darken-4">
-                    {% if model_list %}
-                        {% for model in model_list %}
-
-                            <ul class="collapsible collapsible-accordion">
-                                <li class="bold"><a class="collapsible-header waves-effect waves-teal">{{ model }}</a>
-                                    <div class="collapsible-body">
-                                        {% if case_list %}
-                                            <ul>
-                                                {% for key,value in case_list.items %}
-                                                    {% if model in key %}
-                                                        <li class="green darken-2"><a href="#"
-                                                                                      case-role="{% url 'arbiter:detail' key %}">{{ value }}</a>
-                                                        </li>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </ul>
-                                        {% else %}
-                                            <ul>
-                                                <li> no data</li>
-                                            </ul>
-                                        {% endif %}
-
-                                    </div>
-                                </li>
-                            </ul>
-                        {% endfor %}
-                    {% endif %}
+                <li>
+                    <div class="divider"></div>
                 </li>
+                {% verbatim %}
+                <li class="no-padding  ">
+                    <ul class="collapsible collapsible-accordion" v-for="(value, key) in modelList">
+                        <li class="bold"><a class="collapsible-header waves-effect waves-teal">{{ key }}</a>
+                            <div class="collapsible-body">
+                                <ul id="nav-slide-case">
+                                    <li class="  " v-for="(value, key) in value"
+                                    ><a href="#" :case-role="key">{{ value }}</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                {% endverbatim %}
             </ul>
         </div>
         <div id="root" class="col s10 offset-s2">
-            <div id="top">
-    <span style='font-family:楷体;'>欢迎, {% templatetag openvariable %}message{% templatetag closevariable %} |
-        <a id='logout' href="/arbiter/logout" class="logout">注销</a> </span>
-
-            </div>
             <div id="root-guide">
                 显示指导
             </div>
-            <div id="root-case" class="indigo lighten-5">
+            <div id="root-case" class="">
                 <casename hidden>{{ request.path }}</casename>
-
-                <div id="top-nav">
-                    <span id="case_sumary_name">请点击选择用例</span>
+                <div>
                     <span id="casepath" casepath="" hidden></span>
-                    <div id="case_operation">
-                        <a id="edit" class="waves-effect waves-light btn green">
-                            <i id="save-edit-icon" class="material-icons run-edit-i">mode_edit</i><span>编辑</span></a>
-                        <a id="run" class="waves-effect waves-light btn green"><i id="run-icon"
-                                                                                  class="material-icons run-edit-i">near_me</i><span>运行</span></a>
-                    </div>
-
                 </div>
                 <div id="code">
+                    <div id="code-float-btn" class="fixed-action-btn click-to-toggle"
+                         style="bottom: 45px; right: 24px;">
+                        <a class="btn-floating btn-large blue" title="操作">
+                            <i class="material-icons">pan_tool</i>
+                        </a>
+                        <ul>
+                            <li><a id="edit" class="btn-floating red"
+                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
+                                   title="编辑">
+                                <i id="save-edit-icon"
+                                   class="material-icons run-edit-i">mode_edit</i>
+                                <span>编辑</span></a>
+                            </li>
+                            <li><a id="run" class="btn-floating yellow darken-1"
+                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
+                                   title="运行">
+                                <i id="run-icon" class="material-icons run-edit-i">play_arrow</i>
+                                <span>运行</span></a>
+                            </li>
+                            <li><a id="run" class="btn-floating green darken-1"
+                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
+                                   title="日志">
+                                <i id="log-icon" class="material-icons">message</i>
+                                <span>日志</span></a>
+                            </li>
+                        </ul>
+                    </div>
                     <pre id="code-content"></pre>
+                    <div id="modal-log" class="modal modal-fixed-footer">
+                        <div class="modal-content ">
 
-                    <!-- Modal Structure -->
-                    <div id="modal_log" class="modal">
-                        <div class="modal-content">
                             <ul id="insert">
-                                {#      <li><a>{{ log }}</a></li>#}
                             </ul>
                         </div>
                         <div class="modal-footer">
-                            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"><i
-                                    class="material-icons">clear</i></a>
+                            <a id="clearLog" class="waves-effect waves-teal btn">清空</a>
+                            <a class="modal-action modal-close waves-effect waves-teal btn-flat">关闭</a>
+
                         </div>
+
                     </div>
-                    <!---->
-                    <div id="modal-save" class="modal">
+                    <div id="modal-save" class="modal modal-fixed-footer">
                         <div class="modal-content">
-                            <div id="pro-center">
-                                <div id="pro-message"></div>
-                                <div id="pro-loading">
-                                    <div></div>
+                            <div id="pro-center" class="col s12 m4 center">
+                                <div class="preloader-wrapper big active">
+                                    <div class="spinner-layer spinner-blue">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-red">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-yellow">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-green">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -135,20 +189,13 @@
                                     class="material-icons">clear</i></a>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     </div>
-
-
-    <!--top end-->
-
-
 </div>
 </body>
 <script type="text/javascript" charset="utf-8">
-
 </script>
+<script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
 </html>

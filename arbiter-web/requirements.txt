@@ -17,3 +17,4 @@ Twisted[tls,http2]
 nose
 pymysql
 mongoengine
+elasticsearch
