@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class LogmanageConfig(AppConfig):
-    name = 'arbiter.logmanage'
+    name = 'arbiter.wholog'

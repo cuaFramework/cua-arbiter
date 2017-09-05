@@ -1,0 +1,64 @@
+body {
+
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#query-div {
+    background: rgba(0,0,0,0.05);
+    vertical-align:middle;
+    height: auto;
+    width: auto;
+    margin: 10px;
+    padding-bottom: 10px;
+
+}
+#query-div input{
+    height: 48px;
+    width: 180px;
+}
+#start-date {
+    margin-right: 15px;
+}
+#start-time {
+    margin-right: 30px;
+}
+#end-date {
+    margin-right: 15px;
+}
+#end-time {
+    margin-right: 0;
+}
+
+#start-text {
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#end-text {
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+#key_name > input{
+    width: 824px;
+}
+
+#search-btn {
+    width: 120px;
+    margin-left: 720px;
+}
+
+#search-btn > a {
+    width: 120px;
+}
+.log_content {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+#log_content_search{
+    float: right;
+    margin-right: 30px;
+    width: 380px;
+}
+

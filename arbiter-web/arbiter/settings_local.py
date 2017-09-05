@@ -17,7 +17,7 @@ from mongoengine import connect
 
 mongodb_host = '10.104.104.39'
 mongodb_port = 10001
-redis_url = 'redis://10.104.104.26:6379/5'
+redis_url = 'redis://10.104.104.26:6379/9'
 mysql_host = '10.104.104.58'
 mysql_port = '3306'
 case_path = 'caseobj/casesx'
@@ -71,7 +71,7 @@ INSTALLED_APPS = [
     'channels',
     'arbiter',
     'arbiter.core',
-    'arbiter.logmanage',
+    'arbiter.wholog',
     'mongoengine',
 
 ]
