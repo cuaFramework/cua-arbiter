@@ -20,7 +20,10 @@ mongodb_port = 10001
 redis_url = 'redis://10.104.104.26:6379/5'
 mysql_host = '10.104.104.58'
 mysql_port = '3306'
-
+case_path = 'caseobj/casesx'
+os.environ["CASEPATH"] = case_path
+os.putenv("CASEPATH", case_path)
+case_obj_name = case_path.split('/')[0]
 connect('case_log', host=mongodb_host, port=mongodb_port)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -216,5 +219,5 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "static"),os.path.join(ARBITER_SHELL_ROOT, "arbiter-cases/main"),
+    os.path.join(PROJECT_ROOT, "static"),os.path.join(ARBITER_SHELL_ROOT, "arbiter-cases/"+case_obj_name),
 ]

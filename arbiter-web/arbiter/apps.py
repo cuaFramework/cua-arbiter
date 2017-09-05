@@ -11,7 +11,8 @@ class CasemanagerConfig(AppConfig):
 
                 os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
             "arbiter-cases")
-        caseBasePath = os.path.join(caseBasePath, "main")
+        case_path = os.getenv("CASEPATH")
+        caseBasePath = os.path.join(caseBasePath, case_path.split('/')[0])
         caseBasePath = caseBasePath.replace("\\", "/")
         os.environ["PYTHONPATH"] = caseBasePath
         os.putenv("PYTHONPATH", caseBasePath)

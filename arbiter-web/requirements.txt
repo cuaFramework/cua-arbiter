@@ -18,3 +18,4 @@ nose
 pymysql
 mongoengine
 elasticsearch
+gitpython

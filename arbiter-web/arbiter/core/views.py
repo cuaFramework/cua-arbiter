@@ -3,7 +3,7 @@ import json
 import os
 import time
 from subprocess import Popen, PIPE, STDOUT
-
+import git
 from django import forms
 from django.core.files import File
 from django.http import HttpResponse, JsonResponse
@@ -31,33 +31,8 @@ def login(request):
 
 @ensure_csrf_cookie
 def index(request):
-    username = request.user
-    # 获取所有case目录下的case
-    runcmd = Popen(['nosetests', '-vvv', '--collect-only', '-w', '../arbiter-cases'], bufsize=0,
-                   stdout=PIPE, stderr=STDOUT)
-    log_list = []
-    for line in runcmd.stdout:
-        log_list.append(line.decode('utf-8').rstrip())
-    # 修改显示名称
-    case_list = []
-    case_description_list = []
-    model_list = []
-    for elem in log_list:
-        if elem.find("Preparing test case main") != -1:
-            temp = elem.split("Preparing test case main.")[1]
-            case_list.append(
-                temp[::-1].replace(".", ":", 2).replace(":", ".", 1)[::-1])
-            model_list.append(temp.split(".")[1])
-        elif elem.find(" ... ok") != -1:
-            des_str = elem.split(" ...")[0]
-            if "main.cases" in des_str:
-                des_str = des_str.split("main.cases.")[1].split(".", 1)[1]
-            case_description_list.append(des_str)
-    case_res = dict(zip(case_list, case_description_list))
-    model_res = list(set(model_list))
-    # model_res.sort(model_list.index())
-    context = {'case_list': case_res, 'model_list': model_res}
-    return render(request, 'case/index.html', context)
+
+    return render(request, 'case/index.html' )
 
 
 def detail(request, case_name):
@@ -79,7 +54,6 @@ def editor(request, case_name):
 # 分割路径
 def spiltPath(name):
     temp = name.split(':')[0]
-    print(temp)
     case_class_name = temp.split('.')[-1]  # 用例类名
     case_dir = temp.replace('.', '/')
     return case_dir
@@ -92,6 +66,14 @@ class restful(APIView):
     def get_caselist(request):
         return JsonResponse( CaseList.getList())
 
+    @api_view(['POST'])
+    @permission_classes([permissions.AllowAny,])
+    def get_caseobj(request):
+        case_path = os.getenv("CASEPATH")
+        repo = git.Repo.clone_from('https://github.com/shimine/cua-caseobjdemo.git', '../arbiter-cases/'+case_path.split('/')[0], branch='master')
+        response_data = {}
+        response_data['success'] = True
+        return JsonResponse( response_data)
 
 # 接口验证
 class auth_restful(APIView):
@@ -117,6 +99,8 @@ class auth_restful(APIView):
     # 保存文件方法
     @api_view(['POST'])
     def save_casefile(request):
+        case_path = os.getenv("CASEPATH")
+        case_path_obj = case_path.split('/')[0]
         # 获取发送的请求
         if request.method == 'POST':
             json_str = ((request.body))
@@ -124,10 +108,10 @@ class auth_restful(APIView):
             case_path = spiltPath(json_obj.get('casepath')) + '.py'
             time_str = time.strftime("%Y-%m-%d %H_%M_%S")
             # rename 原文件+时间格式(2017-07-20 18_34_48)
-            os.rename('../arbiter-cases/main/' + case_path,
-                      '../arbiter-cases/main/' + case_path + '_' + time_str + '.history')
+            os.rename('../arbiter-cases/'+case_path_obj+'/' + case_path,
+                      '../arbiter-cases/' +case_path_obj+'/'+ case_path + '_' + time_str + '.history')
         # 使用codecs解决乱码问题
-        with codecs.open('../arbiter-cases/main/' + case_path, 'w', 'utf-8') as f:
+        with codecs.open('../arbiter-cases/'+case_path_obj+'/' + case_path, 'w', 'utf-8') as f:
             mfile = File(f)
             mfile.write(json_obj.get('content'))
             mfile.flush()

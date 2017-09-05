@@ -66,15 +66,16 @@ $(document).ready(function () {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             }
-        }).then(response => {
-        if (response.status !== 200) {
+        }).then(function (response) {
+        if (response.status !== 200
+        ) {
             console.log("存在一个问题，状态码为：" + response.status);
             return false;
         }
         else
             return response.json();
     }).then(
-        json => {
+        function (json) {
             let model_list = json
             let slide_app = new Vue({
                 props: ['todo'],
@@ -139,6 +140,8 @@ $(document).ready(function () {
                                 return setBtn("save");
                             } else if ($("#edit").find("span").text() === "保存") {
                                 //点击保存，不刷新按钮，调后端保存文件，成功后返回
+                                $("#buffer-center").css('display', '');
+                                $("#pro-center").css('display', 'none');
                                 $("#modal-save").modal("open");
                                 let newCodeContent = codeContent.getValue();
                                 fetch("/arbiter/save/",
@@ -159,7 +162,9 @@ $(document).ready(function () {
                                     //检查响应文本
                                     response.json().then(function (data) {
                                         if (data['result'] === "ok") {
-                                            $("#pro-center").html('<i class="material-icons large cyan-text text-darken-4">done</i>');
+                                            $("#buffer-center").css('display', 'none');
+                                            $("#pro-center").css('display', '');
+
 
                                         } else {
                                             alert("保存失败！");
@@ -187,9 +192,45 @@ $(document).ready(function () {
             $("#log-icon").click(function (e) {
                 $('#modal-log').modal('open');
             });
+            $("#import-caseobj").click(function (e) {
+                $('#modal-import').modal('open');
+            });
+            $("#cloneCaseObj").click(function (e) {
+                $('#modal-import').modal('close');
+                $("#buffer-center").css('display', '');
+                $("#pro-center").css('display', 'none');
+                $("#modal-save").modal("open");
+                fetch("./cloneCaseObj",
+                    {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(function (response) {
+
+
+                    if (response.status !== 200
+                    ) {
+                        console.log("存在一个问题，状态码为：" + response.status);
+                        return false;
+                    }
+                    else
+                        return response.json();
+                }).then(
+                    function (json) {
+                        $("#buffer-center").css('display', 'none');
+                        $("#pro-center").css('display', '');
+                        window.location.href = ".";
+
+                    });
+
+            });
+
             $("#clearLog").click(function (e) {
                 $('#insert').text("")
             });
+
             //初始化下拉菜单
             $('.dropdown-button').dropdown({
                     inDuration: 300,
@@ -203,6 +244,7 @@ $(document).ready(function () {
             );
             $('body').show();
         }
-    );
+    )
+    ;
 
 });

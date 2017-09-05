@@ -5,8 +5,7 @@
 mysql存储用户信息
 redis保证实时websocket
 monogodb保存日志
-
-![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/pic.png)
+![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/import.gif)
 ![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/demo.gif)
 
 部署步骤：
