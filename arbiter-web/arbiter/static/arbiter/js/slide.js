@@ -206,7 +206,8 @@ $(document).ready(function () {
                         headers: {
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
-                        }
+                        },
+                         body: JSON.stringify({url: $("#git-url-prefix").val()})
                     }).then(function (response) {
 
 
@@ -222,6 +223,7 @@ $(document).ready(function () {
                         $("#buffer-center").css('display', 'none');
                         $("#pro-center").css('display', '');
                         window.location.href = ".";
+
 
                     });
 

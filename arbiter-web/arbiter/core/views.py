@@ -70,7 +70,8 @@ class restful(APIView):
     @permission_classes([permissions.AllowAny,])
     def get_caseobj(request):
         case_path = os.getenv("CASEPATH")
-        repo = git.Repo.clone_from('https://github.com/shimine/cua-caseobjdemo.git', '../arbiter-cases/'+case_path.split('/')[0], branch='master')
+        json_obj = json.loads(request.body)
+        repo = git.Repo.clone_from(json_obj.get('url'), '../arbiter-cases/'+case_path.split('/')[0], branch='master')
         response_data = {}
         response_data['success'] = True
         return JsonResponse( response_data)
