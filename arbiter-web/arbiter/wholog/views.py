@@ -40,7 +40,7 @@ def index(request):
     data =     res.json()  # 返回的数据
 
     return render(request,'home.html')
-#去esLi
+#去Es 根据id 查询
 def search(id):
     #组合查询DSL
     querybody = {
@@ -50,7 +50,7 @@ def search(id):
             "logId": id
             }
           },
-        "sort": {"@timestamp": {"order": "desc"}}
+        "sort": {"@timestamp": {"order": "asc"}}
 }
 
 
@@ -81,6 +81,36 @@ def search(id):
     #最终返回的json
     response_data={"data":response_data_list}
     return  response_data
+
+#去Es 根据id 只查询具体日志数据
+@api_view(['GET'])
+def queryLogData(request):
+    log_id = request.GET.get('logId')
+    # 组合查询DSL
+    querybody = {
+        "size": 1000,
+        "query": {
+            "match": {
+                "logId": log_id
+            }
+        },
+        "sort": {"creat_time": {"order": "asc"}}
+    }
+
+    res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
+    # 转换成json
+    res_json = res.json()
+    # 符合查询条件的数量
+    result_total = res_json['hits']['total']
+    # 每条返回的数据组合到list
+    # 每条日志内容组合list
+    log_data_list = []
+    for i in range(0, result_total):
+        result_source = res_json['hits']['hits'][i]['_source']
+        log_data_list.append(result_source['logData'])
+    # 最终返回的json
+    response_data = {"data": log_data_list}
+    return JsonResponse(response_data)
 
 @api_view(['GET'])
 def getAllLog(request):

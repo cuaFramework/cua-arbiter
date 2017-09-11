@@ -19,7 +19,7 @@ redis_host = '10.104.104.26'
 redis_port = 6379
 redis_db = 11
 #logstash 在redis key值
-logstash_redis_key = 'logstash-test-list'
+logstash_redis_key = 'logstash-arbiter-list'
 re = redis.Redis(host=redis_host, port=redis_port,db=redis_db)#redis 连接
 # 当连接上时，发回去一个connect字符串
 @channel_session
@@ -41,7 +41,7 @@ def ws_message(message):
             "text": "**********************************************开始执行***********************************************"
         }, immediately=True)
         case_name = cmd.split(' ')[1]
-        run_time = utils.getNowtime()
+        run_time = utils.getNowtime(1)
         # if os.name == 'nt':
         #     setenv = getoutput('set PYTHONPATH='+caseBasePath)
         #     # runcmd = Popen(['nosetests', '-vv', '-P', case_name], bufsize=0, stdout=PIPE, stderr=STDOUT)
@@ -57,7 +57,8 @@ def ws_message(message):
             text = line.decode('utf-8')
             #拼接日志内容
             case_name = case_name.lower()
-            data = {'logId':log_id,'case': case_name, 'author': 'hui', 'logData': text}
+            creat_time = utils.getNowtime(2)
+            data = {'creat_time':creat_time,'logId':log_id,'case': case_name, 'author': 'hui', 'logData': text}
             # 向redis中发送值
             logData = json.dumps(data)
             re.lpush(logstash_redis_key, logData)

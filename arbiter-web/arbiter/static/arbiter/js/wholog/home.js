@@ -76,9 +76,29 @@ $(document).ready(function() {
         loadData();
 
     });
-
+    /*init 日志详情模态*/
+    $('#log_detail_modal').modal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: .2, // Opacity of modal background
+      in_duration: 300, // Transition in duration
+      out_duration: 200, // Transition out duration
+      starting_top: '40%', // Starting top style attribute
+      ending_top: '10%', // Ending top style attribute
+      ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+        alert("Ready");
+        console.log(modal, trigger);
+      },
+      complete: function() {
+          alert('Closed');
+      } // Callback for Modal close
+    }
+  );
 
 });/*ready end*/
+
+
+
+
 function getCurrentTime() {
      var current = new Array();
      var currentTime = new Date();
@@ -165,10 +185,8 @@ function loadData() {
                 "width": "10%",
                 "render": function(data, type, row, meta) {
                     //替换所有-
-                    logIdData = data.replace(/\-/g,"");
 
-                     // return data = '<button class="btn btn-info btn-sm" data-id=' + data + '><i class="fa fa-pencil"></i>Edit</button>';
-                     return data ='<a href="../wholog/logDetail?logId='+logIdData+'" class="waves-effect waves-light btn">查看</a>'
+                     return  '<a href="javascript:void(0)" type="button"  onclick=openLogDetail(this) class="waves-effect waves-light btn">查看</a>';
                 }
             }],
         //使用ajax请求
@@ -204,6 +222,40 @@ function loadData() {
     } );
 
 }/*load Data end*/
+
+/*打开日志详情模态框*/
+function openLogDetail(adata){
+     var logId =  $(adata).parent('td').parent("tr").find("td").eq(0).text();
+     logId = logId.replace(/\-/g,"");
+    /*先清空ul*/
+     $('#log_data li').remove();
+     $('#log_detail_modal').modal('open');
+     /*打印日志内容*/
+    /*ajax请求*/
+      $.ajax({
+          type:'GET',
+          url:'../wholog/queryLogData',
+          data:{'logId':logId},
+          dataType:'json',
+          cache:false,
+          ifModified:true,
+          success:function (data,status) {
+              /*循环输出*/
+              $.each(data.data,function (i,val) {
+
+                   document.getElementById("log_data").innerHTML += "<li><a>" + val + "</a></li>";
+              });
+
+          },
+          error:function (err,status) {
+              alert("出现了一个错误:"+status);
+          }
+      });
+
+
+}
+
+
 
 
 

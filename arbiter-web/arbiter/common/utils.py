@@ -10,6 +10,11 @@ def generate_id():
 
     return m.hexdigest()
 
-#获取当前时间 ，格式：2017-09-05 13:58:41
-def getNowtime():
-    return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+#获取当前时间
+#typeid=1 ，格式：2017-09-05 13:58:41
+#typeid=1 ，格式：时间戳形式：1505112338.4971874
+def getNowtime(typeId):
+    if (typeId == 1):
+        return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+    if (typeId == 2):
+        return datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')

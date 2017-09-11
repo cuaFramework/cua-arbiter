@@ -211,7 +211,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+#09-11 为支持creat_time查询排序修改为true
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
