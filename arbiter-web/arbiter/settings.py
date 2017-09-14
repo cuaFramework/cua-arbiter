@@ -11,15 +11,22 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from mongoengine import connect
 
-mongodb_host = '10.10.10.10'
-mongodb_port = 10001
-redis_url = 'redis://10.24.11.2:6379/0'
-mysql_host = '10.14.23.58'
-mysql_port = '3306'
+import datetime
+from config import arbiter_prod_config
 
-connect('case_log', host=mongodb_host, port=mongodb_port)
+env_config = arbiter_prod_config
+# mongodb_host = env_config['mongodb_host']
+# mongodb_port = env_config['mongodb_port']
+redis_url = env_config['redis_url']
+mysql_host = env_config['mysql_host']
+mysql_port = env_config['mysql_port']
+case_path = env_config['case_path']
+os.environ["CASEPATH"] = case_path
+os.putenv("CASEPATH", case_path)
+case_obj_name = case_path.split('/')[0]
+# connect('case_log', host=mongodb_host, port=mongodb_port)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,13 +43,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# websocket
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "asgiref.inmemory.ChannelLayer",
-#         "ROUTING": "arbiter.routing.routing",
-#     },
-# }
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "asgi_redis.RedisChannelLayer",
@@ -57,7 +57,6 @@ CHANNEL_LAYERS = {
 # Application definition
 
 INSTALLED_APPS = [
-    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -67,8 +66,7 @@ INSTALLED_APPS = [
     'channels',
     'arbiter',
     'arbiter.core',
-    'mongoengine'
-
+    'arbiter.wholog'
 ]
 
 MIDDLEWARE = [
@@ -103,26 +101,70 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'arbiter.wsgi.application'
 
+# Rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# jwt
+JWT_AUTH = {
+    'JWT_ENCODE_HANDLER':
+        'rest_framework_jwt.utils.jwt_encode_handler',
+
+    'JWT_DECODE_HANDLER':
+        'rest_framework_jwt.utils.jwt_decode_handler',
+
+    'JWT_PAYLOAD_HANDLER':
+        'rest_framework_jwt.utils.jwt_payload_handler',
+
+    'JWT_PAYLOAD_GET_USER_ID_HANDLER':
+        'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
+
+    'JWT_RESPONSE_PAYLOAD_HANDLER':
+        'rest_framework_jwt.utils.jwt_response_payload_handler',
+
+    # 'JWT_SECRET_KEY': settings.SECRET_KEY,
+    'JWT_GET_USER_SECRET_KEY': None,
+    'JWT_PUBLIC_KEY': None,
+    'JWT_PRIVATE_KEY': None,
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_AUDIENCE': None,
+    'JWT_ISSUER': None,
+
+    'JWT_ALLOW_REFRESH': False,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_AUTH_COOKIE': 'auth-jwt-token',
+
+}
+
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {},
-    # 'default': {
-    #     'NAME': 'case_log',
-    #     'ENGINE': 'django_mongodb_engine',
-    # },
     'default': {
-         # 'ENGINE': 'django.db.backends.dummy',
+        # 'ENGINE': 'django.db.backends.dummy',
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test_dj',
-        'USER': 'luna',   #你的数据库用户名
-        'PASSWORD': 'luna', #你的数据库密码
-        'HOST': mysql_host, #你的数据库主机，留空默认为localhost
-        'PORT': mysql_port, #你的数据库端口
-        'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset':'utf8mb4',
+        'NAME': 'arbiter_dj',
+        'USER': 'luna',  # 你的数据库用户名
+        'PASSWORD': 'luna',  # 你的数据库密码
+        'HOST': mysql_host,  # 你的数据库主机，留空默认为localhost
+        'PORT': mysql_port,  # 你的数据库端口
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'sql_mode': 'traditional',
         },
 
     }
@@ -157,7 +199,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+# 09-11 为支持creat_time查询排序修改为true
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -165,5 +208,5 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "static"),os.path.join(ARBITER_SHELL_ROOT, "arbiter-cases/main"),
+    os.path.join(PROJECT_ROOT, "static"), os.path.join(ARBITER_SHELL_ROOT, "arbiter-cases/" + case_obj_name),
 ]

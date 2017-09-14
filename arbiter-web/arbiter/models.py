@@ -7,9 +7,9 @@ import django.utils.timezone as timezone
 
 # Create your models here.
 #用户模型
-class User (models.Model):
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
+# class User (models.Model):
+#     username = models.CharField(max_length=20)
+#     password = models.CharField(max_length=20)
 #用例执行日志
 class Run_Log (Document):
     meta = {
@@ -35,15 +35,15 @@ class RunInfo (models.Model):
 class Case_Version_Info(models.Model):
     case_name = models.TextField(max_length=200)#用例名，.py文件
     latest_version = models.IntegerField(default=10000000)#版本号 八位
-    update_time = models.DateTimeField(default=timezone.now())
+    update_time = models.DateTimeField(default=timezone.now)
 #运行记录
 class Case_Save_Info(models.Model):
     case_name = models.TextField(max_length=200)#用例名+方法
     version = models.IntegerField(default=10000000)
     author = models.CharField(max_length=50)
-    save_time = models.DateTimeField(default=timezone.now())
+    save_time = models.DateTimeField(default=timezone.now)
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username','password')
-
-admin.site.register(User,UserAdmin)
+# class UserAdmin(admin.ModelAdmin):
+#     list_display = ('username','password')
+#
+# admin.site.register(User,UserAdmin)
