@@ -29,6 +29,20 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="{% static 'arbiter/js/datatables/jquery.dataTables.js' %}"></script>
 <div class="root">
+     <div id="arbiter-navbar">
+            <nav class="col s10 offset-s2 top-nav teal">
+                <div class="nav-wrapper">
+                    <a href="#" id="case_sumary_name"></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a target="_blank" href="../">首页</a></li>
+                        <li><a target="_blank" href="../">用例管理</a></li>
+                        <li><a target="_blank" href="./">日志管理</a></li>
+                        <li><a href="#" data-activates="nav-mobile" class="button-collapse11"><i
+                                class="material-icons">menu</i></a></li>
+                    </ul>
+                </div>
+            </nav>
+     </div>
     {% comment %}
     查询条件布局
     {% endcomment %}
