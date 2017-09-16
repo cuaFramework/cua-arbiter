@@ -1,0 +1,27 @@
+version: '3'
+services:
+    web:
+      image: shimine/cua-arbiter:1.2-alpine
+      links:
+        - db
+        - redis
+      ports:
+        - "8000:8000"
+      environment:
+        - LD_PRELOAD=/usr/src/app/stack-fix.so
+      depends_on:
+        - db
+      command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate
+    db: 
+      image: mysql 
+      environment: 
+        - MYSQL_ROOT_PASSWORD=123456
+        - MYSQL_DATABASE=arbiter_dj
+        - MYSQL_USER=luna 
+        - MYSQL_PASSWORD=luna
+      healthcheck:
+                  test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+                  timeout: 20s
+                  retries: 10
+    redis: 
+      image: redis

@@ -8,6 +8,6 @@ arbiter_prod_config = \
 
 arbiter_docker_config = \
     dict(redis_url='redis://redis:6379/9',
-         mysql_host='mysql',
+         mysql_host='db',
          mysql_port='3306',
          case_path='caseobj/casesx')

@@ -1,0 +1,6 @@
+FROM shimine/cua-arbiter:1.1-alpine
+
+WORKDIR /usr/src/app
+COPY . .
+
+CMD sh docker_start.sh
