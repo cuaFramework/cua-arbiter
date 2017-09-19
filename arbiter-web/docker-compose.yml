@@ -1,14 +1,12 @@
 version: '3'
 services:
     web:
-      image: shimine/cua-arbiter:1.2-alpine
+      image: shimine/cua-arbiter:1.3-alpine
       links:
         - db
         - redis
       ports:
         - "8000:8000"
-      environment:
-        - LD_PRELOAD=/usr/src/app/stack-fix.so
       depends_on:
         - db
       command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate
