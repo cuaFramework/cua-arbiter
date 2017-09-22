@@ -15,7 +15,7 @@ from ..common import utils
 
 isEditFilesName = []#全局变量，保存正在被编辑的文件名
 #redis 配置
-redis_host = '10.104.104.26'
+redis_host = 'redis'
 redis_port = 6379
 redis_db = 11
 #logstash 在redis key值
