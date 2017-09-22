@@ -18,7 +18,7 @@ import datetime
 # 日志管理
 from rest_framework.decorators import api_view
 
-ES_URL = '192.168.99.100:9200'
+ES_URL = 'elk:9200'
 
 
 def index(request):
