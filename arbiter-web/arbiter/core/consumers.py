@@ -2,7 +2,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 from channels.sessions import channel_session
 
-from arbiter.models import RunInfo
+from arbiter.models import Case_Run_Info
 import json
 import redis
 
@@ -15,7 +15,7 @@ from ..common import utils
 
 isEditFilesName = []#全局变量，保存正在被编辑的文件名
 #redis 配置
-redis_host = '10.104.104.26'
+redis_host = 'redis'
 redis_port = 6379
 redis_db = 11
 #logstash 在redis key值
@@ -76,7 +76,7 @@ def ws_message(message):
         #将日志存入mysql
         # mysql 存入格式和内容需要完善
         dic = {'log_id':log_id,'case_name':case_name,'run_time': run_time,'author':'hui'}
-        RunInfo.objects.create(**dic)
+        Case_Run_Info.objects.create(**dic)
 
         #mongodb
         #Run_Log.objects.create(case_info=case_name)

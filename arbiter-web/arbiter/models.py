@@ -22,7 +22,7 @@ class Run_Log (Document):
     # run_time = models.IntegerField(null=True)
     # operator = models.CharField(max_length=20,null=True)
 #运行日志信息模型
-class RunInfo (models.Model):
+class Case_Run_Info (models.Model):
     log_id = models.UUIDField()
     case_name = models.TextField(max_length=200)
     run_time = models.DateTimeField()

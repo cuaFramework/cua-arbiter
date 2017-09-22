@@ -200,7 +200,6 @@ function loadData() {
 
          language: {
                 'emptyTable': '没有数据',
-                'loadingRecords': '加载中...',
                 'processing': '查询中...',
                 'search': '检索:',
                 'lengthMenu': '每页 _MENU_ 条',

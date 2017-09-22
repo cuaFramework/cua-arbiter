@@ -11,15 +11,21 @@ services:
         - db
       command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate
     db: 
-      image: mysql 
+      image: mysql
+      ports:
+        - "3306:3306"
       environment: 
         - MYSQL_ROOT_PASSWORD=123456
         - MYSQL_DATABASE=arbiter_dj
         - MYSQL_USER=luna 
         - MYSQL_PASSWORD=luna
-      healthcheck:
-                  test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-                  timeout: 20s
-                  retries: 10
     redis: 
       image: redis
+      ports:
+        - "6379:6379"
+    elk:
+      image: sebp/elk
+      ports:
+        - "5601:5601"
+        - "9200:9200"
+        - "5044:5044"

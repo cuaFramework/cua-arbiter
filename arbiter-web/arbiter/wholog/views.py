@@ -11,14 +11,14 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.core import serializers
-from arbiter.models import RunInfo
+from arbiter.models import Case_Run_Info
 import requests
 import datetime
 
 # 日志管理
 from rest_framework.decorators import api_view
 
-ES_URL = '10.104.104.57:9200'
+ES_URL = '192.168.99.100:9200'
 
 
 def index(request):
@@ -123,7 +123,7 @@ def getAllLog(request):
     date_from =datetime.datetime.strptime(start_time,'%Y-%m-%d %H:%M')
     date_to =datetime.datetime.strptime(end_time,'%Y-%m-%d %H:%M')
     #查询时间范围内的数据库
-    log_list = RunInfo.objects.filter(run_time__range=(date_from,date_to)).order_by('run_time')
+    log_list = Case_Run_Info.objects.filter(run_time__range=(date_from,date_to)).order_by('run_time')
     data = serializers.serialize('json',log_list)
     return HttpResponse(data)
 

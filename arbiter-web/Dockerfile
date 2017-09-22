@@ -9,4 +9,5 @@ ENV LD_PRELOAD = /usr/src/app/stack-fix.so
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
 #RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000:8000
+
 CMD sh docker_start.sh
