@@ -27,7 +27,7 @@ services:
       image: redis
 
     elk:
-      image: tmd
+      image: shimine/redis-elk
       links:
         - redis
       ports:

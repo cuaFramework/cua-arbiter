@@ -13,12 +13,17 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 import datetime
-from config import arbiter_docker_config
+from config import arbiter_prod_config
 
-env_config = arbiter_docker_config
+env_config = arbiter_prod_config
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']
-redis_url = env_config['redis_url']
+elk_url=env_config['elk_url']
+redis_host = env_config['redis_host']
+redis_port = env_config['redis_port']
+redis_dj_db = env_config['redis_dj_db']
+redis_elk_db = env_config['redis_elk_db']
+redis_url = 'redis://'+redis_host+':'+str(redis_port)+'/'+str(redis_dj_db)
 mysql_host = env_config['mysql_host']
 mysql_port = env_config['mysql_port']
 case_path = env_config['case_path']

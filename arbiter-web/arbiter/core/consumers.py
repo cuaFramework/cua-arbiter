@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE, STDOUT
 from channels.sessions import channel_session
 
 from arbiter.models import Case_Run_Info
+from ..settings import redis_host,redis_port,redis_elk_db
 import json
 import redis
 
@@ -15,12 +16,10 @@ from ..common import utils
 
 isEditFilesName = []#全局变量，保存正在被编辑的文件名
 #redis 配置
-redis_host = 'redis'
-redis_port = 6379
-redis_db = 11
+
 #logstash 在redis key值
 logstash_redis_key = 'logstash-arbiter-list'
-re = redis.Redis(host=redis_host, port=redis_port,db=redis_db)#redis 连接
+re = redis.Redis(host=redis_host, port=redis_port,db=redis_elk_db)#redis 连接
 # 当连接上时，发回去一个connect字符串
 @channel_session
 def ws_connect(message):

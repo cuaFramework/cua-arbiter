@@ -76,12 +76,12 @@ $(document).ready(function () {
             return response.json();
     }).then(
         function (json) {
-            let model_list = json
+
             let slide_app = new Vue({
                 props: ['todo'],
                 el: '#nav-slide',
                 data: {
-                    modelList: model_list
+                    modelList: json
                 }
             });
             $('.collapsible').collapsible();
@@ -207,7 +207,7 @@ $(document).ready(function () {
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
                         },
-                         body: JSON.stringify({url: $("#git-url-prefix").val()})
+                        body: JSON.stringify({url: $("#git-url-prefix").val()})
                     }).then(function (response) {
 
 
