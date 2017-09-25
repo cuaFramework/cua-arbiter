@@ -1,15 +1,13 @@
 version: '3'
 services:
     web:
-      image: shimine/cua-arbiter:1.3-alpine
-      links:
-        - db
-        - redis
+      image: shimine/cua-arbiter-alpine
       ports:
         - "8000:8000"
       depends_on:
         - db
-      command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate
+      command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate && python ./manage.py shell < initadmin.py
+
     db: 
       image: mysql
       ports:
@@ -19,17 +17,12 @@ services:
         - MYSQL_DATABASE=arbiter_dj
         - MYSQL_USER=luna 
         - MYSQL_PASSWORD=luna
-      healthcheck:
-                  test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-                  timeout: 20s
-                  retries: 10
+
     redis: 
       image: redis
 
     elk:
-      image: shimine/redis-elk
-      links:
-        - redis
+      image: shimine/cua-arbiter-elk
       ports:
         - "5601:5601"
         - "9200:9200"
