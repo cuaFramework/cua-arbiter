@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 import datetime
-from config import arbiter_docker_config
+from config import arbiter_prod_config
 
-env_config = arbiter_docker_config
+env_config = arbiter_prod_config
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']
 elk_url=env_config['elk_url']

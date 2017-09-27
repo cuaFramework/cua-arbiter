@@ -3,17 +3,15 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{% get_current_language as LANGUAGE_CODE %}">
-<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon" />
+<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon"/>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <title>登录</title>
-        <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"
-          media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/theme-teal.min.css' %}"
-          media="screen,projection"/>
+    <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/theme-teal.min.css' %}"/>
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/login.css' %}"/>
     {% block head %}
     {% endblock head %}
@@ -27,27 +25,17 @@
 <h6 id="LoginInfo" class="text-danger"></h6>
 <div class="root">
     <div class="login">
-    <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data" onsubmit="return login()">
-        {% csrf_token %}
-
-
-            <mu-text-field name="username" label="用户名" ></mu-text-field>
-
-        <div class="input-field col s12">
-          <i class="material-icons prefix">account_circle</i>
-          <input id="username" name="username" type="text" class="validate">
-          <label for="username">用户名</label>
-        </div>
-
-        <div class="row">
-        <div class="input-field col s12">
-          <i class="material-icons prefix">vpn_key</i>
-          <input id="password" name="password" type="password" class="validate">
-          <label for="password">密码</label>
-        </div>
-        </div>
-          <button class="btn waves-effect waves-light" type="submit" name="login-btn">登 录</button>
-    </form>
+        <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data"
+              onsubmit="return login()">
+            {% csrf_token %}
+            <mu-text-field icon="account_circle" name="username" label="用户名" label-float></mu-text-field>
+            <mu-text-field icon="vpn_key" name="password" label="密码" hintText="请输入密码" type="password"
+                           label-float></mu-text-field>
+            <div>
+                <mu-raised-button class="demo-raised-button" type="submit" name="login-btn" label="登 录"
+                                  primary></mu-raised-button>
+            </div>
+        </form>
     </div><!--login div end-->
     <canvas></canvas>
 </div><!-- root end-->
