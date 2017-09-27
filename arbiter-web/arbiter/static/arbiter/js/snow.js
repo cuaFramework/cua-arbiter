@@ -1,4 +1,4 @@
-$(function () {
+const snow=function () {
     let canvas = document.querySelector('canvas');
     let ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -85,4 +85,5 @@ $(function () {
 
     createDots();
     requestAnimationFrame(animateDots);
-});
+};
+snow();

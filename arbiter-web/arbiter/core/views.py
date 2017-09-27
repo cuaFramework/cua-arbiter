@@ -20,36 +20,23 @@ from .models import CaseList
 class UserForm(forms.Form):
     username = forms.CharField(label='用户名', max_length=50)
     password = forms.CharField(label='密码', widget=forms.PasswordInput())
-
-
 # 登录
 def login(request):
     return render(request, 'case/login.html')
 
-
-
-
 @ensure_csrf_cookie
 def index(request):
-
     return render(request, 'case/index.html' )
 
 
 def detail(request, case_name):
-    # runcmd = Popen('nosetests -vv -P --exe  ' + case_name, bufsize = 1, stdout=PIPE, stderr=subprocess.STDOUT)
-    # runcmd.wait()
     # 日志
     log_list = []
-    # for line in runcmd.stdout.readlines():
-    #     log_list.append(line.decode('utf-8'))
-    # 传给网页模板
     context = {'log_list': log_list}
     return render(request, "case/detail.html", context)
 
-
 def editor(request, case_name):
     return render(request, "case/editor.html")
-
 
 # 分割路径
 def spiltPath(name):
@@ -57,6 +44,7 @@ def spiltPath(name):
     case_class_name = temp.split('.')[-1]  # 用例类名
     case_dir = temp.replace('.', '/')
     return case_dir
+
 
 class restful(APIView):
     # permission_classes = (AllowAny,)
@@ -118,6 +106,6 @@ class auth_restful(APIView):
             mfile.flush()
             mfile.seek(0)
             mfile.close()
-            if (mfile.closed):  # TODO 若未关闭？保存不成功？？
+            if (mfile.closed):
                 result = 'ok'
                 return HttpResponse(json.dumps({"result": result}), content_type="application/json")

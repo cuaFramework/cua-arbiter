@@ -2,6 +2,14 @@
  * Created by Administrator on 2017/8/6.
  */
 
+        var app = new Vue({
+            el: '#login-form',
+            data: {
+                message: ''
+            }
+        });
+
+
 function login() {
 
     $.ajax({
@@ -22,20 +30,24 @@ function login() {
                             'Content-Type': 'application/json'
                         }
                     }).then(response => {
-                    if (response.status !== 200) {
-                        console.log("存在一个问题，状态码为：" + response.status);
-                        return false;
-                    }
-                    else
-                        return response.json();
+                    if(response.status !== 200
+            )
+                {
+                    console.log("存在一个问题，状态码为：" + response.status);
+                    return false;
+                }
+            else
+                return response.json();
 
-                }).then(
+            }).
+                then(
                     json => {
-                        storage["username"] = json["username"];
-                        storage["role"] = json["role"];
-                        window.location.href = ".";
-                    }
-                );
+                    storage["username"] = json["username"];
+                storage["role"] = json["role"];
+                window.location.href = ".";
+            }
+            )
+                ;
 
             }
             else {

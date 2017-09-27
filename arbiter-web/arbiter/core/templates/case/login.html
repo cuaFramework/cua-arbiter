@@ -10,7 +10,9 @@
 
     <title>登录</title>
         <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/theme-teal.min.css' %}"
           media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/login.css' %}"/>
     {% block head %}
@@ -18,23 +20,25 @@
 </head>
 
 <body>
+<script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/login.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/snow.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
 
 <h6 id="LoginInfo" class="text-danger"></h6>
 <div class="root">
     <div class="login">
     <form id="login-form" class="col s12" action="login" method="POST" enctype="multipart/form-data" onsubmit="return login()">
         {% csrf_token %}
-        <div class="row">
+
+
+            <mu-text-field name="username" label="用户名" ></mu-text-field>
+
         <div class="input-field col s12">
           <i class="material-icons prefix">account_circle</i>
           <input id="username" name="username" type="text" class="validate">
           <label for="username">用户名</label>
         </div>
-        </div>
+
         <div class="row">
         <div class="input-field col s12">
           <i class="material-icons prefix">vpn_key</i>
@@ -47,6 +51,7 @@
     </div><!--login div end-->
     <canvas></canvas>
 </div><!-- root end-->
-
+<script src="{% static 'arbiter/js/login.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/snow.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>
