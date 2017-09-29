@@ -1,4 +1,28 @@
-/*#arbiter-navbar {*/
-    /*left: 0;*/
-    /*right: 0;*/
-/*}*/
+.mu-appbar {
+    height: 56px;
+}
+
+.mu-appbar-title {
+    line-height: 56px;
+}
+
+.appbar-search-field {
+    color: #FFF;
+    margin-bottom: 0;
+}
+
+.appbar-search-field.focus-state {
+    color: #FFF;
+}
+
+.appbar-search-field .mu-text-field-hint {
+    color: rgba(255, 255, 255, 0.54);
+}
+
+.appbar-search-field .mu-text-field-input {
+    color: #FFF;
+}
+
+.appbar-search-field .mu-text-field-focus-line {
+    background-color: #FFF;
+}

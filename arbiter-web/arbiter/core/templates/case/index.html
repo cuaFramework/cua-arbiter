@@ -9,8 +9,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>arbiter</title>
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"
-          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/theme-teal.min.css' %}"/>
+    {#    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/materialize.min.css' %}"#}
+    {#          media="screen,projection"/>#}
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/navbar.css' %}"/>
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/index.css' %}"/>
     {% block head %}
@@ -18,27 +20,40 @@
 </head>
 <body style="display: none;">
 <script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>
+{#<script src="{% static 'arbiter/js/materialize.min.js' %}" type="text/javascript" charset="utf-8"></script>#}
 <script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/header.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <div class="had-container">
+    <div id="arbiter-navbar">
+
+        {#            <mu-icon-button icon="menu" slot="left"/>#}
+        <mu-appbar title="用例管理" :z-depth="2">
+            <mu-icon-button icon="menu" slot="left"></mu-icon-button>
+            <mu-text-field icon="search" class="appbar-search-field" slot="right" hint-text="请输入搜索内容"></mu-text-field>
+            <mu-flat-button color="white" label="flat Button" slot="right"></mu-flat-button>
+            <mu-icon-button tooltip="消息" tooltip-position="bottom-right" icon="grade" slot="right"></mu-icon-button>
+            <mu-icon-button tooltip="应用" tooltip-position="bottom-right" icon="grade" slot="right"></mu-icon-button>
+            <mu-avatar background-color="lime700" slot="right">S</mu-avatar>
+        </mu-appbar>
+    </div>
     <div class="row">
-        <div id="arbiter-navbar">
-            <nav class="col s10 offset-s2 top-nav teal">
-                <div class="nav-wrapper">
-                    <a href="#" id="case_sumary_name"></a>
-                    <ul id="nav-mobile" class="right hide-on-med-and-down">
-                        <li><a target="_blank" href="./">总览</a></li>
-                        <li><a target="_blank" href="./">用例管理</a></li>
-                        <li><a target="_blank" href="./wholog">日志管理</a></li>
-                        <li><a href="#" data-activates="nav-mobile" class="button-collapse11"><i
-                                class="material-icons">menu</i></a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+
+        {#            <nav class="col s10 offset-s2 top-nav teal">#}
+        {#                <div class="nav-wrapper">#}
+        {#                    <a href="#" id="case_sumary_name"></a>#}
+        {#                    <ul id="nav-mobile" class="right hide-on-med-and-down">#}
+        {#                        <li><a target="_blank" href="./">总览</a></li>#}
+        {#                        <li><a target="_blank" href="./">用例管理</a></li>#}
+        {#                        <li><a target="_blank" href="./wholog">日志管理</a></li>#}
+        {#                        <li><a href="#" data-activates="nav-mobile" class="button-collapse11"><i#}
+        {#                                class="material-icons">menu</i></a></li>#}
+        {#                    </ul>#}
+        {#                </div>#}
+        {#            </nav>#}
+
         <div>
             <ul id="nav-slide" class="col s2 side-nav fixed ">
                 <li>
@@ -138,7 +153,7 @@
                                 </form>
                             </div>
                         </div>
-                          <div class="modal-footer">
+                        <div class="modal-footer">
                             <a id="cloneCaseObj" class="waves-effect waves-teal btn">导入</a>
                             <a class="modal-action modal-close waves-effect waves-teal btn-flat">关闭</a>
                         </div>

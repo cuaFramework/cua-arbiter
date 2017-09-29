@@ -38,6 +38,9 @@ $(document).ready(function () {
         }
 
     });
+
+
+
     user_list_app = new Vue({
         el: '#usr_dropdown',
         data: function () {
@@ -76,6 +79,9 @@ $(document).ready(function () {
             return response.json();
     }).then(
         function (json) {
+              let navbar_app = new Vue({
+        el: '#arbiter-navbar',
+        data: {}});
 
             let slide_app = new Vue({
                 props: ['todo'],
@@ -84,7 +90,7 @@ $(document).ready(function () {
                     modelList: json
                 }
             });
-            $('.collapsible').collapsible();
+            // $('.collapsible').collapsible();
             $(".collapsible-body li").click(function () {
                 //guide 显示到隐藏，root-case从隐藏到显示
                 $("#root-guide"
@@ -233,18 +239,18 @@ $(document).ready(function () {
                 $('#insert').text("")
             });
 
-            //初始化下拉菜单
-            $('.dropdown-button').dropdown({
-                    inDuration: 300,
-                    outDuration: 225,
-                    constrain_width: false, // Does not change width of dropdown to that of the activator
-                    hover: false, // Activate on hover
-                    gutter: 0, // Spacing from edge
-                    belowOrigin: false, // Displays dropdown below the button
-                    alignment: 'left' // Displays dropdown with edge aligned to the left of button
-                }
-            );
-            $('body').show();
+
+            $('body').show();            // //初始化下拉菜单
+            // $('.dropdown-button').dropdown({
+            //         inDuration: 300,
+            //         outDuration: 225,
+            //         constrain_width: false, // Does not change width of dropdown to that of the activator
+            //         hover: false, // Activate on hover
+            //         gutter: 0, // Spacing from edge
+            //         belowOrigin: false, // Displays dropdown below the button
+            //         alignment: 'left' // Displays dropdown with edge aligned to the left of button
+            //     }
+            // );
         }
     )
     ;

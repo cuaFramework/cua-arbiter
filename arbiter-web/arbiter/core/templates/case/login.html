@@ -19,10 +19,9 @@
 
 <body>
 <script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
 
- {% verbatim %}
+{% verbatim %}
 <div class="root">
     <div class="login">
         <form id="login-form" @submit.prevent="submit">
@@ -32,19 +31,19 @@
                                label-float></mu-text-field>
             </div>
             <div>
-                <mu-text-field icon="vpn_key" name="password" v-model="inputtext.password" label="密码" hintText="请输入密码"
+                <mu-text-field icon="vpn_key" name="password" v-model="inputtext.password" label="密码" hintext="请输入密码"
                                type="password"
                                label-float></mu-text-field>
             </div>
             <div>
-                <mu-raised-button class="demo-raised-button" type="submit" name="login-btn" label="登 录"
+                <mu-raised-button class="demo-raised-button" type="submit" name="login-btn" label="登录"
                                   primary></mu-raised-button>
             </div>
         </form>
     </div><!--login div end-->
     <canvas></canvas>
 </div><!-- root end-->
- {% endverbatim %}
+{% endverbatim %}
 <script src="{% static 'arbiter/js/login.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/snow.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
