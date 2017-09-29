@@ -195,7 +195,14 @@ function loadData() {
              url:'../wholog/getAllLog',
              data:{'startTime':getStartTime(),'endTime':getEndTime(),'keyWords':getKeyWords()},
              dataType:'json',
-             dataSrc: ''
+             dataSrc: '',
+             /*出现鉴权错误后，跳转到登录页*/
+             error:function (response) {
+                  if (response.status === 401){
+                      alert("请先登录");
+                      location.href='../login';
+                  }
+            }
          },
 
          language: {
