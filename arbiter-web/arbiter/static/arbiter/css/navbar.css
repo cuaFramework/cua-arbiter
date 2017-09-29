@@ -11,6 +11,12 @@
     margin-bottom: 0;
 }
 
+#arbiter-navbar .mu-text-field {
+
+    width: 800px;
+        margin-right: 300px;
+}
+
 .appbar-search-field.focus-state {
     color: #FFF;
 }
