@@ -11,10 +11,26 @@
     margin-bottom: 0;
 }
 
+#arbiter-navbar h2 {
+
+    width: 300px;
+}
+
+#arbiter-navbar .mu-avatar {
+
+    margin: 30px;
+}
+
 #arbiter-navbar .mu-text-field {
 
     width: 800px;
-        margin-right: 300px;
+
+}
+
+.mu-dialog .mu-text-field {
+
+    width: 500px;
+
 }
 
 .appbar-search-field.focus-state {

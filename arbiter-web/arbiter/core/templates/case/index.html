@@ -27,54 +27,40 @@
 <script src="{% static 'arbiter/js/header.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <div class="had-container">
+     {% verbatim %}
     <div id="arbiter-navbar">
-
-        {#            <mu-icon-button icon="menu" slot="left"/>#}
-        <mu-appbar title="用例管理" :z-depth="2">
+        <mu-appbar :z-depth="2">
             <mu-icon-button icon="menu" slot="left"></mu-icon-button>
-            <mu-text-field icon="search" class="appbar-search-field" slot="right" hint-text="请输入搜索内容"></mu-text-field>
-            <mu-flat-button color="white" label="flat Button" slot="right"></mu-flat-button>
-            <mu-icon-button tooltip="消息" tooltip-position="bottom-right" icon="grade" slot="right"></mu-icon-button>
-            <mu-icon-button tooltip="应用" tooltip-position="bottom-right" icon="grade" slot="right"></mu-icon-button>
-            <mu-avatar background-color="lime700" slot="right">S</mu-avatar>
+            <h2 slot="left">用例管理</h2>
+            <mu-text-field icon="search" class="appbar-search-field" hint-text="搜索"></mu-text-field>
+            <mu-avatar v-if="message.username!=null" background-color="lime700" color="black" :size="50" slot="right">{{ message.username.substr(0, 2) }}</mu-avatar>
+            <mu-icon-button v-if="message.username!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat" slot="right"></mu-icon-button>
+            <mu-icon-menu icon="view_module" slot="right">
+                <mu-menu-item title="用例导入" left-icon="add" @click="openImportDialog"></mu-menu-item>
+                <mu-menu-item title="用例管理" left-icon="mode_edit"></mu-menu-item>
+                <mu-menu-item href="./wholog" title="日志查询" left-icon="history"></mu-menu-item>
+            </mu-icon-menu>
+                <mu-icon-menu v-if="message.username!=null" icon="more_vert" slot="right">
+                    <mu-menu-item title="设置" left-icon="settings"></mu-menu-item>
+                    <mu-menu-item title="帮助" left-icon="help_outline"></mu-menu-item>
+                    <mu-divider></mu-divider>
+                    <mu-menu-item title="退出" @click="logout()" left-icon="power_settings_new"></mu-menu-item>
+                </mu-icon-menu>
+                <mu-flat-button v-if="message.username==null" href="/arbiter/login" label="登陆" icon="account_circle" class="demo-flat-button" color="lime700" slot="right"></mu-flat-button>
         </mu-appbar>
+  <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
+       <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix" label="git仓库的URL（例：https://example/demo.git）" :width="100" label-float></mu-text-field>
+      <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary label="取消"></mu-flat-button>
+    <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="cloneCaseObj" primary label="导入"></mu-flat-button>
+      <mu-linear-progress v-if="gitCloneStatus == 'running'" :size="10" color="blue" ></mu-linear-progress>
+  </mu-dialog>
     </div>
+     {% endverbatim %}
     <div class="row">
 
-        {#            <nav class="col s10 offset-s2 top-nav teal">#}
-        {#                <div class="nav-wrapper">#}
-        {#                    <a href="#" id="case_sumary_name"></a>#}
-        {#                    <ul id="nav-mobile" class="right hide-on-med-and-down">#}
-        {#                        <li><a target="_blank" href="./">总览</a></li>#}
-        {#                        <li><a target="_blank" href="./">用例管理</a></li>#}
-        {#                        <li><a target="_blank" href="./wholog">日志管理</a></li>#}
-        {#                        <li><a href="#" data-activates="nav-mobile" class="button-collapse11"><i#}
-        {#                                class="material-icons">menu</i></a></li>#}
-        {#                    </ul>#}
-        {#                </div>#}
-        {#            </nav>#}
 
         <div>
             <ul id="nav-slide" class="col s2 side-nav fixed ">
-                <li>
-                    <div id="username" class="user-view center-align">
-                        <a href="#!user">
-                            <img v-if="message.islogin" class="circle" style="margin:0 auto"
-                                 src="{% static 'arbiter/imgs/team_logo.png' %}">
-                        </a>
-                        <a :href="message.href">
-                            <span :class="message.classes"
-                                  data-activates='usr_dropdown'>{% templatetag openvariable %}message.username{% templatetag closevariable %}
-                                 <i v-if="message.islogin" class="material-icons dp20">arrow_drop_down</i>
-                            </span>
-                        </a>
-                        <ul id='usr_dropdown' class='dropdown-content'>
-                            <li><a href="#">设置(没做)</a></li>
-                            <li class="divider"></li>
-                            <li><a id='logout' href="/arbiter/logout!" class="logout">注销</a></li>
-                        </ul>
-                    </div>
-                </li>
                 <li>
                     <div>
                         <a id="import-caseobj" class="btn-floating btn-large waves-effect waves-light red"><i

@@ -1,64 +1,73 @@
 function getusername() {
     let storage = window.localStorage;
     let username = storage['username'];
-    return username ? username : "登录";
+    return username ? username : null;
 
 }
 
 $(document).ready(function () {
     let username = getusername();
-    user_app = new Vue({
-        el: '#username',
+    let navbar_app = new Vue({
+        el: '#arbiter-navbar',
         data: function () {
-            if (username === '登录') {
-                return {
-                    message: {
-                        username: username,
-                        classes: 'btn waves-effect waves-teal',
-                        href: 'login',
-                        islogin: false
-
-
-                    }
-                }
-            }
-            else {
-                return {
-                    message: {
-                        username: username,
-                        classes: 'dropdown-button btn waves-effect waves-teal btn-flat',
-                        href: '',
-                        islogin: true
-
-
-                    }
-                }
-
-            }
-        }
-
-    });
-
-
-
-    user_list_app = new Vue({
-        el: '#usr_dropdown',
-        data: function () {
-            if (username === '登录') {
-                return {
-                    data: {
-                        itemList: {}
-                    }
-                }
-            }
-            else {
-                return {
-                    data: {
-                        itemList: {}
-                    }
-                }
+            return {
+                message: {
+                    username: username,
+                    href: 'login',
+                },
+                dialog: false,
+                gitUrlPrefix: '',
+                gitCloneStatus: 'finish'
             }
 
+        },
+        methods: {
+            logout() {
+                deleteAllCookies();
+                let storage = window.localStorage;
+                storage.clear();
+                window.location.href = ".";
+
+            },
+            openImportDialog() {
+                this.dialog = true;
+
+            },
+            closeImportDialog() {
+                this.dialog = false
+            },
+            cloneCaseObj() {
+                this.gitCloneStatus = 'running';
+
+                fetch("./cloneCaseObj",
+                    {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json, text/plain, */*',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({url: this.gitUrlPrefix})
+                    }).then((response) =>{
+
+
+                    if (response.status !== 200
+                    ) {
+                        console.log("存在一个问题，状态码为：" + response.status);
+                        const error = new Error(response.statusText);
+                        error.response = response;
+                        this.gitCloneStatus = 'fail';
+                        throw error;
+                    }
+                    else
+                        return response.json();
+                }).then(
+                     json => {
+                        this.gitCloneStatus = 'finish';
+                        window.location.href = ".";
+
+
+                    });
+            }
         }
     });
 
@@ -79,9 +88,7 @@ $(document).ready(function () {
             return response.json();
     }).then(
         function (json) {
-              let navbar_app = new Vue({
-        el: '#arbiter-navbar',
-        data: {}});
+
 
             let slide_app = new Vue({
                 props: ['todo'],
