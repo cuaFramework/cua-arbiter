@@ -6,6 +6,7 @@ function getusername() {
 }
 
 $(document).ready(function () {
+    let Event=new Vue();
     let username = getusername();
     let navbar_app = new Vue({
         el: '#arbiter-navbar',
@@ -47,7 +48,7 @@ $(document).ready(function () {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({url: this.gitUrlPrefix})
-                    }).then((response) =>{
+                    }).then((response) => {
 
 
                     if (response.status !== 200
@@ -61,12 +62,15 @@ $(document).ready(function () {
                     else
                         return response.json();
                 }).then(
-                     json => {
+                    json => {
                         this.gitCloneStatus = 'finish';
                         window.location.href = ".";
 
 
                     });
+            },
+             toggleSlide(){
+                Event.$emit('toggle-slide');
             }
         }
     });
@@ -93,8 +97,26 @@ $(document).ready(function () {
             let slide_app = new Vue({
                 props: ['todo'],
                 el: '#nav-slide',
-                data: {
-                    modelList: json
+                data: function () {
+                    return {
+                        open: false,
+                        docked: true,
+                        modelList: json
+                    }
+                }, mounted(){
+                     let _this = this;
+                    Event.$on('toggle-slide',function (flag) {
+                alert('触发了接收');
+  _this.open = !_this.open;
+                        _this.docked = !flag;
+            });
+                },
+                methods: {
+
+                    toggle(flag) {
+                        this.open = !this.open;
+                        this.docked = !flag;
+                    }
                 }
             });
             // $('.collapsible').collapsible();
@@ -204,9 +226,6 @@ $(document).ready(function () {
 
             $("#log-icon").click(function (e) {
                 $('#modal-log').modal('open');
-            });
-            $("#import-caseobj").click(function (e) {
-                $('#modal-import').modal('open');
             });
             $("#cloneCaseObj").click(function (e) {
                 $('#modal-import').modal('close');

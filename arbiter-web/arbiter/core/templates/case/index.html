@@ -30,7 +30,7 @@
      {% verbatim %}
     <div id="arbiter-navbar">
         <mu-appbar :z-depth="2">
-            <mu-icon-button icon="menu" slot="left"></mu-icon-button>
+            <mu-icon-button icon="menu" slot="left" @click="toggleSlide()" ></mu-icon-button>
             <h2 slot="left">用例管理</h2>
             <mu-text-field icon="search" class="appbar-search-field" hint-text="搜索"></mu-text-field>
             <mu-avatar v-if="message.username!=null" background-color="lime700" color="black" :size="50" slot="right">{{ message.username.substr(0, 2) }}</mu-avatar>
@@ -60,14 +60,20 @@
 
 
         <div>
-            <ul id="nav-slide" class="col s2 side-nav fixed ">
-                <li>
-                    <div>
-                        <a id="import-caseobj" class="btn-floating btn-large waves-effect waves-light red"><i
-                                class="material-icons">add</i></a>
-                    </div>
 
-                </li>
+
+
+
+            <ul id="nav-slide" class="col s2 side-nav fixed ">
+                           <mu-drawer :open="open" :docked="docked" @close="toggle()">
+      <mu-list @itemClick="docked ? '' : toggle()">
+        <mu-list-item title="Menu Item 1"/>
+        <mu-list-item title="Menu Item 2"/>
+        <mu-list-item title="Menu Item 3"/>
+        <mu-list-item v-if="docked" @click.native="open = false" title="Close"/>
+      </mu-list>
+    </mu-drawer>
+
                 <li>
                     <div class="divider"></div>
                 </li>
