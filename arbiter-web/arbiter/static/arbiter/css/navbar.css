@@ -11,6 +11,21 @@
     margin-bottom: 0;
 }
 
+
+
+
+#arbiter-navbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.slider-open {
+    left: 256px !important;
+}
+
 #arbiter-navbar h2 {
 
     width: 300px;

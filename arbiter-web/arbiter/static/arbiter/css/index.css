@@ -13,18 +13,9 @@
 /*margin-left: 300px;*/
 /*}*/
 
-#root-guide {
-
-}
 
 #root-case {
     display: none;
-}
-
-#case_sumary_name {
-    vertical-align: middle;
-    line-height: 45px;
-    font-weight: bold;
 }
 
 #code {
