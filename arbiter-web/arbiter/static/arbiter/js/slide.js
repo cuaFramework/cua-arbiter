@@ -76,6 +76,9 @@ $(document).ready(function () {
             }
         }
     });
+    let codeFAB_app = new Vue({
+        el: '#code-float-btn',
+    });
 
     fetch("./getCaseList",
         {
@@ -95,7 +98,7 @@ $(document).ready(function () {
     }).then(
         function (json) {
             let slide_app = new Vue({
-                props: ['todo'],
+                props: [],
                 el: '#nav-slide',
                 data: function () {
                     return {

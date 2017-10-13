@@ -26,6 +26,9 @@
     width: 100%;
     height: 100%;
     size: 14px;
+    position: fixed;
+    left: 256px;
+    top: 60px;
 }
 
 #modal_log {

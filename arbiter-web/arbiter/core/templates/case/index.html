@@ -68,9 +68,10 @@
             <mu-drawer :overlay="true" id="nav-slide" :z-depth="0" :open="open" :docked="docked" @close="toggle()">
                 <mu-appbar title="Arbiter" :z-depth="2"></mu-appbar>
                 <mu-list v-for="(value, key) in modelList" :key="key">
-                    <mu-list-item :title="key" toggle-nested :open="false" >
+                    <mu-list-item :title="key" toggle-nested :open="false">
                         <mu-icon slot="left" value="wb_cloudy"></mu-icon>
-                        <mu-list-item slot="nested" :title="value" v-for="(value, key) in value" :key="value"  @click="loadCaseFile(key)">
+                        <mu-list-item slot="nested" :title="value" v-for="(value, key) in value" :key="value"
+                                      @click="loadCaseFile(key)">
                             <mu-icon slot="left" value="looks"></mu-icon>
                         </mu-list-item>
                     </mu-list-item>
@@ -83,33 +84,35 @@
                     <span id="casepath" casepath="" hidden></span>
                 </div>
                 <div id="code">
-                    <div id="code-float-btn" class="fixed-action-btn click-to-toggle"
-                         style="bottom: 45px; right: 24px;">
-                        <a class="btn-floating btn-large blue" title="操作">
-                            <i class="material-icons">pan_tool</i>
-                        </a>
-                        <ul>
-                            <li><a id="edit" class="btn-floating red"
-                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
-                                   title="编辑">
-                                <i id="save-edit-icon"
-                                   class="material-icons run-edit-i">mode_edit</i>
-                                <span>编辑</span></a>
-                            </li>
-                            <li><a id="run" class="btn-floating yellow darken-1"
-                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
-                                   title="运行">
-                                <i id="run-icon" class="material-icons run-edit-i">play_arrow</i>
-                                <span>运行</span></a>
-                            </li>
-                            <li><a id="run" class="btn-floating green darken-1"
-                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"
-                                   title="日志">
-                                <i id="log-icon" class="material-icons">message</i>
-                                <span>日志</span></a>
-                            </li>
-                        </ul>
-                    </div>
+
+                    <div id="code-float-btn" style="z-index: 1;position: fixed; bottom: 45px; right: 24px;"><mu-float-button icon="add" class="demo-float-button"/></div>
+
+{#                   <div  class="fixed-action-btn click-to-toggle">#}
+{#                        <a class="btn-floating btn-large blue" title="操作">#}
+{#                            <i class="material-icons">pan_tool</i>#}
+{#                        </a>#}
+{#                        <ul>#}
+{#                            <li><a id="edit" class="btn-floating red"#}
+{#                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"#}
+{#                                   title="编辑">#}
+{#                                <i id="save-edit-icon"#}
+{#                                   class="material-icons run-edit-i">mode_edit</i>#}
+{#                                <span>编辑</span></a>#}
+{#                            </li>#}
+{#                            <li><a id="run" class="btn-floating yellow darken-1"#}
+{#                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"#}
+{#                                   title="运行">#}
+{#                                <i id="run-icon" class="material-icons run-edit-i">play_arrow</i>#}
+{#                                <span>运行</span></a>#}
+{#                            </li>#}
+{#                            <li><a id="run" class="btn-floating green darken-1"#}
+{#                                   style="transform: scaleY(0.4) scaleX(0.4) translateY(40px) translateX(0px); opacity: 0;"#}
+{#                                   title="日志">#}
+{#                                <i id="log-icon" class="material-icons">message</i>#}
+{#                                <span>日志</span></a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </div> #}
                     <pre id="code-content"></pre>
                     <div id="modal-import" class="modal modal-fixed-footer">
                         <div class="modal-content">
@@ -146,55 +149,7 @@
                                 <i class="material-icons large cyan-text text-darken-4">done</i>
                             </div>
                             <div id="buffer-center" class="col s12 m4 center">
-                                <div class="preloader-wrapper big active">
-                                    <div class="spinner-layer spinner-blue">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
 
-                                    <div class="spinner-layer spinner-red">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="spinner-layer spinner-yellow">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="spinner-layer spinner-green">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="modal-footer modal-save-footer">
