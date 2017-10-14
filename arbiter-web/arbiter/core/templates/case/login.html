@@ -23,8 +23,8 @@
 
 {% verbatim %}
 <div class="root">
-    <div class="login">
-        <form id="login-form" @submit.prevent="submit">
+    <div id="login-form" class="login">
+        <form @submit.prevent="submit">
             <h6 id="LoginInfo" class="text-danger">{{ prompt}}</h6>
             <div>
                 <mu-text-field icon="account_circle" name="username" v-model="inputtext.username" label="用户名"

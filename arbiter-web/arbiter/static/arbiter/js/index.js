@@ -42,51 +42,6 @@ function ValidateEditWebSocket(fileName) {
     }
 }
 
-function RunWebSocketTest() {
-    let casename = getCaseName();
-    if ("WebSocket" in window) {
-        let socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
-        socket.onmessage = function (e) {
-            document.getElementById("insert").innerHTML += "<li><a>" + e.data + "</a></li>";
-
-        };
-        socket.onopen = function () {
-            socket.send("runCase " + casename);
-        };
-        // Call onopen directly if socket is already open
-        if (socket.readyState === WebSocket.OPEN)
-            socket.onopen();
-    }
-    else {
-        // 浏览器不支持 WebSocket
-        alert("您的浏览器不支持 WebSocket!");
-    }
-}
-
-/**
- * 获取caseName
- * @returns {jQuery}
- */
-function getCaseName() {
-    return $("#casepath").attr("casepath");
-
-}
-
-function setBtn(type) {
-    if (type === "save") {
-        //设置为保存按钮状态
-        let jq_edit =  $("#edit");
-        jq_edit.find("span").text("保存");
-         jq_edit.attr("title","保存");
-        $("#save-edit-icon").text("save");
-    }
-    if (type === "edit") {
-        //设置为保存按钮状态
-        $("#edit").find("span").text("编辑");
-        $("#save-edit-icon").text("mode_edit");
-    }
-}
-
 /**
  * 解决csrf问题
  * @param name
