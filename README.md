@@ -1,12 +1,13 @@
 # interface test with python
-用python实现的测试网页，对接口&网页进行测试
+用python实现的web IDE，可以导入&编辑脚本工程，对接口&网页进行测试
+也可以对测试日志进行查询和统计
+
 
 需要
 mysql存储用户信息
 redis保证实时websocket
 monogodb保存日志
 ![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/import.gif)
-![Image text](https://github.com/shimine/cua-arbiter/blob/master/doc/demo.gif)
 
 部署步骤：
 
