@@ -29,8 +29,12 @@ class CaseList:
         case_map = {}
         case_name = None
         for elem in log_list:
-            if elem.find("Preparing test case "+case_path_obj) != -1:
-                temp = elem.split("Preparing test case "+case_path_obj+".")[1]
+            if elem.find("Preparing test case ") != -1:
+                if elem.find("(")!= -1:
+                    x =  elem.split("Preparing test case ")[1]
+                    temp =x.split(" ("+case_path_obj+".")[1].split(")")[0]+"."+x.split(" (")[0]
+                else:
+                    temp = elem.split("Preparing test case "+case_path_obj+".")[1]
                 model = temp.split(".")[1]
                 case_name = temp[::-1].replace(".", ":", 2).replace(":", ".", 1)[::-1]
                 if model not in res_tree:

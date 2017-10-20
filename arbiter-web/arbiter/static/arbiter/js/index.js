@@ -10,13 +10,6 @@ function deleteAllCookies() {
 }
 
 
-
-$(document).ready(function () {
-
-
-
-});
-
 /**
  * 验证是否可编辑
  * @constructor
