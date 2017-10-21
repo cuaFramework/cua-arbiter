@@ -16,6 +16,10 @@ let navbar_app = new Vue({
                 username: username,
                 href: 'login',
             },
+            userMenuTrigger: null,
+            userMenuOpen: false,
+            appMenuTrigger: null,
+            appMenuOpen: false,
             dialog: false,
             gitUrlPrefix: '',
             gitCloneStatus: 'finish',
@@ -23,7 +27,23 @@ let navbar_app = new Vue({
         }
 
     },
+    mounted() {
+        this.userMenuTrigger = this.$refs.UserAvatar.$el
+        this.appMenuTrigger = this.$refs.appIcon.$el
+    },
     methods: {
+        userMenuToggle() {
+            this.userMenuOpen = !this.userMenuOpen
+        },
+        userMenuHandleClose(e) {
+            this.userMenuOpen = false
+        },
+        appMenuToggle() {
+            this.appMenuOpen = !this.appMenuOpen
+        },
+        appMenuHandleClose(e) {
+            this.appMenuOpen = false
+        },
         logout() {
             deleteAllCookies();
             let storage = window.localStorage;
