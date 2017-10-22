@@ -41,7 +41,7 @@
                 </mu-menu>
             </mu-popover>
              <mu-avatar v-if="message.username!=null" background-color="lime700" ref="UserAvatar" color="black" :size="40" slot="right" @click="userMenuToggle">{{
-                    message.username.substr(0, 1) }}
+                    message.username.substr(0, 2) }}
              </mu-avatar>
             <mu-popover v-if="message.username!=null" :anchor-origin={"vertical":"bottom","horizontal":"middle"} :target-origin={"vertical":"top","horizontal":"middle"} :trigger="userMenuTrigger" :open="userMenuOpen" @close="userMenuHandleClose">
                 <mu-menu>
@@ -69,7 +69,7 @@
             <mu-drawer :overlay="true" id="nav-slide" :z-depth="0" :open="open" :docked="docked" @close="toggle()">
                 <mu-appbar title="Arbiter" :z-depth="2"></mu-appbar>
                 <mu-list v-for="(value, key) in modelList" :key="key">
-                    <mu-list-item :title="key" toggle-nested :open="false">
+                    <mu-list-item :title="key" toggle-nested :open="false" @click="loadCasePaper(value)">
                         <mu-icon slot="left" value="wb_cloudy"></mu-icon>
                         <mu-list-item slot="nested" :title="value" v-for="(value, key) in value" :key="value"
                                       @click="loadCaseFile(key)">
@@ -80,6 +80,18 @@
             </mu-drawer>
         </div>
         <div id="root">
+
+
+
+            <div id="case-paper">
+                <mu-icon-button icon="android">{{ pyFileName }}</mu-icon-button>
+                <div v-for="(value, key) in caseMap">
+                    <mu-paper class="long-little-paper" :z-depth="1" :key="value" >{{ key }}</mu-paper>
+                </div>
+            </div>
+
+
+
             <div id="root-case" style="display: block;">
                 <div id="code">
                     <div id="code-float-btn" v-if="modalShow">

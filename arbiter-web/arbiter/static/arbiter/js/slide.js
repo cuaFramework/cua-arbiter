@@ -211,6 +211,13 @@ let codeFAB_app = new Vue({
         }
     }
 });
+let caseMap = {};
+let pyFileName = "";
+let casepaper_app = new Vue({
+    props: [],
+    el: '#case-paper',
+    data: {caseMap: caseMap, pyFileName: pyFileName}
+});
 
 fetch("./getCaseList",
     {
@@ -249,6 +256,17 @@ fetch("./getCaseList",
                 toggle(flag) {
                     this.open = !this.open;
                     this.docked = !flag;
+                },
+                loadCasePaper(caseMap) {
+                    casepaper_app.caseMap = caseMap;
+                    let casepath = null;
+                    for (let key of Object.keys(caseMap)) {
+                             casepath = key.substring(key.indexOf(".")+1);
+                             casepath = casepath.substring(casepath.indexOf(".")+1);
+
+                    }
+                    casepaper_app.pyFileName = casepath.split(":")[0].replace(/\./g, "/")+".py"
+
                 },
                 loadCaseFile(casePath) {
                     //guide 显示到隐藏，root-case从隐藏到显示

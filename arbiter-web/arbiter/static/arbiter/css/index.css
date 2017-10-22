@@ -32,5 +32,25 @@
     width: auto;
     bottom: 0;
     size: 14px;
+    z-index: -1;
 
+}
+
+#case-paper {
+    position: fixed;
+    left: 256px;
+    top: 60px;
+    right: 0;
+    width: auto;
+    bottom: 0;
+    size: 14px;
+    z-index: -1;
+}
+
+.long-little-paper {
+    height: 45px;
+    margin: 20px;
+    margin-right: 80px;
+    margin-left: 30px;
+    position: relative;
 }
