@@ -65,28 +65,33 @@
         </mu-dialog>
     </div>
     <div>
-        <div>
-            <mu-drawer :overlay="true" id="nav-slide" :z-depth="0" :open="open" :docked="docked" @close="toggle()">
+        <div id="nav-slide">
+            <mu-drawer :overlay="true"  :z-depth="0" :open="open" :docked="docked" @close="toggle()">
                 <mu-appbar title="Arbiter" :z-depth="2"></mu-appbar>
-                <mu-list v-for="(value, key) in modelList" :key="key">
+                <mu-list >
+                        <mu-list v-for="(value, key) in modelList" :key="key">
                     <mu-list-item :title="key" toggle-nested :open="false" @click="loadCasePaper(value)">
                         <mu-icon slot="left" value="wb_cloudy"></mu-icon>
-                        <mu-list-item slot="nested" :title="value" v-for="(value, key) in value" :key="value"
-                                      @click="loadCaseFile(key)">
+                        <mu-list-item slot="nested" :title="key" v-for="(value, key) in value" v-if="(typeof value)==='object'" :key="key"
+                                      @click="loadCasePaper(value)">
                             <mu-icon slot="left" value="looks"></mu-icon>
+                                <mu-list-item slot="nested" :title="key" v-for="(value, key) in value" v-if="(typeof value)==='object'" :key="key"
+                                          @click="loadAllCasePaper(value)">
+                                <mu-icon slot="left" value="wb_sunny"></mu-icon>
+                            </mu-list-item>
                         </mu-list-item>
                     </mu-list-item>
+                </mu-list>
                 </mu-list>
             </mu-drawer>
         </div>
         <div id="root">
-
-
-
             <div id="case-paper">
-                <mu-icon-button icon="android">{{ pyFileName }}</mu-icon-button>
                 <div v-for="(value, key) in caseMap">
-                    <mu-paper class="long-little-paper" :z-depth="1" :key="value" >{{ key }}</mu-paper>
+                <mu-icon-button icon="android">{{ key }}</mu-icon-button>
+                <div v-for="(value, key) in value">
+                    <mu-paper class="long-little-paper" :z-depth="1" :key="key" >{{ value }}</mu-paper>
+                </div>
                 </div>
             </div>
 

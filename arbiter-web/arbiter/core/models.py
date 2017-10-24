@@ -11,7 +11,34 @@ from mongoengine import *
 
 # Create your models here.
 # case模型
+def Splitmap(src_map,i):
+    dst_map = {}
+    for case_path, case_name in src_map.items():
+        pathArry = case_path.split(":")[0].split(".")
+        if len(pathArry)>i+1:
+            if pathArry[i] not in dst_map:
+                dst_map[pathArry[i]]={}
+            dst_map[pathArry[i]][case_path] = case_name
+        else:
+            dst_map[case_path] = case_name
+    i=i+1
+    for k, y in dst_map.items():
+        if isinstance(y, dict):
+            dst_map[k]=Splitmap(y,i)
+    return dst_map
+
+
+def refact(src_map):
+    dst_map = {}
+    for model, cases in src_map.items():
+        if model not in dst_map:
+            dst_map[model]={}
+        dst_map[model]=Splitmap(cases,2)
+    return dst_map
+
+
 class CaseList:
+
     @staticmethod
     def getList():
         runcmd = Popen(['nosetests', '-vvv', '--collect-only', '-w', '../arbiter-cases'], bufsize=0,
@@ -35,6 +62,7 @@ class CaseList:
                     temp =x.split(" ("+case_path_obj+".")[1].split(")")[0]+"."+x.split(" (")[0]
                 else:
                     temp = elem.split("Preparing test case "+case_path_obj+".")[1]
+
                 model = temp.split(".")[1]
                 case_name = temp[::-1].replace(".", ":", 2).replace(":", ".", 1)[::-1]
                 if model not in res_tree:
@@ -48,4 +76,5 @@ class CaseList:
                 if case_class in des_str:
                     des_str = des_str.split(case_class+".")[1].split(".", 1)[1]
                 case_map[case_name] = des_str
+        res_tree = refact(res_tree)
         return res_tree

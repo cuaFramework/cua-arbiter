@@ -8,6 +8,8 @@ let Event = new Vue();
 let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
+
+
 let navbar_app = new Vue({
     el: '#arbiter-navbar',
     data: function () {
@@ -28,8 +30,8 @@ let navbar_app = new Vue({
 
     },
     mounted() {
-        this.userMenuTrigger = this.$refs.UserAvatar.$el
-        this.appMenuTrigger = this.$refs.appIcon.$el
+        this.userMenuTrigger = this.$refs.UserAvatar.$el,
+            this.appMenuTrigger = this.$refs.appIcon.$el
     },
     methods: {
         userMenuToggle() {
@@ -141,7 +143,7 @@ let codeFAB_app = new Vue({
             this.logContent = [];
         },
         run() {
-            if (username == null) {
+            if (username === null) {
                 window.location.href = "login";
             }
             else {
@@ -160,17 +162,17 @@ let codeFAB_app = new Vue({
             this.logDialog = true;
         },
         edit() {
-            if (username == null) {
+            if (username === null) {
                 window.location.href = "login";
             }
             let codeContent = ace.edit("code-content");
-            if (this.editIcon == "mode_edit") {
+            if (this.editIcon === "mode_edit") {
 
                 codeContent.setReadOnly(false);//设置为可编辑模式
                 codeContent.setTheme("ace/theme/chrome");//设置可编辑状态主题
                 this.editIcon = "save";
             }
-            else if (this.editIcon == "save") {
+            else if (this.editIcon === "save") {
 
                 this.saveStatus = "running";
                 this.saveDialog = true;
@@ -212,11 +214,10 @@ let codeFAB_app = new Vue({
     }
 });
 let caseMap = {};
-let pyFileName = "";
 let casepaper_app = new Vue({
     props: [],
     el: '#case-paper',
-    data: {caseMap: caseMap, pyFileName: pyFileName}
+    data: {caseMap: caseMap}
 });
 
 fetch("./getCaseList",
@@ -236,6 +237,8 @@ fetch("./getCaseList",
         return response.json();
 }).then(
     function (json) {
+
+
         let slide_app = new Vue({
             props: [],
             el: '#nav-slide',
@@ -245,7 +248,8 @@ fetch("./getCaseList",
                     docked: true,
                     modelList: json
                 }
-            }, mounted() {
+            }//components: { arbiter_list: arbiter_list }
+            , mounted() {
                 let _this = this;
                 Event.$on('toggle-slide', function () {
                     _this.open = !_this.open;
@@ -256,17 +260,69 @@ fetch("./getCaseList",
                 toggle(flag) {
                     this.open = !this.open;
                     this.docked = !flag;
-                },
-                loadCasePaper(caseMap) {
-                    casepaper_app.caseMap = caseMap;
+                }, loadCasePaper(caseMap) {
+                    let paperMap = {};
                     let casepath = null;
-                    for (let key of Object.keys(caseMap)) {
-                             casepath = key.substring(key.indexOf(".")+1);
-                             casepath = casepath.substring(casepath.indexOf(".")+1);
+                    for (var [key, value] of Object.entries(caseMap)) {
+                        let casepath = key.substring(key.indexOf(".") + 1);
+                        casepath = casepath.substring(casepath.indexOf(".") + 1);
+                        let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                        if (!!paperMap[pyfilepath] === false) {
+                            paperMap[pyfilepath] = {};
+                        }
+                        paperMap[pyfilepath][key] = value;
 
                     }
-                    casepaper_app.pyFileName = casepath.split(":")[0].replace(/\./g, "/")+".py"
+                    casepaper_app.caseMap = paperMap;
+                    console.log(paperMap);
+                    // casepaper_app.pyFileName = casepath.split(":")[0].replace(/\./g, "/")+".py"
 
+                },
+                loadAllCasePaper(caseMap) {
+                    let paperMap = {};
+                    let casepath = null;
+                    for (let [key, value] of Object.entries(caseMap)) {
+                        if (typeof value !== "object") {
+                            let casepath = key.substring(key.indexOf(".") + 1);
+                            casepath = casepath.substring(casepath.indexOf(".") + 1);
+                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                            if (!!paperMap[pyfilepath] === false) {
+                                paperMap[pyfilepath] = {};
+                            }
+                            paperMap[pyfilepath][key] = value;
+                        }
+                        else {
+                            for (let [k, y] of Object.entries(value)) {
+                                let casepath = k.substring(k.indexOf(".") + 1);
+                            casepath = casepath.substring(casepath.indexOf(".") + 1);
+                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                            if (!!paperMap[pyfilepath] === false) {
+                                paperMap[pyfilepath] = {};
+                            }
+                            paperMap[pyfilepath][key] = y;
+
+                            }
+                        }
+
+                    }
+                    casepaper_app.caseMap = paperMap;
+
+                },
+                loadCasePaper(caseMap) {
+                    let paperMap = {};
+                    let casepath = null;
+                    for (var [key, value] of Object.entries(caseMap)) {
+                        if (typeof value !== "object") {
+                            let casepath = key.substring(key.indexOf(".") + 1);
+                            casepath = casepath.substring(casepath.indexOf(".") + 1);
+                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                            if (!!paperMap[pyfilepath] === false) {
+                                paperMap[pyfilepath] = {};
+                            }
+                            paperMap[pyfilepath][key] = value;
+                        }
+                    }
+                    casepaper_app.caseMap = paperMap;
                 },
                 loadCaseFile(casePath) {
                     //guide 显示到隐藏，root-case从隐藏到显示
