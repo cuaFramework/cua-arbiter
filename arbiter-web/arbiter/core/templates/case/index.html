@@ -90,7 +90,9 @@
                 <div v-for="(value, key) in caseMap">
                 <mu-icon-button icon="android">{{ key }}</mu-icon-button>
                 <div v-for="(value, key) in value">
-                    <mu-paper class="long-little-paper" :z-depth="1" :key="key" >{{ value }}</mu-paper>
+                    <mu-paper class="long-little-paper" :z-depth="1" :key="key" >{{ value }}
+                     <mu-float-button id="run" @click="run(key)" icon="play_arrow" secondary mini class="demo-float-button" style="bottom: 6px; right: 3px;"></mu-float-button>
+                    </mu-paper>
                 </div>
                 </div>
             </div>

@@ -30,8 +30,10 @@ let navbar_app = new Vue({
 
     },
     mounted() {
-        this.userMenuTrigger = this.$refs.UserAvatar.$el,
-            this.appMenuTrigger = this.$refs.appIcon.$el
+        if(!!this.$refs.UserAvatar){
+            this.userMenuTrigger = this.$refs.UserAvatar.$el;
+        }
+            this.appMenuTrigger = this.$refs.appIcon.$el;
     },
     methods: {
         userMenuToggle() {
@@ -217,7 +219,29 @@ let caseMap = {};
 let casepaper_app = new Vue({
     props: [],
     el: '#case-paper',
-    data: {caseMap: caseMap}
+    data: {caseMap: caseMap},
+    methods:{
+
+        run(testCase){
+            if (username === null) {
+                window.location.href = "login";
+            }
+            else {
+                run_socket.onmessage = (res) => {
+                    this.logContent.push(res.data);
+                    //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
+
+                };
+                run_socket.onopen = function () {
+                    run_socket.send("runCase " + testCase);
+                };
+                // Call onopen directly if socket is already open
+                if (run_socket.readyState === WebSocket.OPEN)
+                    run_socket.onopen();
+            }
+            this.logDialog = true;
+    }
+    }
 });
 
 fetch("./getCaseList",
