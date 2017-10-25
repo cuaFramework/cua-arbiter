@@ -73,6 +73,9 @@ class CaseList:
                     temp[::-1].replace(".", ":", 2).replace(":", ".", 1)[::-1])
             elif elem.find(" ... ok") != -1:
                 des_str = elem.split(" ...")[0]
+                if elem.find("(") != -1:
+                    temp_str = des_str.split(")")[0].split(".")
+                    des_str = temp_str[len(temp_str)-1] + "." + des_str.split(" (")[0]
                 if case_class in des_str:
                     des_str = des_str.split(case_class+".")[1].split(".", 1)[1]
                 case_map[case_name] = des_str

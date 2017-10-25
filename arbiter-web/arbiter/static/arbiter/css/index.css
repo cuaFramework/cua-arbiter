@@ -1,6 +1,10 @@
-.col {
 
-    padding: 0 !important;
+body {
+    background-color: #f2f2f2;
+}
+.mu-drawer
+{
+    background-color: #f2f2f2;
 }
 
 #slide-nav {
@@ -46,6 +50,39 @@
     size: 14px;
     z-index: -1;
 }
+
+.flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.grey-text {
+    color:#9e9e9e;
+}
+
+.brown800-text {
+    color:#4e342e;
+}
+
+.paper-casename {
+    margin-left: 30px;
+}
+
+.paper-pyname {
+    margin-left: 100px;
+}
+
+.red-icon {
+    color:#ff5722;
+}
+
+
+.green-icon {
+    color:#8bc34a;
+}
+
 
 .long-little-paper {
     height: 45px;

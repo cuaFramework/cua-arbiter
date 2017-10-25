@@ -30,10 +30,10 @@ let navbar_app = new Vue({
 
     },
     mounted() {
-        if(!!this.$refs.UserAvatar){
+        if (!!this.$refs.UserAvatar) {
             this.userMenuTrigger = this.$refs.UserAvatar.$el;
         }
-            this.appMenuTrigger = this.$refs.appIcon.$el;
+        this.appMenuTrigger = this.$refs.appIcon.$el;
     },
     methods: {
         userMenuToggle() {
@@ -104,12 +104,13 @@ let codeFAB_app = new Vue({
     el: '#code-float-btn',
     data: function () {
         return {
-            modalShow: false,
+            modalShow: true,
             seen: false,
             editIcon: "mode_edit",
             saveDialog: false,
             logDialog: false,
             saveStatus: 'finish',
+            casefullname: '',
             logContent: [],
         }
     }, mounted() {
@@ -154,8 +155,8 @@ let codeFAB_app = new Vue({
                     //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
 
                 };
-                run_socket.onopen = function () {
-                    run_socket.send("runCase " + casefullname);
+                run_socket.onopen = () => {
+                    run_socket.send("runCase " + this.casefullname);
                 };
                 // Call onopen directly if socket is already open
                 if (run_socket.readyState === WebSocket.OPEN)
@@ -188,7 +189,7 @@ let codeFAB_app = new Vue({
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({casepath: casefullname, content: newCodeContent})
+                        body: JSON.stringify({casepath: this.casefullname, content: newCodeContent})
                     }).then((response) => {
                     if (response.status !== 200) {
                         console.log("请求失败，状态码为：" + response.status);
@@ -220,27 +221,13 @@ let casepaper_app = new Vue({
     props: [],
     el: '#case-paper',
     data: {caseMap: caseMap},
-    methods:{
+    methods: {
 
-        run(testCase){
-            if (username === null) {
-                window.location.href = "login";
-            }
-            else {
-                run_socket.onmessage = (res) => {
-                    this.logContent.push(res.data);
-                    //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
+        run(testcase) {
+            codeFAB_app.casefullname = testcase;
+            codeFAB_app.run();
 
-                };
-                run_socket.onopen = function () {
-                    run_socket.send("runCase " + testCase);
-                };
-                // Call onopen directly if socket is already open
-                if (run_socket.readyState === WebSocket.OPEN)
-                    run_socket.onopen();
-            }
-            this.logDialog = true;
-    }
+        }
     }
 });
 
@@ -270,16 +257,21 @@ fetch("./getCaseList",
                 return {
                     open: true,
                     docked: true,
-                    modelList: json
+                    modelList: json,
+                    value:""
                 }
-            }//components: { arbiter_list: arbiter_list }
-            , mounted() {
+            },
+            mounted() {
                 let _this = this;
                 Event.$on('toggle-slide', function () {
                     _this.open = !_this.open;
                 });
             },
             methods: {
+                handleChange(val) {
+                    this.value = val;
+                    console.log(val);
+                },
 
                 toggle(flag) {
                     this.open = !this.open;
@@ -287,7 +279,7 @@ fetch("./getCaseList",
                 }, loadCasePaper(caseMap) {
                     let paperMap = {};
                     let casepath = null;
-                    for (var [key, value] of Object.entries(caseMap)) {
+                    for (let [key, value] of Object.entries(caseMap)) {
                         let casepath = key.substring(key.indexOf(".") + 1);
                         casepath = casepath.substring(casepath.indexOf(".") + 1);
                         let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
@@ -298,8 +290,6 @@ fetch("./getCaseList",
 
                     }
                     casepaper_app.caseMap = paperMap;
-                    console.log(paperMap);
-                    // casepaper_app.pyFileName = casepath.split(":")[0].replace(/\./g, "/")+".py"
 
                 },
                 loadAllCasePaper(caseMap) {
@@ -318,12 +308,12 @@ fetch("./getCaseList",
                         else {
                             for (let [k, y] of Object.entries(value)) {
                                 let casepath = k.substring(k.indexOf(".") + 1);
-                            casepath = casepath.substring(casepath.indexOf(".") + 1);
-                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                            if (!!paperMap[pyfilepath] === false) {
-                                paperMap[pyfilepath] = {};
-                            }
-                            paperMap[pyfilepath][key] = y;
+                                casepath = casepath.substring(casepath.indexOf(".") + 1);
+                                let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                                if (!!paperMap[pyfilepath] === false) {
+                                    paperMap[pyfilepath] = {};
+                                }
+                                paperMap[pyfilepath][k] = y;
 
                             }
                         }
@@ -335,7 +325,7 @@ fetch("./getCaseList",
                 loadCasePaper(caseMap) {
                     let paperMap = {};
                     let casepath = null;
-                    for (var [key, value] of Object.entries(caseMap)) {
+                    for (let [key, value] of Object.entries(caseMap)) {
                         if (typeof value !== "object") {
                             let casepath = key.substring(key.indexOf(".") + 1);
                             casepath = casepath.substring(casepath.indexOf(".") + 1);

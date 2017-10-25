@@ -33,17 +33,22 @@
             <mu-icon-button v-if="message.username!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat"
                             slot="right"></mu-icon-button>
             <mu-icon-button icon="apps" slot="right" ref="appIcon" @click="appMenuToggle"></mu-icon-button>
-            <mu-popover v-if="message.username!=null" :anchor-origin={"vertical":"bottom","horizontal":"middle"} :target-origin={"vertical":"top","horizontal":"middle"} :trigger="appMenuTrigger" :open="appMenuOpen" @close="appMenuHandleClose">
+            <mu-popover v-if="message.username!=null" :anchor-origin={"vertical":"bottom","horizontal":"middle"}
+                        :target-origin={"vertical":"top","horizontal":"middle"} :trigger="appMenuTrigger"
+                        :open="appMenuOpen" @close="appMenuHandleClose">
                 <mu-menu>
                     <mu-menu-item title="用例导入" left-icon="add" @click="openImportDialog"></mu-menu-item>
                     <mu-menu-item title="用例管理" left-icon="mode_edit"></mu-menu-item>
                     <mu-menu-item href="./wholog" title="日志查询" left-icon="history"></mu-menu-item>
                 </mu-menu>
             </mu-popover>
-             <mu-avatar v-if="message.username!=null" background-color="lime700" ref="UserAvatar" color="black" :size="40" slot="right" @click="userMenuToggle">{{
-                    message.username.substr(0, 2) }}
-             </mu-avatar>
-            <mu-popover v-if="message.username!=null" :anchor-origin={"vertical":"bottom","horizontal":"middle"} :target-origin={"vertical":"top","horizontal":"middle"} :trigger="userMenuTrigger" :open="userMenuOpen" @close="userMenuHandleClose">
+            <mu-avatar v-if="message.username!=null" background-color="lime700" ref="UserAvatar" color="black"
+                       :size="40" slot="right" @click="userMenuToggle">{{
+                message.username.substr(0, 2) }}
+            </mu-avatar>
+            <mu-popover v-if="message.username!=null" :anchor-origin={"vertical":"bottom","horizontal":"middle"}
+                        :target-origin={"vertical":"top","horizontal":"middle"} :trigger="userMenuTrigger"
+                        :open="userMenuOpen" @close="userMenuHandleClose">
                 <mu-menu>
                     <mu-menu-item title="设置" left-icon="settings"></mu-menu-item>
                     <mu-menu-item title="帮助" left-icon="help_outline"></mu-menu-item>
@@ -56,7 +61,8 @@
         </mu-appbar>
         <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
             <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix"
-                           label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100" label-float></mu-text-field>
+                           label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100"
+                           label-float></mu-text-field>
             <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary
                             label="取消"></mu-flat-button>
             <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="cloneCaseObj" primary
@@ -66,67 +72,82 @@
     </div>
     <div>
         <div id="nav-slide">
-            <mu-drawer :overlay="true"  :z-depth="0" :open="open" :docked="docked" @close="toggle()">
+            <mu-drawer :overlay="true" :z-depth="0" :open="open" :docked="docked" @close="toggle()">
                 <mu-appbar title="Arbiter" :z-depth="2"></mu-appbar>
-                <mu-list >
-                        <mu-list v-for="(value, key) in modelList" :key="key">
-                    <mu-list-item :title="key" toggle-nested :open="false" @click="loadCasePaper(value)">
-                        <mu-icon slot="left" value="wb_cloudy"></mu-icon>
-                        <mu-list-item slot="nested" :title="key" v-for="(value, key) in value" v-if="(typeof value)==='object'" :key="key"
-                                      @click="loadCasePaper(value)">
-                            <mu-icon slot="left" value="looks"></mu-icon>
-                                <mu-list-item slot="nested" :title="key" v-for="(value, key) in value" v-if="(typeof value)==='object'" :key="key"
-                                          @click="loadAllCasePaper(value)">
-                                <mu-icon slot="left" value="wb_sunny"></mu-icon>
+                <mu-list :value="value" @change="handleChange">
+                    <div v-for="(value, key) in modelList" :key="key">
+                        <mu-list-item :title="key" :value="key" toggle-nested :open="false"
+                                      @click="loadCasePaper(value)" inset>
+                            <mu-icon slot="left" value="wb_cloudy"></mu-icon>
+                            <mu-list-item slot="nested" :value="key+kx" :title="kx" v-for="(vx, kx) in value"
+                                          v-if="(typeof vx)==='object'" :key="kx"
+                                          @click="loadCasePaper(vx)" inset>
+                                <mu-icon slot="left" value="looks"></mu-icon>
+                                <mu-list-item slot="nested" :value="key+kx+ky" :title="ky" v-for="(vy, ky) in vx"
+                                              v-if="(typeof vy)==='object'" :key="ky"
+                                              @click="loadAllCasePaper(vy)" inset>
+                                    <mu-icon slot="left" value="wb_sunny"></mu-icon>
+                                </mu-list-item>
                             </mu-list-item>
                         </mu-list-item>
-                    </mu-list-item>
-                </mu-list>
+                    </div>
                 </mu-list>
             </mu-drawer>
         </div>
         <div id="root">
             <div id="case-paper">
                 <div v-for="(value, key) in caseMap">
-                <mu-icon-button icon="android">{{ key }}</mu-icon-button>
-                <div v-for="(value, key) in value">
-                    <mu-paper class="long-little-paper" :z-depth="1" :key="key" >{{ value }}
-                     <mu-float-button id="run" @click="run(key)" icon="play_arrow" secondary mini class="demo-float-button" style="bottom: 6px; right: 3px;"></mu-float-button>
-                    </mu-paper>
-                </div>
+                    <div><div class="flex-between"><b class="grey-text paper-pyname">{{ key }}</b>
+                        <mu-icon-button icon="delete" icon-class="red-icon" ></mu-icon-button></div> </div>
+                    <div v-for="(value, key) in value">
+                        <mu-paper class="long-little-paper" :z-depth="1" :key="key">
+                            <div class="flex-between"><i class="brown800-text paper-casename">{{ value }}</i>
+                            <mu-icon-button icon="play_arrow" icon-class="green-icon" @click="run(key,value)"></mu-icon-button>
+                            </div>
+                        </mu-paper>
+                    </div>
                 </div>
             </div>
-
 
 
             <div id="root-case" style="display: block;">
                 <div id="code">
                     <div id="code-float-btn" v-if="modalShow">
-                        <div  style="z-index: 1;position: fixed; bottom: 45px; right: 24px;" @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
-                        <mu-float-button id="edit" @click="edit()" :icon="editIcon" secondary mini class="demo-float-button" v-show="seen" style="bottom: 6px; right: 3px;"></mu-float-button>
-                        <mu-float-button id="run" @click="run()" icon="play_arrow" secondary mini class="demo-float-button" v-show="seen" style="bottom: 6px; right: 3px;"></mu-float-button>
-                        <mu-float-button id="log" @click="log()" icon="message" secondary mini class="demo-float-button" v-show="seen" style="bottom: 6px; right: 3px;"></mu-float-button>
-                        <mu-float-button id="edit" icon="add" class="demo-float-button" ></mu-float-button>
+                        <div style="z-index: 1;position: fixed; bottom: 45px; right: 24px;"
+                             @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
+                            <mu-float-button id="edit" @click="edit()" :icon="editIcon" secondary mini
+                                             class="demo-float-button" v-show="seen"
+                                             style="bottom: 6px; right: 3px;"></mu-float-button>
+                            <mu-float-button id="run" @click="run()" icon="play_arrow" secondary mini
+                                             class="demo-float-button" v-show="seen"
+                                             style="bottom: 6px; right: 3px;"></mu-float-button>
+                            <mu-float-button id="log" @click="log()" icon="message" secondary mini
+                                             class="demo-float-button" v-show="seen"
+                                             style="bottom: 6px; right: 3px;"></mu-float-button>
+                            <mu-float-button id="edit" icon="add" class="demo-float-button"></mu-float-button>
                         </div>
                         <div>
                             <mu-dialog :open="saveDialog" title="保存中">
-                                <mu-linear-progress v-if="saveStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
+                                <mu-linear-progress v-if="saveStatus == 'running'" :size="10"
+                                                    color="blue"></mu-linear-progress>
                             </mu-dialog>
-                         </div>
-                         <div >
-                              <mu-dialog dialog-class="log-dialog" :open="logDialog" @close="closeLogDialog" title="运行日志"  scrollable>
-                                       <p v-for="log, index in logContent" :key="index">{{ log }}</p>
-                                      <mu-flat-button primary label="清空" @click="cleanLog" slot="actions"></mu-flat-button>
-                                      <mu-flat-button primary label="关闭" @click="closeLogDialog" slot="actions"></mu-flat-button>
-                              </mu-dialog>
+                        </div>
+                        <div>
+                            <mu-dialog dialog-class="log-dialog" :open="logDialog" @close="closeLogDialog" title="运行日志"
+                                       scrollable>
+                                <p v-for="log, index in logContent" :key="index">{{ log }}</p>
+                                <mu-flat-button primary label="清空" @click="cleanLog" slot="actions"></mu-flat-button>
+                                <mu-flat-button primary label="关闭" @click="closeLogDialog"
+                                                slot="actions"></mu-flat-button>
+                            </mu-dialog>
                         </div>
                     </div>
-                    <pre id="code-content"></pre>
+                    <!--  <pre id="code-content"></pre> -->
                 </div>
             </div>
         </div>
     </div>
-     {% endverbatim %}
+    {% endverbatim %}
 </div>
 <script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/slide.js' %}" type="text/javascript" charset="utf-8"></script>
