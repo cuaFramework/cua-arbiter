@@ -71,7 +71,7 @@ body {
 }
 
 .paper-pyname {
-    margin-left: 100px;
+    margin-left: 30px;
 }
 
 .red-icon {
@@ -86,7 +86,7 @@ body {
 
 .long-little-paper {
     height: 45px;
-    margin: 20px;
+    margin-bottom: 20px;
     margin-right: 80px;
     margin-left: 30px;
     position: relative;
