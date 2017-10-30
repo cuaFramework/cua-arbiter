@@ -11,8 +11,8 @@ urlpatterns = [
     url(r'^save', views.auth_restful.save_casefile, name='save'),
     url(r'^getCaseList', views.restful.get_caselist),
     url(r'^cloneCaseObj', views.restful.get_caseobj),
-   url(r'^$', views.index, name='index'),
-    url(r'^.*/$', RedirectView.as_view(url='/arbiter', permanent=False)),
+    url(r'^$', views.index, name='index'),
+    url(r'^.*$', views.index),
     # url(r'^(?P<case_name>[\w.:]+)/editor/$', views.editor, name='editor'),
 
 ]

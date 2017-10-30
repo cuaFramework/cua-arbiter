@@ -14,7 +14,7 @@ import os
 
 import datetime
 from config import arbiter_prod_config
-
+APPEND_SLASH=False
 env_config = arbiter_prod_config
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']

@@ -9,7 +9,7 @@ let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
 
-Vue.component('navbar_app', {
+const ArbiterNavbar = {
     template: '#arbiterNavbar'
     , data: function () {
         return {
@@ -100,9 +100,8 @@ Vue.component('navbar_app', {
         }
     }
 
-});
-
-Vue.component('slide_app', {
+};
+const ArbiterSlide = {
     template: '#arbiterNavSlide'
     ,
     data() {
@@ -222,8 +221,8 @@ Vue.component('slide_app', {
             xhr.send(null);
         }
     }
-});
-Vue.component('code_float_btn', {
+};
+const CodeFloatBtn = {
     template: '#codeFloatBtn',
     data: function () {
         return {
@@ -243,7 +242,7 @@ Vue.component('code_float_btn', {
             _this.logContent = [];
             _this.modalShow = true;
         });
-             Event.$on('run-case', function (casefullname) {
+        Event.$on('run-case', function (casefullname) {
             _this.casefullname = casefullname;
             _this.run();
         });
@@ -343,8 +342,8 @@ Vue.component('code_float_btn', {
 
         }
     }
-});
-Vue.component('case_paper', {
+};
+const CasePaper = {
     template: '#casePaper',
     data() {
         return {caseMap: {}}
@@ -359,44 +358,47 @@ Vue.component('case_paper', {
     methods: {
 
         run(testcase) {
-            Event.$emit('run-case',testcase);
+            Event.$emit('run-case', testcase);
 
         }
     }
-});
+};
 
 const router = new VueRouter({
-  mode: 'history',
-  base: __dirname,
-  routes: [
-    { path: '/', component: Hello }, // No props, no nothing
-    { path: '/hello/:name', component: Hello, props: true }, // Pass route.params to props
-    { path: '/static', component: Hello, props: { name: 'world' }}, // static values
-    { path: '/dynamic/:years', component: Hello, props: dynamicPropsFn }, // custom logic for mapping between route and props
-    { path: '/attrs', component: Hello, props: { name: 'attrs' }}
-  ]
+    mode: 'history',
+  //  base: "arbiter",
+    routes: [
+        {path: '/arbiter/'}, // No props, no nothing
+        {path: '/arbiter/:casemodel/:name/', components: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // Pass route.params to props
+        {path: '/arbiter/:casemodel/', component: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // static values
+    ]
 });
 
 let navbar_app = new Vue({
     router,
     el: '#app',
+    components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
+        'ArbiterNavbar': ArbiterNavbar,
+        'ArbiterSlide': ArbiterSlide,
+        'CodeFloatBtn': CodeFloatBtn,
+        'CasePaper': CasePaper,
+    }
 });
 
 
-
-new Vue({
-  router,
-  template: `
-    <div id="app">
-      <h1>Route props</h1>
-      <ul>
-        <li><router-link to="/">/</router-link></li>
-        <li><router-link to="/hello/you">/hello/you</router-link></li>
-        <li><router-link to="/static">/static</router-link></li>
-        <li><router-link to="/dynamic/1">/dynamic/1</router-link></li>
-        <li><router-link to="/attrs">/attrs</router-link></li>
-      </ul>
-      <router-view class="view" foo="123"></router-view>
-    </div>
-  `
-})
+// new Vue({
+//     router,
+//     template: `
+//     <div id="app">
+//       <h1>Route props</h1>
+//       <ul>
+//         <li><router-link to="/">/</router-link></li>
+//         <li><router-link to="/hello/you">/hello/you</router-link></li>
+//         <li><router-link to="/static">/static</router-link></li>
+//         <li><router-link to="/dynamic/1">/dynamic/1</router-link></li>
+//         <li><router-link to="/attrs">/attrs</router-link></li>
+//       </ul>
+//       <router-view class="view" foo="123"></router-view>
+//     </div>
+//   `
+// })

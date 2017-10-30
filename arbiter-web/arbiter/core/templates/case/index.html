@@ -27,15 +27,17 @@
 <div class="arbiter-container">
     {% verbatim %}
     <div id="app">
-        <navbar_app></navbar_app>
+        <arbiter-navbar></arbiter-navbar>
         <div>
             <div id="root">
-                <case_paper></case_paper>
+                <router-view name="paper"></router-view>
+               <!--   <case-paper></case-paper>-->
 
-                <slide_app></slide_app>
+                <arbiter-slide></arbiter-slide>
                 <div id="root-case" style="display: block;">
                     <div id="code">
-                        <code_float_btn><</code_float_btn>
+                        <router-view name="cfab"></router-view>
+                      <!--   <code-float-btn><</code-float-btn>-->
                         <!--  <pre id="code-content"></pre> -->
                     </div>
                 </div>
