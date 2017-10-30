@@ -9,9 +9,9 @@ let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
 
-Vue.component('navbar_app',{
-            template: '#arbiterNavbar'
-            ,data: function () {
+Vue.component('navbar_app', {
+    template: '#arbiterNavbar'
+    , data: function () {
         return {
             message: {
                 username: username,
@@ -28,13 +28,14 @@ Vue.component('navbar_app',{
         }
 
     },
-        mounted() {
+    mounted() {
+        this.appMenuTrigger = this.$refs.appIcon.$el;
         if (!!this.$refs.UserAvatar) {
             this.userMenuTrigger = this.$refs.UserAvatar.$el;
         }
-        this.appMenuTrigger = this.$refs.appIcon.$el;
+
     },
-        methods: {
+    methods: {
         userMenuToggle() {
             this.userMenuOpen = !this.userMenuOpen
         },
@@ -99,129 +100,131 @@ Vue.component('navbar_app',{
         }
     }
 
+});
+
+Vue.component('slide_app', {
+    template: '#arbiterNavSlide'
+    ,
+    data() {
+
+        this.$http.post("./getCaseList").then(function (response) {
+            if (response.status !== 200
+            ) {
+                console.log("存在一个问题，状态码为：" + response.status);
+                return false;
+            }
+            else
+                return response.json();
+        }).then(
+            function (json) {
+                this.modelList = json;
+                document.getElementsByTagName("body")[0].style.display = "";
+            });
+
+        return {
+            open: true,
+            docked: true,
+            modelList: {},
+            value: ""
+        }
+    },
+    mounted() {
+        let _this = this;
+        Event.$on('toggle-slide', function () {
+            _this.open = !_this.open;
         });
 
-Vue.component('slide_app',{ template: '#arbiterNavSlide'
-            ,
-            props: {json:{}},
-            data: function () {
-                return {
-                    open: true,
-                    docked: true,
-                    modelList: this.json,
-                    value:""
-                }
-            },
-            mounted() {
-                let _this = this;
-                Event.$on('toggle-slide', function () {
-                    _this.open = !_this.open;
-                });
-            },
-            methods: {
-                handleChange(val) {
-                    this.value = val;
-                    console.log(val);
-                },
 
-                toggle(flag) {
-                    this.open = !this.open;
-                    this.docked = !flag;
-                }, loadCasePaper(caseMap) {
-                    let paperMap = {};
-                    let casepath = null;
-                    for (let [key, value] of Object.entries(caseMap)) {
-                        let casepath = key.substring(key.indexOf(".") + 1);
+    },
+    methods: {
+        handleChange(val) {
+            this.value = val;
+        },
+
+        toggle() {
+            this.open = !this.open;
+        },
+        loadAllCasePaper(caseMap) {
+            let paperMap = {};
+            let casepath = null;
+            for (let [key, value] of Object.entries(caseMap)) {
+                if (typeof value !== "object") {
+                    let casepath = key.substring(key.indexOf(".") + 1);
+                    casepath = casepath.substring(casepath.indexOf(".") + 1);
+                    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                    if (!!paperMap[pyfilepath] === false) {
+                        paperMap[pyfilepath] = {};
+                    }
+                    paperMap[pyfilepath][key] = value;
+                }
+                else {
+                    for (let [k, y] of Object.entries(value)) {
+                        let casepath = k.substring(k.indexOf(".") + 1);
                         casepath = casepath.substring(casepath.indexOf(".") + 1);
                         let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
                         if (!!paperMap[pyfilepath] === false) {
                             paperMap[pyfilepath] = {};
                         }
-                        paperMap[pyfilepath][key] = value;
+                        paperMap[pyfilepath][k] = y;
 
                     }
-                    casepaper_app.caseMap = paperMap;
+                }
 
-                },
-                loadAllCasePaper(caseMap) {
-                    let paperMap = {};
-                    let casepath = null;
-                    for (let [key, value] of Object.entries(caseMap)) {
-                        if (typeof value !== "object") {
-                            let casepath = key.substring(key.indexOf(".") + 1);
-                            casepath = casepath.substring(casepath.indexOf(".") + 1);
-                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                            if (!!paperMap[pyfilepath] === false) {
-                                paperMap[pyfilepath] = {};
-                            }
-                            paperMap[pyfilepath][key] = value;
-                        }
-                        else {
-                            for (let [k, y] of Object.entries(value)) {
-                                let casepath = k.substring(k.indexOf(".") + 1);
-                                casepath = casepath.substring(casepath.indexOf(".") + 1);
-                                let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                                if (!!paperMap[pyfilepath] === false) {
-                                    paperMap[pyfilepath] = {};
-                                }
-                                paperMap[pyfilepath][k] = y;
+            }
+            Event.$emit('change-paper', paperMap);
+            //casepaper_app.caseMap = paperMap;
 
-                            }
-                        }
-
+        },
+        loadCasePaper(caseMap) {
+            console.log("xxx")
+            let paperMap = {};
+            let casepath = null;
+            for (let [key, value] of Object.entries(caseMap)) {
+                if (typeof value !== "object") {
+                    let casepath = key.substring(key.indexOf(".") + 1);
+                    casepath = casepath.substring(casepath.indexOf(".") + 1);
+                    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                    if (!!paperMap[pyfilepath] === false) {
+                        paperMap[pyfilepath] = {};
                     }
-                    casepaper_app.caseMap = paperMap;
-
-                },
-                loadCasePaper(caseMap) {
-                    let paperMap = {};
-                    let casepath = null;
-                    for (let [key, value] of Object.entries(caseMap)) {
-                        if (typeof value !== "object") {
-                            let casepath = key.substring(key.indexOf(".") + 1);
-                            casepath = casepath.substring(casepath.indexOf(".") + 1);
-                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                            if (!!paperMap[pyfilepath] === false) {
-                                paperMap[pyfilepath] = {};
-                            }
-                            paperMap[pyfilepath][key] = value;
-                        }
-                    }
-                    casepaper_app.caseMap = paperMap;
-                },
-                loadCaseFile(casePath) {
-                    //guide 显示到隐藏，root-case从隐藏到显示
-                    casefullname = casePath;
-                    //设置标题显示用例类名+方法名
-                    let caseclassname = casefullname.split(":")[1];
-                    //读取用例文件,并设置codeContent
-                    let caseNamePathList = casefullname.split("/");//获取用例路径，解析内容
-                    let caseNamePath = caseNamePathList[caseNamePathList.length - 1].split(":")[0].split(".").join("/") + ".py";
-                    document.getElementById("code-content").style.fontSize = "14px";
-                    let codeContent = ace.edit("code-content");
-                    codeContent.setTheme("ace/theme/github");
-                    codeContent.setReadOnly(true);//设置只读
-                    codeContent.$blockScrolling = Infinity;
-                    codeContent.session.setMode("ace/mode/python");
-                    // setBtn("edit");
-                    /*查询可编辑状态*/
-                    new ValidateEditWebSocket(caseNamePath);
-                    let xhr = new XMLHttpRequest();
-                    xhr.open('GET', '/static/' + caseNamePath, true);
-                    xhr.setRequestHeader("If-Modified-Since", "0");
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4) {
-                            codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
-                            Event.$emit('flush-fab');
-                        }
-                    };
-                    xhr.send(null);
+                    paperMap[pyfilepath][key] = value;
                 }
             }
-        });
-
-let codeFAB_app = new Vue({
-    el: '#code-float-btn',
+            Event.$emit('change-paper', paperMap);
+            //casepaper_app.caseMap = paperMap;
+        },
+        loadCaseFile(casePath) {
+            //guide 显示到隐藏，root-case从隐藏到显示
+            casefullname = casePath;
+            //设置标题显示用例类名+方法名
+            let caseclassname = casefullname.split(":")[1];
+            //读取用例文件,并设置codeContent
+            let caseNamePathList = casefullname.split("/");//获取用例路径，解析内容
+            let caseNamePath = caseNamePathList[caseNamePathList.length - 1].split(":")[0].split(".").join("/") + ".py";
+            document.getElementById("code-content").style.fontSize = "14px";
+            let codeContent = ace.edit("code-content");
+            codeContent.setTheme("ace/theme/github");
+            codeContent.setReadOnly(true);//设置只读
+            codeContent.$blockScrolling = Infinity;
+            codeContent.session.setMode("ace/mode/python");
+            // setBtn("edit");
+            /*查询可编辑状态*/
+            new ValidateEditWebSocket(caseNamePath);
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', '/static/' + caseNamePath, true);
+            xhr.setRequestHeader("If-Modified-Since", "0");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
+                    Event.$emit('flush-fab');
+                }
+            };
+            xhr.send(null);
+        }
+    }
+});
+Vue.component('code_float_btn', {
+    template: '#codeFloatBtn',
     data: function () {
         return {
             modalShow: true,
@@ -240,6 +243,11 @@ let codeFAB_app = new Vue({
             _this.logContent = [];
             _this.modalShow = true;
         });
+             Event.$on('run-case', function (casefullname) {
+            _this.casefullname = casefullname;
+            _this.run();
+        });
+
     },
     methods: {
         openSaveDialog() {
@@ -336,52 +344,27 @@ let codeFAB_app = new Vue({
         }
     }
 });
-let caseMap = {};
-let casepaper_app = new Vue({
-    props: [],
-    el: '#case-paper',
-    data: {caseMap: caseMap},
+Vue.component('case_paper', {
+    template: '#casePaper',
+    data() {
+        return {caseMap: {}}
+    },
+    mounted() {
+        let _this = this;
+        Event.$on('change-paper', (caseMap) => {
+            _this.caseMap = caseMap;
+        });
+    }
+    ,
     methods: {
 
         run(testcase) {
-            codeFAB_app.casefullname = testcase;
-            codeFAB_app.run();
+            Event.$emit('run-case',testcase);
 
         }
     }
 });
 
-
-let navbar_app  = new Vue({
+let navbar_app = new Vue({
     el: '#app',
-    data:{json:{}},
-    ready:()=>{
-        this.$http.post("./getCaseList").then(data => {
-            this.json=data;
-             document.getElementsByTagName("body")[0].style.display = "";
-        });
-    }
 });
-
-
-
-// fetch("./getCaseList",
-//     {
-//         method: "POST",
-//         headers: {
-//             'Accept': 'application/json, text/plain, */*',
-//             'Content-Type': 'application/json'
-//         }
-//     }).then(function (response) {
-//     if (response.status !== 200
-//     ) {
-//         console.log("存在一个问题，状态码为：" + response.status);
-//         return false;
-//     }
-//     else
-//         return response.json();
-// }).then(
-//     function (json) {
-//         document.getElementsByTagName("body")[0].style.display = "";
-//     }
-// );
