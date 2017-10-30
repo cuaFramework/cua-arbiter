@@ -14,7 +14,7 @@ import os
 
 import datetime
 from config import arbiter_prod_config
-APPEND_SLASH=False
+# APPEND_SLASH=False
 env_config = arbiter_prod_config
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']
@@ -75,7 +75,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

@@ -106,7 +106,7 @@ const ArbiterSlide = {
     ,
     data() {
 
-        this.$http.post("./getCaseList").then(function (response) {
+        this.$http.post("/arbiter/getCaseList").then(function (response) {
             if (response.status !== 200
             ) {
                 console.log("存在一个问题，状态码为：" + response.status);
