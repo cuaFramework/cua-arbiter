@@ -1,5 +1,5 @@
 from django.conf.urls import url
-
+from django.views.generic import RedirectView
 from . import views
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
@@ -11,8 +11,8 @@ urlpatterns = [
     url(r'^save', views.auth_restful.save_casefile, name='save'),
     url(r'^getCaseList', views.restful.get_caselist),
     url(r'^cloneCaseObj', views.restful.get_caseobj),
-    url(r'^(?P<case_name>[\w.:]+)/$', views.detail, name='detail'),
-    url(r'^$', views.index, name='index'),
+   url(r'^$', views.index, name='index'),
+    url(r'^.*/$', RedirectView.as_view(url='/arbiter', permanent=False)),
     # url(r'^(?P<case_name>[\w.:]+)/editor/$', views.editor, name='editor'),
 
 ]

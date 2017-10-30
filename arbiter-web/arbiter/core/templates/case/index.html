@@ -102,7 +102,7 @@
             <mu-appbar title="Arbiter" :z-depth="2"></mu-appbar>
             <mu-list :value="value" @change="handleChange">
                 <div v-for="(value, key) in modelList" :key="key">
-                    <mu-list-item :title="key" toggle-nested :open="false" @click='loadCasePaper(value)'>
+                    <mu-list-item :title="key" :value="key"  toggle-nested :open="false" @click='loadCasePaper(value)'>
                         <mu-icon slot="left" value="wb_cloudy"></mu-icon>
                         <mu-list-item slot="nested" :value="key+kx" :title="kx" v-for="(vx, kx) in value"
                                       v-if="(typeof vx)==='object'" :key="kx"
@@ -140,6 +140,16 @@
                 </mu-paper>
             </div>
         </div>
+    </div>
+    {% endverbatim %}
+
+</template>
+<template id="codePaper">
+    {% verbatim %}
+    <div id="code-paper">
+                <mu-paper class="long-little-paper" :z-depth="2">
+                    <div id="code-content"></div>
+                </mu-paper>
     </div>
     {% endverbatim %}
 
