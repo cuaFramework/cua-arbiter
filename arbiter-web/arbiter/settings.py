@@ -14,7 +14,7 @@ import os
 
 import datetime
 from config import arbiter_prod_config
-# APPEND_SLASH=False
+
 env_config = arbiter_prod_config
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']
@@ -45,7 +45,8 @@ SECRET_KEY = '4d*!@um+nv9-lx#k215nrr=6oijv-l&)sdn585_bjzlljlmszg'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+APPEND_SLASH = False
+PREPEND_WWW = False
 ALLOWED_HOSTS = ['*']
 
 CHANNEL_LAYERS = {
@@ -75,7 +76,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # 'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

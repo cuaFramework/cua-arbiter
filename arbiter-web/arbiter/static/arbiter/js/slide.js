@@ -8,6 +8,8 @@ let Event = new Vue();
 let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
+let case_map = {};
+
 
 const ArbiterNavbar = {
     template: '#arbiterNavbar'
@@ -117,6 +119,7 @@ const ArbiterSlide = {
         }).then(
             function (json) {
                 this.modelList = json;
+                case_map = json;
                 document.getElementsByTagName("body")[0].style.display = "";
             });
 
@@ -175,7 +178,6 @@ const ArbiterSlide = {
 
         },
         loadCasePaper(caseMap) {
-            console.log("xxx")
             let paperMap = {};
             let casepath = null;
             for (let [key, value] of Object.entries(caseMap)) {
@@ -344,15 +346,51 @@ const CodeFloatBtn = {
     }
 };
 const CasePaper = {
+    props: {casemodel: ""},
     template: '#casePaper',
     data() {
-        return {caseMap: {}}
+
+
+        return {caseMap: {}, casemap: case_map};
+    },
+    watch: {
+        casemap:
+            {
+                handler: function (curVal, oldVal) { //此处不要使用箭头函数
+                    conosle.log(curVal, oldVal);
+
+                    let caseMap = case_map;
+                    console.log(caseMap + "zz23123");
+                    this.casemodel.split(".").forEach((element, index) => {
+                        caseMap = caseMap.element;
+                    });
+                    console.log(caseMap + "asdsadasdasd");
+                    let paperMap = {};
+                    let casepath = null;
+                    for (let [key, value] of Object.entries(caseMap)) {
+                        if (typeof value !== "object") {
+                            let casepath = key.substring(key.indexOf(".") + 1);
+                            casepath = casepath.substring(casepath.indexOf(".") + 1);
+                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+                            if (!!paperMap[pyfilepath] === false) {
+                                paperMap[pyfilepath] = {};
+                            }
+                            paperMap[pyfilepath][key] = value;
+                        }
+                    }
+                    this.caseMap = paperMap;
+
+                }
+                ,
+                deep: true//对象内部的属性监听，也叫深度监听
+            }
     },
     mounted() {
-        let _this = this;
-        Event.$on('change-paper', (caseMap) => {
-            _this.caseMap = caseMap;
-        });
+        console.log("asdsadasdasd"+this.casemodel);
+        // let _this = this;
+        // Event.$on('change-paper', (caseMap) => {
+        //     _this.caseMap = caseMap;
+        // });
     }
     ,
     methods: {
@@ -366,11 +404,16 @@ const CasePaper = {
 
 const router = new VueRouter({
     mode: 'history',
-  //  base: "arbiter",
+    //  base: "arbiter",
     routes: [
-        {path: '/arbiter/'}, // No props, no nothing
-        {path: '/arbiter/:casemodel/:name/', components: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // Pass route.params to props
-        {path: '/arbiter/:casemodel/', component: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // static values
+        {path: '/'}, // No props, no nothing
+        {
+            path: '/arbiter/:casemodel',
+            components: {paper: CasePaper, cfab: CodeFloatBtn},
+            props: {paper: true, cfab: false}
+        }, // static values
+        //  {path: '/arbiter/:casemodel/:name', components: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // Pass route.params to props
+
     ]
 });
 
@@ -385,20 +428,3 @@ let navbar_app = new Vue({
     }
 });
 
-
-// new Vue({
-//     router,
-//     template: `
-//     <div id="app">
-//       <h1>Route props</h1>
-//       <ul>
-//         <li><router-link to="/">/</router-link></li>
-//         <li><router-link to="/hello/you">/hello/you</router-link></li>
-//         <li><router-link to="/static">/static</router-link></li>
-//         <li><router-link to="/dynamic/1">/dynamic/1</router-link></li>
-//         <li><router-link to="/attrs">/attrs</router-link></li>
-//       </ul>
-//       <router-view class="view" foo="123"></router-view>
-//     </div>
-//   `
-// })
