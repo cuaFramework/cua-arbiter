@@ -52,7 +52,7 @@ let Event = new Vue();
 let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
-let allCase = {};
+let allCase = null;
 
 const ArbiterNavbar = {
     template: '#arbiterNavbar'
@@ -305,11 +305,11 @@ const CaseFloatBtn = {
         return {
             modalShow: true,
             seen: false,
-            casefullname:"",
+            casefullname: "",
             logDialog: false,
             logContent: [],
         }
-    },mounted() {
+    }, mounted() {
         let _this = this;
         Event.$on('run-case', function (casefullname) {
             _this.casefullname = casefullname;
@@ -338,7 +338,7 @@ const CaseFloatBtn = {
         cleanLog() {
             this.logContent = [];
         },
-                run() {
+        run() {
             if (username === null) {
                 window.location.href = "login";
             }
@@ -365,9 +365,65 @@ const CaseFloatBtn = {
         },
     }
 };
+const CodePaper = {
+    data: {pypath: null,},
+    template: '#codePaper',
+    mounted() {
+
+
+        if (!!this.pypath) {
+           for (let [k, v] of Object.entries(this.pypath)) {
+                caseNamePath = k;
+            }
+            caseNamePath = caseNamePath.split(":")[0];
+            this.pypath = caseNamePath.split(".").join("/") + ".py";
+
+            this.loadCaseFile(this.pypath)
+        }
+
+    }
+    ,
+    methods: {
+        showcode(key, value) {
+            this.$router.push({name: 'casepathpy', params: {pyname: key}});
+            let caseNamePath = null;
+
+            for (let [k, v] of Object.entries(value)) {
+                caseNamePath = k;
+            }
+            caseNamePath = caseNamePath.split(":")[0];
+            this.pypath = caseNamePath.split(".").join("/") + ".py";
+
+        },
+        loadCaseFile(caseNamePath) {
+
+          //  document.getElementById("codecontent").style.fontSize = "14px";
+           // document.getElementById("codecontent").style.height = "600px";
+            let codeContent = ace.edit(this.$el);
+            codeContent.setTheme("ace/theme/github");
+            codeContent.setReadOnly(true);//设置只读
+            codeContent.$blockScrolling = Infinity;
+            codeContent.session.setMode("ace/mode/python");
+            // setBtn("edit");
+            /*查询可编辑状态*/
+            new ValidateEditWebSocket(caseNamePath);
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', '/static/' + caseNamePath, true);
+            xhr.setRequestHeader("If-Modified-Since", "0");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
+                }
+            };
+            xhr.send(null);
+        }
+
+    }
+};
 const CasePaper = {
-    props: {casemodel: "",pyname:""},
+    props: {casemodel: "", pyname: "",pypath:""},
     template: '#casePaper',
+    components:{'CodePaper': CodePaper,},
     data() {
         return {caseMap: {}};
     },
@@ -398,6 +454,14 @@ const CasePaper = {
             });
             _this.caseMap = toAllpaperMap(_this.caseMap);
         });
+
+        if (!!allCase) {
+            Event.$emit('change-paper', allCase);
+        }
+        if (!!this.pyname) {
+          this.loadCaseFile(this.pypath);
+        }
+
     }
     ,
     methods: {
@@ -406,21 +470,22 @@ const CasePaper = {
             Event.$emit('run-case', testcase);
 
         },
-        showcode(key) {
-             this.$router.push({name: 'casepathpy', params: {pyname: key}});
-             this.loadCaseFile(casePath)
+        showcode(key, value) {
+            this.$router.push({name: 'casepathpy', params: {pyname: key}});
+            let caseNamePath = null;
+
+            for (let [k, v] of Object.entries(value)) {
+                caseNamePath = k;
+            }
+            caseNamePath = caseNamePath.split(":")[0];
+            this.pypath = caseNamePath.split(".").join("/") + ".py";
 
         },
-                loadCaseFile(casePath) {
-            //guide 显示到隐藏，root-case从隐藏到显示
-            casefullname = casePath;
-            //设置标题显示用例类名+方法名
-            let caseclassname = casefullname.split(":")[1];
-            //读取用例文件,并设置codeContent
-            let caseNamePathList = casefullname.split("/");//获取用例路径，解析内容
-            let caseNamePath = caseNamePathList[caseNamePathList.length - 1].split(":")[0].split(".").join("/") + ".py";
-            document.getElementById("code-content").style.fontSize = "14px";
-            let codeContent = ace.edit("code-content");
+        loadCaseFile(caseNamePath) {
+            console.log(this.$refs.mybox);
+          //  document.getElementById("codecontent").style.fontSize = "14px";
+           // document.getElementById("codecontent").style.height = "600px";
+            let codeContent = ace.edit(this.$refs.xxx);
             codeContent.setTheme("ace/theme/github");
             codeContent.setReadOnly(true);//设置只读
             codeContent.$blockScrolling = Infinity;
@@ -441,6 +506,7 @@ const CasePaper = {
 
     }
 };
+
 
 const router = new VueRouter({
     mode: 'history',
@@ -488,8 +554,9 @@ let navbar_app = new Vue({
         'ArbiterNavbar': ArbiterNavbar,
         'ArbiterSlide': ArbiterSlide,
         'CodeFloatBtn': CodeFloatBtn,
-        'CaseFloatBtn':CaseFloatBtn,
+        'CaseFloatBtn': CaseFloatBtn,
         'CasePaper': CasePaper,
+        'CodePaper': CodePaper,
     }
 });
 

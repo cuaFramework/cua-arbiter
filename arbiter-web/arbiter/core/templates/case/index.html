@@ -129,16 +129,14 @@
     <div id="case-paper">
         <div v-for="(value, key) in caseMap">
             <div>
-                <div class="flex-between"><b class="grey-text paper-pyname" @click="showcode(key)">{{ key }}</b>
+                <div class="flex-between"><b class="grey-text paper-pyname" @click="showcode(key,value)">{{ key }}</b>
                     <mu-icon-button icon="delete" icon-class="red-icon"></mu-icon-button>
                 </div>
             </div>
             <div v-if="pyname===key">
-                <mu-paper class="code-paper" :z-depth="2" :key="key">
-                    <div class="flex-between"><i class="brown800-text paper-casename">{{ value }}</i>
-                        <mu-icon-button icon="play_arrow" icon-class="green-icon"
-                                        @click="run(key,value)"></mu-icon-button>
-                    </div>
+                <mu-paper class="code-paper" :z-depth="2" :key="key" >
+                    <code-paper :pypath="value"></code-paper>
+                     <div id="codecontent" ref="mybox+"></div>
                 </mu-paper>
             </div>
             <div v-else v-for="(v, k) in value">
@@ -157,9 +155,7 @@
 <template id="codePaper">
     {% verbatim %}
     <div id="code-paper">
-        <mu-paper class="long-little-paper" :z-depth="2">
-            <div id="code-content"></div>
-        </mu-paper>
+            <div id="codecontent"></div>
     </div>
     {% endverbatim %}
 

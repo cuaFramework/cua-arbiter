@@ -28,15 +28,11 @@ body {
     display: none;
 }
 
-#code-content {
-    position: fixed;
-    left: 256px;
-    top: 60px;
-    right: 0;
-    width: auto;
+#codecontent {
+    top: 0;
+
     bottom: 0;
-    size: 14px;
-    z-index: -1;
+
 
 }
 
@@ -47,6 +43,7 @@ body {
     right: 0;
     width: auto;
     bottom: 0;
+    overflow-y: scroll;
     size: 14px;
     z-index: -1;
 }
