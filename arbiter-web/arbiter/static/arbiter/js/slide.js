@@ -4,12 +4,55 @@ function getusername() {
     return username ? username : null;
 }
 
+let getfilePath = function (key) {
+    let casepath = key.substring(key.indexOf(".") + 1);
+    casepath = casepath.substring(casepath.indexOf(".") + 1);
+    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
+    return pyfilepath;
+};
+let topaperMap = function (caseMap) {
+    let paperMap = {};
+    for (let [key, value] of Object.entries(caseMap)) {
+        if (typeof value !== "object") {
+            let pyfilepath = getfilePath(key);
+            if (!!paperMap[pyfilepath] === false) {
+                paperMap[pyfilepath] = {};
+            }
+            paperMap[pyfilepath][key] = value;
+        }
+    }
+    return paperMap;
+};
+let toAllpaperMap = function (caseMap) {
+    let paperMap = new Object();
+    for (let [key, value] of Object.entries(caseMap)) {
+        if (typeof value !== "object") {
+            let pyfilepath = getfilePath(key);
+            if (!!paperMap[pyfilepath] === false) {
+                paperMap[pyfilepath] = {};
+            }
+            paperMap[pyfilepath][key] = value;
+        }
+        else {
+            for (let [k, y] of Object.entries(value)) {
+
+                let pyfilepath = getfilePath(key);
+                if (!!paperMap[pyfilepath] === false) {
+                    paperMap[pyfilepath] = {};
+                }
+                paperMap[pyfilepath][k] = y;
+            }
+        }
+
+    }
+    return paperMap;
+};
+
 let Event = new Vue();
 let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
-let case_map = {};
-
+let allCase = {};
 
 const ArbiterNavbar = {
     template: '#arbiterNavbar'
@@ -105,8 +148,7 @@ const ArbiterNavbar = {
 };
 const ArbiterSlide = {
     props: {modelList: {}},
-    template: '#arbiterNavSlide'
-    ,
+    template: '#arbiterNavSlide',
     data() {
         return {
             open: true,
@@ -130,82 +172,10 @@ const ArbiterSlide = {
         toggle() {
             this.open = !this.open;
         },
-        loadAllCasePaper(caseMap) {
-            let paperMap = {};
-            let casepath = null;
-            for (let [key, value] of Object.entries(caseMap)) {
-                if (typeof value !== "object") {
-                    let casepath = key.substring(key.indexOf(".") + 1);
-                    casepath = casepath.substring(casepath.indexOf(".") + 1);
-                    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                    if (!!paperMap[pyfilepath] === false) {
-                        paperMap[pyfilepath] = {};
-                    }
-                    paperMap[pyfilepath][key] = value;
-                }
-                else {
-                    for (let [k, y] of Object.entries(value)) {
-                        let casepath = k.substring(k.indexOf(".") + 1);
-                        casepath = casepath.substring(casepath.indexOf(".") + 1);
-                        let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                        if (!!paperMap[pyfilepath] === false) {
-                            paperMap[pyfilepath] = {};
-                        }
-                        paperMap[pyfilepath][k] = y;
-
-                    }
-                }
-
-            }
-            Event.$emit('change-paper', paperMap);
-            //casepaper_app.caseMap = paperMap;
-
+        loadCasePaper(casemodel) {
+            this.$router.push({name: 'casepath', params: {casemodel: casemodel}});
         },
-        loadCasePaper(caseMap) {
-            let paperMap = {};
-            let casepath = null;
-            for (let [key, value] of Object.entries(caseMap)) {
-                if (typeof value !== "object") {
-                    let casepath = key.substring(key.indexOf(".") + 1);
-                    casepath = casepath.substring(casepath.indexOf(".") + 1);
-                    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                    if (!!paperMap[pyfilepath] === false) {
-                        paperMap[pyfilepath] = {};
-                    }
-                    paperMap[pyfilepath][key] = value;
-                }
-            }
-            Event.$emit('change-paper', paperMap);
-            //casepaper_app.caseMap = paperMap;
-        },
-        loadCaseFile(casePath) {
-            //guide 显示到隐藏，root-case从隐藏到显示
-            casefullname = casePath;
-            //设置标题显示用例类名+方法名
-            let caseclassname = casefullname.split(":")[1];
-            //读取用例文件,并设置codeContent
-            let caseNamePathList = casefullname.split("/");//获取用例路径，解析内容
-            let caseNamePath = caseNamePathList[caseNamePathList.length - 1].split(":")[0].split(".").join("/") + ".py";
-            document.getElementById("code-content").style.fontSize = "14px";
-            let codeContent = ace.edit("code-content");
-            codeContent.setTheme("ace/theme/github");
-            codeContent.setReadOnly(true);//设置只读
-            codeContent.$blockScrolling = Infinity;
-            codeContent.session.setMode("ace/mode/python");
-            // setBtn("edit");
-            /*查询可编辑状态*/
-            new ValidateEditWebSocket(caseNamePath);
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/static/' + caseNamePath, true);
-            xhr.setRequestHeader("If-Modified-Since", "0");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
-                    Event.$emit('flush-fab');
-                }
-            };
-            xhr.send(null);
-        }
+
     }
 };
 const CodeFloatBtn = {
@@ -329,69 +299,104 @@ const CodeFloatBtn = {
         }
     }
 };
+const CaseFloatBtn = {
+    template: '#caseFloatBtn',
+    data: function () {
+        return {
+            modalShow: true,
+            seen: false,
+            casefullname:"",
+            logDialog: false,
+            logContent: [],
+        }
+    },mounted() {
+        let _this = this;
+        Event.$on('run-case', function (casefullname) {
+            _this.casefullname = casefullname;
+            _this.run();
+        });
+
+    },
+    methods: {
+
+        openLogDialog() {
+            this.logDialog = true;
+
+        },
+        closeLogDialog() {
+            this.logDialog = false
+        },
+        onMouseEnterCodeFAB() {
+            this.seen = true;
+        },
+        onMouseleaveCodeFAB() {
+            this.seen = false;
+        },
+        log() {
+            this.logDialog = true;
+        },
+        cleanLog() {
+            this.logContent = [];
+        },
+                run() {
+            if (username === null) {
+                window.location.href = "login";
+            }
+            else {
+                run_socket.onmessage = (res) => {
+                    this.logContent.push(res.data);
+                    //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
+
+                };
+                run_socket.onopen = () => {
+                    run_socket.send("runCase " + this.casefullname);
+                };
+                // Call onopen directly if socket is already open
+                if (run_socket.readyState === WebSocket.OPEN)
+                    run_socket.onopen();
+            }
+            this.logDialog = true;
+        }
+        ,
+        add() {
+            if (username === null) {
+                window.location.href = "login";
+            }
+        },
+    }
+};
 const CasePaper = {
-    props: {casemodel: ""},
+    props: {casemodel: "",pyname:""},
     template: '#casePaper',
     data() {
-
-
-        return {caseMap: {}, casemap: {}};
+        return {caseMap: {}};
     },
     watch: {
-        casemap:
-            {
-                handler: function (curVal, oldVal) { //此处不要使用箭头函数
-
-
-                    let caseMap = case_map;
-                    console.log(caseMap + "zz23123");
-                    this.casemodel.split(".").forEach((element, index) => {
-                        caseMap = caseMap.element;
-                    });
-                    console.log(caseMap + "asdsadasdasd");
-                    let paperMap = {};
-                    let casepath = null;
-                    for (let [key, value] of Object.entries(caseMap)) {
-                        if (typeof value !== "object") {
-                            let casepath = key.substring(key.indexOf(".") + 1);
-                            casepath = casepath.substring(casepath.indexOf(".") + 1);
-                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                            if (!!paperMap[pyfilepath] === false) {
-                                paperMap[pyfilepath] = {};
-                            }
-                            paperMap[pyfilepath][key] = value;
-                        }
-                    }
-                    this.caseMap = paperMap;
-
-                }
-                ,
-                deep: true//对象内部的属性监听，也叫深度监听
+        casemodel: function (val) {
+            if (val.split(".").length < 3) {
+                Event.$emit('change-paper', allCase);
             }
+            else {
+                Event.$emit('change-paper-all', allCase);
+            }
+        }
     },
     mounted() {
-        console.log("asdsadasdasd" + this.casemodel);
         let _this = this;
         Event.$on('change-paper', (caseMap) => {
             _this.caseMap = caseMap;
-                    _this.casemodel.split(".").forEach((element, index) => {
-                        caseMap = caseMap.element;
-                    });
-                    console.log(_this.caseMap + "asdsadasdasd");
-                    let paperMap = {};
-                    let casepath = null;
-                    for (let [key, value] of Object.entries(caseMap)) {
-                        if (typeof value !== "object") {
-                            let casepath = key.substring(key.indexOf(".") + 1);
-                            casepath = casepath.substring(casepath.indexOf(".") + 1);
-                            let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-                            if (!!paperMap[pyfilepath] === false) {
-                                paperMap[pyfilepath] = {};
-                            }
-                            paperMap[pyfilepath][key] = value;
-                        }
-                    }
-                    _this.caseMap = paperMap;
+            _this.casemodel.split(".").forEach((element, index) => {
+                _this.caseMap = _this.caseMap[element];
+            });
+            _this.caseMap = topaperMap(_this.caseMap);
+        });
+
+        Event.$on('change-paper-all', (caseMap) => {
+            _this.caseMap = caseMap;
+            _this.casemodel.split(".").forEach((element, index) => {
+                _this.caseMap = _this.caseMap[element];
+            });
+            _this.caseMap = toAllpaperMap(_this.caseMap);
         });
     }
     ,
@@ -400,21 +405,60 @@ const CasePaper = {
         run(testcase) {
             Event.$emit('run-case', testcase);
 
+        },
+        showcode(key) {
+             this.$router.push({name: 'casepathpy', params: {pyname: key}});
+             this.loadCaseFile(casePath)
+
+        },
+                loadCaseFile(casePath) {
+            //guide 显示到隐藏，root-case从隐藏到显示
+            casefullname = casePath;
+            //设置标题显示用例类名+方法名
+            let caseclassname = casefullname.split(":")[1];
+            //读取用例文件,并设置codeContent
+            let caseNamePathList = casefullname.split("/");//获取用例路径，解析内容
+            let caseNamePath = caseNamePathList[caseNamePathList.length - 1].split(":")[0].split(".").join("/") + ".py";
+            document.getElementById("code-content").style.fontSize = "14px";
+            let codeContent = ace.edit("code-content");
+            codeContent.setTheme("ace/theme/github");
+            codeContent.setReadOnly(true);//设置只读
+            codeContent.$blockScrolling = Infinity;
+            codeContent.session.setMode("ace/mode/python");
+            // setBtn("edit");
+            /*查询可编辑状态*/
+            new ValidateEditWebSocket(caseNamePath);
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', '/static/' + caseNamePath, true);
+            xhr.setRequestHeader("If-Modified-Since", "0");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
+                }
+            };
+            xhr.send(null);
         }
+
     }
 };
 
 const router = new VueRouter({
     mode: 'history',
-    //  base: "arbiter",
+    base: "arbiter",
     routes: [
         {path: '/'}, // No props, no nothing
         {
-            path: '/arbiter/:casemodel',
-            components: {paper: CasePaper, cfab: CodeFloatBtn},
-            props: {paper: true, cfab: false}
-        }, // static values
-        //  {path: '/arbiter/:casemodel/:name', components: {paper:CasePaper,cfab:CodeFloatBtn}, props: {paper:true,cfab:true}}, // Pass route.params to props
+            path: '/:casemodel',
+            name: 'casepath',
+            components: {paper: CasePaper, casefab: CaseFloatBtn},
+            props: {paper: true, casefab: false}
+        },
+        {
+            path: '/:casemodel/:pyname',
+            name: 'casepathpy',
+            components: {paper: CasePaper, codefab: CodeFloatBtn},
+            props: {paper: true, codefab: true}
+        }, // Pass route.params to props
 
     ]
 });
@@ -434,7 +478,8 @@ let navbar_app = new Vue({
         }).then(
             (json) => {
                 this.modelList = json;
-                 Event.$emit('change-paper', json);
+                allCase = json;
+                Event.$emit('change-paper', json);
                 document.getElementsByTagName("body")[0].style.display = "";
             });
         return {modelList: {}}
@@ -443,6 +488,7 @@ let navbar_app = new Vue({
         'ArbiterNavbar': ArbiterNavbar,
         'ArbiterSlide': ArbiterSlide,
         'CodeFloatBtn': CodeFloatBtn,
+        'CaseFloatBtn':CaseFloatBtn,
         'CasePaper': CasePaper,
     }
 });
