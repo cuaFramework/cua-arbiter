@@ -31,12 +31,10 @@
         <div>
             <div id="root">
                 <router-view name="paper"></router-view>
-                <!--   <case-paper></case-paper>-->
-
                 <arbiter-slide :model-list="modelList"></arbiter-slide>
                 <div id="root-case" style="display: block;">
                     <div id="code">
-                        <router-view name="casefab"></router-view>
+                        <case-float-btn></case-float-btn>
                         <!--   <code-float-btn><</code-float-btn>-->
                         <!--  <pre id="code-content"></pre> -->
                     </div>
@@ -129,14 +127,14 @@
     <div id="case-paper">
         <div v-for="(value, key) in caseMap">
             <div>
-                <div class="flex-between"><b class="grey-text paper-pyname" @click="showcode(key,value)">{{ key }}</b>
+                <div class="flex-between"><b title="查看/编辑" class="grey-text paper-pyname" @click="showcode(key,value)">{{ key }}</b>
                     <mu-icon-button icon="delete" icon-class="red-icon"></mu-icon-button>
                 </div>
             </div>
             <div v-if="pyname===key">
-                <mu-paper class="code-paper" :z-depth="2" :key="key" >
-                    <code-paper :pypath="value"></code-paper>
-                     <div id="codecontent" ref="mybox+"></div>
+                <mu-paper class="long-large-paper" :z-depth="2" :key="key" >
+                    <code-paper :pypathx="value"></code-paper>
+                    <code-float-btn :casemodel="casemodel" :pypath="value"></code-float-btn>
                 </mu-paper>
             </div>
             <div v-else v-for="(v, k) in value">
@@ -162,19 +160,10 @@
 </template>
 <template id="codeFloatBtn">
     {% verbatim %}
-    <div id="code-float-btn" v-if="modalShow">
-        <div style="z-index: 1;position: fixed; bottom: 45px; right: 24px;"
+    <div id="code-float-btn" v-if="modalShow" >
+        <div style=" position: relative;z-index: 1; float: right;bottom: 110px;right: 60px;"
              @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
-            <mu-float-button id="edit" @click="edit()" :icon="editIcon" secondary mini
-                             class="demo-float-button" v-show="seen"
-                             style="bottom: 6px; right: 3px;"></mu-float-button>
-            <mu-float-button id="run" @click="run()" icon="play_arrow" secondary mini
-                             class="demo-float-button" v-show="seen"
-                             style="bottom: 6px; right: 3px;"></mu-float-button>
-            <mu-float-button id="log" @click="log()" icon="message" secondary mini
-                             class="demo-float-button" v-show="seen"
-                             style="bottom: 6px; right: 3px;"></mu-float-button>
-            <mu-float-button id="edit" icon="add" class="demo-float-button"></mu-float-button>
+            <mu-float-button style="background-color:#bf360c" @click="edit()" :icon="editIcon" class="demo-float-button"></mu-float-button>
         </div>
         <div>
             <mu-dialog :open="saveDialog" title="保存中">
@@ -197,7 +186,7 @@
 </template>
 <template id="caseFloatBtn">
     {% verbatim %}
-    <div id="code-float-btn" v-if="modalShow">
+    <div id="case-float-btn" v-if="modalShow">
         <div style="z-index: 1;position: fixed; bottom: 45px; right: 24px;"
              @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
             <mu-float-button id="log" @click="log()" icon="message" secondary mini

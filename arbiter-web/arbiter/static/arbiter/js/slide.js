@@ -180,6 +180,11 @@ const ArbiterSlide = {
 };
 const CodeFloatBtn = {
     template: '#codeFloatBtn',
+    props: {
+        pypath: null,
+        casemodel:null
+
+    },
     data: function () {
         return {
             modalShow: true,
@@ -190,18 +195,10 @@ const CodeFloatBtn = {
             saveStatus: 'finish',
             casefullname: '',
             logContent: [],
+            path: null
         }
     }, mounted() {
-        let _this = this;
-        Event.$on('flush-fab', function () {
-            _this.editIcon = "mode_edit";
-            _this.logContent = [];
-            _this.modalShow = true;
-        });
-        Event.$on('run-case', function (casefullname) {
-            _this.casefullname = casefullname;
-            _this.run();
-        });
+        this.path = this.pypath;
 
     },
     methods: {
@@ -228,30 +225,11 @@ const CodeFloatBtn = {
         cleanLog() {
             this.logContent = [];
         },
-        run() {
-            if (username === null) {
-                window.location.href = "login";
-            }
-            else {
-                run_socket.onmessage = (res) => {
-                    this.logContent.push(res.data);
-                    //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
-
-                };
-                run_socket.onopen = () => {
-                    run_socket.send("runCase " + this.casefullname);
-                };
-                // Call onopen directly if socket is already open
-                if (run_socket.readyState === WebSocket.OPEN)
-                    run_socket.onopen();
-            }
-            this.logDialog = true;
-        },
         edit() {
             if (username === null) {
                 window.location.href = "login";
             }
-            let codeContent = ace.edit("code-content");
+            let codeContent = ace.edit("code-paper");
             if (this.editIcon === "mode_edit") {
 
                 codeContent.setReadOnly(false);//设置为可编辑模式
@@ -259,6 +237,13 @@ const CodeFloatBtn = {
                 this.editIcon = "save";
             }
             else if (this.editIcon === "save") {
+                let caseNamePath = null;
+                for (let [k, v] of Object.entries(this.path)) {
+                    if (k) {
+                        caseNamePath = k;
+                        break;
+                    }
+                }
 
                 this.saveStatus = "running";
                 this.saveDialog = true;
@@ -272,19 +257,22 @@ const CodeFloatBtn = {
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({casepath: this.casefullname, content: newCodeContent})
+                        body: JSON.stringify({casepath: caseNamePath, content: newCodeContent})
                     }).then((response) => {
                     if (response.status !== 200) {
                         console.log("请求失败，状态码为：" + response.status);
                         deleteAllCookies();
-                        window.location.href = "login";
+                        window.location.href = "/arbiter/login";
                         return;
                     }
                     //检查响应文本
                     response.json().then((data) => {
                         if (data['result'] === "ok") {
                             this.editIcon = "mode_edit";
+                            let codeContent = ace.edit("code-paper");
+                            codeContent.setReadOnly(true);//设置为不可编辑模式
                             this.saveDialog = false;
+                            this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
 
                         } else {
                             alert("保存失败！");
@@ -311,11 +299,17 @@ const CaseFloatBtn = {
         }
     }, mounted() {
         let _this = this;
+         console.log(casefullname+"sda"+this.$el);
         Event.$on('run-case', function (casefullname) {
+
             _this.casefullname = casefullname;
             _this.run();
         });
 
+    },
+    destroy(){
+        console.log(casefullname+"qwerte"+this.$el);
+        Event.$off("run-case");
     },
     methods: {
 
@@ -366,19 +360,25 @@ const CaseFloatBtn = {
     }
 };
 const CodePaper = {
-    data: {pypath: null,},
+    props: {pypathx: null,},
+    data: function () {
+        return {path: null}
+    },
     template: '#codePaper',
     mounted() {
 
-
-        if (!!this.pypath) {
-           for (let [k, v] of Object.entries(this.pypath)) {
-                caseNamePath = k;
+        this.path = this.pypathx;
+        if (!!this.path) {
+            for (let [k, v] of Object.entries(this.path)) {
+                if (k) {
+                    caseNamePath = k;
+                    break;
+                }
             }
             caseNamePath = caseNamePath.split(":")[0];
-            this.pypath = caseNamePath.split(".").join("/") + ".py";
+            this.path = caseNamePath.split(".").join("/") + ".py";
 
-            this.loadCaseFile(this.pypath)
+            this.loadCaseFile(this.path)
         }
 
     }
@@ -392,13 +392,13 @@ const CodePaper = {
                 caseNamePath = k;
             }
             caseNamePath = caseNamePath.split(":")[0];
-            this.pypath = caseNamePath.split(".").join("/") + ".py";
+            this.path = caseNamePath.split(".").join("/") + ".py";
 
         },
         loadCaseFile(caseNamePath) {
 
-          //  document.getElementById("codecontent").style.fontSize = "14px";
-           // document.getElementById("codecontent").style.height = "600px";
+            //  document.getElementById("codecontent").style.fontSize = "14px";
+            // document.getElementById("codecontent").style.height = "600px";
             let codeContent = ace.edit(this.$el);
             codeContent.setTheme("ace/theme/github");
             codeContent.setReadOnly(true);//设置只读
@@ -421,11 +421,14 @@ const CodePaper = {
     }
 };
 const CasePaper = {
-    props: {casemodel: "", pyname: "",pypath:""},
+    props: {casemodel: "", pyname: ""},
     template: '#casePaper',
-    components:{'CodePaper': CodePaper,},
+    components: {
+        'CodePaper': CodePaper,
+        'CodeFloatBtn': CodeFloatBtn,
+    },
     data() {
-        return {caseMap: {}};
+        return {caseMap: {}, cpath: null};
     },
     watch: {
         casemodel: function (val) {
@@ -458,15 +461,13 @@ const CasePaper = {
         if (!!allCase) {
             Event.$emit('change-paper', allCase);
         }
-        if (!!this.pyname) {
-          this.loadCaseFile(this.pypath);
-        }
 
     }
     ,
     methods: {
 
         run(testcase) {
+            console.log(testcase);
             Event.$emit('run-case', testcase);
 
         },
@@ -478,36 +479,12 @@ const CasePaper = {
                 caseNamePath = k;
             }
             caseNamePath = caseNamePath.split(":")[0];
-            this.pypath = caseNamePath.split(".").join("/") + ".py";
+            this.cpath = caseNamePath.split(".").join("/") + ".py";
 
         },
-        loadCaseFile(caseNamePath) {
-            console.log(this.$refs.mybox);
-          //  document.getElementById("codecontent").style.fontSize = "14px";
-           // document.getElementById("codecontent").style.height = "600px";
-            let codeContent = ace.edit(this.$refs.xxx);
-            codeContent.setTheme("ace/theme/github");
-            codeContent.setReadOnly(true);//设置只读
-            codeContent.$blockScrolling = Infinity;
-            codeContent.session.setMode("ace/mode/python");
-            // setBtn("edit");
-            /*查询可编辑状态*/
-            new ValidateEditWebSocket(caseNamePath);
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/static/' + caseNamePath, true);
-            xhr.setRequestHeader("If-Modified-Since", "0");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    codeContent.setValue(xhr.responseText, -1);//设置显示内容，并将光标移动到start处
-                }
-            };
-            xhr.send(null);
-        }
 
     }
 };
-
-
 const router = new VueRouter({
     mode: 'history',
     base: "arbiter",
@@ -516,8 +493,8 @@ const router = new VueRouter({
         {
             path: '/:casemodel',
             name: 'casepath',
-            components: {paper: CasePaper, casefab: CaseFloatBtn},
-            props: {paper: true, casefab: false}
+            components: {paper: CasePaper,},
+            props: {paper: true,}
         },
         {
             path: '/:casemodel/:pyname',
@@ -553,8 +530,8 @@ let navbar_app = new Vue({
     components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
         'ArbiterNavbar': ArbiterNavbar,
         'ArbiterSlide': ArbiterSlide,
+        'CaseFloatBtn':CaseFloatBtn,
         'CodeFloatBtn': CodeFloatBtn,
-        'CaseFloatBtn': CaseFloatBtn,
         'CasePaper': CasePaper,
         'CodePaper': CodePaper,
     }

@@ -28,12 +28,10 @@ body {
     display: none;
 }
 
-#codecontent {
+#code-paper {
     top: 0;
-
+    height: 600px;
     bottom: 0;
-
-
 }
 
 #case-paper {
@@ -52,6 +50,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+        width: 100%;
 
 }
 
@@ -69,6 +68,7 @@ body {
 
 .paper-pyname {
     margin-left: 30px;
+    cursor:pointer;
 }
 
 .red-icon {
@@ -79,12 +79,15 @@ body {
 .green-icon {
     color:#8bc34a;
 }
+.long-large-paper
+{margin-right: 80px;
+    margin-left: 20px;}
 
 
 .long-little-paper {
     height: 45px;
     margin-bottom: 20px;
-    margin-right: 80px;
+    margin-right: 130px;
     margin-left: 30px;
     position: relative;
 }
