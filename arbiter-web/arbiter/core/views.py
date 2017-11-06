@@ -49,7 +49,7 @@ def spiltPath(name):
 class restful(APIView):
     # permission_classes = (AllowAny,)
 
-    @api_view(['POST'])
+    @api_view(['GET','POST'])
     @permission_classes([permissions.AllowAny,])
     def get_caselist(request):
         return JsonResponse( CaseList.getList())
