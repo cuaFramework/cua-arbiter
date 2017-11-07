@@ -1,53 +1,3 @@
-function getusername() {
-    let storage = window.localStorage;
-    let username = storage['username'];
-    return username ? username : null;
-}
-
-let getfilePath = function (key) {
-    let casepath = key.substring(key.indexOf(".") + 1);
-    casepath = casepath.substring(casepath.indexOf(".") + 1);
-    let pyfilepath = casepath.split(":")[0].replace(/\./g, "/") + ".py";
-    return pyfilepath;
-};
-let topaperMap = function (caseMap) {
-    let paperMap = {};
-    for (let [key, value] of Object.entries(caseMap)) {
-        if (typeof value !== "object") {
-            let pyfilepath = getfilePath(key);
-            if (!!paperMap[pyfilepath] === false) {
-                paperMap[pyfilepath] = {};
-            }
-            paperMap[pyfilepath][key] = value;
-        }
-    }
-    return paperMap;
-};
-let toAllpaperMap = function (caseMap) {
-    let paperMap = new Object();
-    for (let [key, value] of Object.entries(caseMap)) {
-        if (typeof value !== "object") {
-            let pyfilepath = getfilePath(key);
-            if (!!paperMap[pyfilepath] === false) {
-                paperMap[pyfilepath] = {};
-            }
-            paperMap[pyfilepath][key] = value;
-        }
-        else {
-            for (let [k, y] of Object.entries(value)) {
-
-                let pyfilepath = getfilePath(key);
-                if (!!paperMap[pyfilepath] === false) {
-                    paperMap[pyfilepath] = {};
-                }
-                paperMap[pyfilepath][k] = y;
-            }
-        }
-
-    }
-    return paperMap;
-};
-
 let Event = new Vue();
 let username = getusername();
 let casefullname = null;
@@ -299,7 +249,6 @@ const CaseFloatBtn = {
         }
     }, mounted() {
         let _this = this;
-         console.log(casefullname+"sda"+this.$el);
         Event.$on('run-case', function (casefullname) {
 
             _this.casefullname = casefullname;
@@ -485,55 +434,3 @@ const CasePaper = {
 
     }
 };
-const router = new VueRouter({
-    mode: 'history',
-    base: "arbiter",
-    routes: [
-        {path: '/'}, // No props, no nothing
-        {
-            path: '/:casemodel',
-            name: 'casepath',
-            components: {paper: CasePaper,},
-            props: {paper: true,}
-        },
-        {
-            path: '/:casemodel/:pyname',
-            name: 'casepathpy',
-            components: {paper: CasePaper, codefab: CodeFloatBtn},
-            props: {paper: true, codefab: true}
-        }, // Pass route.params to props
-
-    ]
-});
-
-let navbar_app = new Vue({
-    router,
-    el: '#app',
-    data() {
-        this.$http.post("/arbiter/getCaseList").then(function (response) {
-            if (response.status !== 200
-            ) {
-                console.log("存在一个问题，状态码为：" + response.status);
-                return false;
-            }
-            else
-                return response.json();
-        }).then(
-            (json) => {
-                this.modelList = json;
-                allCase = json;
-                Event.$emit('change-paper', json);
-                document.getElementsByTagName("body")[0].style.display = "";
-            });
-        return {modelList: {}}
-    },
-    components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
-        'ArbiterNavbar': ArbiterNavbar,
-        'ArbiterSlide': ArbiterSlide,
-        'CaseFloatBtn':CaseFloatBtn,
-        'CodeFloatBtn': CodeFloatBtn,
-        'CasePaper': CasePaper,
-        'CodePaper': CodePaper,
-    }
-});
-

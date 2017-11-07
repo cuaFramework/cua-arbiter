@@ -23,8 +23,6 @@
 <script src="{% static 'arbiter/js/vue/vue-resource.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static "arbiter/js/ace/ace.js" %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/header.js' %}" type="text/javascript" charset="utf-8"></script>
-
 <div class="arbiter-container">
     {% verbatim %}
     <div id="app">
@@ -162,7 +160,7 @@
 <template id="codeFloatBtn">
     {% verbatim %}
     <div id="code-float-btn" v-if="modalShow" >
-        <div style=" position: relative;z-index: 1; float: right;bottom: 110px;right: 60px;"
+        <div style=" position: relative;z-index: 1; float: right;bottom: 80px;right: 60px;"
              @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
             <mu-float-button style="background-color:#bf360c" @click="edit()" :icon="editIcon" class="demo-float-button"></mu-float-button>
         </div>
@@ -188,7 +186,7 @@
 <template id="caseFloatBtn">
     {% verbatim %}
     <div id="case-float-btn" v-if="modalShow">
-        <div style="z-index: 1;position: fixed; bottom: 45px; right: 24px;"
+        <div style="z-index: 1;position: fixed; bottom: 15px; right: 45px;"
              @mouseover="onMouseEnterCodeFAB()" @mouseout="onMouseleaveCodeFAB()">
             <mu-float-button id="log" @click="log()" icon="message" secondary mini
                              class="demo-float-button" v-show="seen"
@@ -209,6 +207,9 @@
 
 </template>
 <script src="{% static 'arbiter/js/index.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/slide.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/route.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>
