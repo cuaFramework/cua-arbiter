@@ -423,7 +423,6 @@ const CasePaper = {
         showcode(key, value) {
             this.$router.push({name: 'casepathpy', params: {pyname: key}});
             let caseNamePath = null;
-
             for (let [k, v] of Object.entries(value)) {
                 caseNamePath = k;
             }

@@ -23,9 +23,7 @@ let app = new Vue({
         'ArbiterNavbar': ArbiterNavbar,
         'ArbiterSlide': ArbiterSlide,
         'CaseFloatBtn':CaseFloatBtn,
-        'CodeFloatBtn': CodeFloatBtn,
         'CasePaper': CasePaper,
-        'CodePaper': CodePaper,
     }
 });
 
