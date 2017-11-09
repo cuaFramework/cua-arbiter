@@ -1,6 +1,7 @@
 const userModule = {
     state: {
         username: null,
+        jwtToken: null,
         avatarPicPath: null,
         nickName: null,
         role: null,
@@ -11,6 +12,9 @@ const userModule = {
     mutations: {
         setusername(state, username) {
             state.username = username;
+        },
+        refreshJwtToken(state,) {
+            state.jwtToken = window.localStorage["token"];
         }
     },
     actions: {
@@ -21,6 +25,9 @@ const userModule = {
     getters: {
         username: state => {
             return state.username
+        },
+        jwtHeader: state => {
+            return 'JWT ' + state.jwtToken
         }
     }
 };

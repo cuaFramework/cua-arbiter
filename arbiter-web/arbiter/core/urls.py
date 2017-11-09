@@ -5,7 +5,7 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
 urlpatterns = [
     url(r'^login', views.login, name='login'),
-    url(r'^logout', views.auth_restful.logout, name='logout'),
+    # url(r'^logoutxxx', views.auth_restful.logout, name='logout'),
     url(r'^api-token-auth', obtain_jwt_token),
     url(r'^getUserDetail', views.auth_restful.get_user_detail),
     url(r'^save', views.auth_restful.save_casefile, name='save'),

@@ -24,7 +24,7 @@
 {% verbatim %}
 <div class="root">
     <div id="login-form" class="login">
-        <form @submit.prevent="submit">
+        <form ref="form">
             <h6 id="LoginInfo" class="text-danger">{{ prompt}}</h6>
             <div>
                 <mu-text-field icon="account_circle" name="username" v-model="inputtext.username" label="用户名"
@@ -36,7 +36,7 @@
                                label-float></mu-text-field>
             </div>
             <div>
-                <mu-raised-button class="demo-raised-button" type="submit" name="login-btn" label="登录"
+                <mu-raised-button @click="submit" class="demo-raised-button" name="login-btn" label="登录"
                                   primary></mu-raised-button>
             </div>
         </form>

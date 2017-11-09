@@ -83,7 +83,7 @@ let topaperMap = function (caseMap) {
     return paperMap;
 };
 let toAllpaperMap = function (caseMap) {
-    let paperMap = new Object();
+    let paperMap = {};
     for (let [key, value] of Object.entries(caseMap)) {
         if (typeof value !== "object") {
             let pyfilepath = getfilePath(key);

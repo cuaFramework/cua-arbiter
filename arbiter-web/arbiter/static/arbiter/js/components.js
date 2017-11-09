@@ -3,52 +3,62 @@ let username = getusername();
 let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
 let allCase = null;
-
-const ArbiterNavbar = {
-    template: '#arbiterNavbar'
-    , data: function () {
+const userAvatar = {
+    template: '#userAvatar',
+    store,
+    props: {usernameAbbreviation: null},
+    data: function () {
         return {
-            message: {
-                username: username,
-                href: 'login',
-            },
             userMenuTrigger: null,
             userMenuOpen: false,
-            appMenuTrigger: null,
-            appMenuOpen: false,
-            dialog: false,
-            gitUrlPrefix: '',
-            gitCloneStatus: 'finish',
-            sliderIsOpen: true,
         }
 
     },
     mounted() {
-        this.appMenuTrigger = this.$refs.appIcon.$el;
-        if (!!this.$refs.UserAvatar) {
-            this.userMenuTrigger = this.$refs.UserAvatar.$el;
-        }
-
+        this.userMenuTrigger = this.$refs.UserAvatar.$el;
     },
     methods: {
+                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
         userMenuToggle() {
             this.userMenuOpen = !this.userMenuOpen
         },
         userMenuHandleClose(e) {
             this.userMenuOpen = false
+        }, logout() {
+            deleteAllCookies();
+            let storage = window.localStorage;
+            storage.clear();
+            this.setusername(null);
+            this.refreshJwtToken();
+
         },
+    }
+
+};
+const menuIconButton = {
+    template: '#menuIconButton',store,
+    props: {usernameAbbreviation: null},
+    data: function () {
+        return {
+            appMenuTrigger: null,
+            appMenuOpen: false,
+            dialog: false,
+            gitUrlPrefix: '',
+            gitCloneStatus: 'finish',
+        }
+
+    },
+    mounted() {
+        this.appMenuTrigger = this.$refs.appIcon.$el;
+    },
+    methods: {
+                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
+        ...Vuex.mapGetters(['username','jwtHeader']),
         appMenuToggle() {
             this.appMenuOpen = !this.appMenuOpen
         },
         appMenuHandleClose(e) {
             this.appMenuOpen = false
-        },
-        logout() {
-            deleteAllCookies();
-            let storage = window.localStorage;
-            storage.clear();
-            window.location.href = ".";
-
         },
         openImportDialog() {
             this.dialog = true;
@@ -65,7 +75,8 @@ const ArbiterNavbar = {
                     method: "POST",
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                         'Authorization': this.jwtHeader()
                     },
                     body: JSON.stringify({url: this.gitUrlPrefix})
                 }).then((response) => {
@@ -89,10 +100,82 @@ const ArbiterNavbar = {
 
                 });
         },
+
+    }
+
+};
+const ArbiterNavbar = {
+    template: '#arbiterNavbar',
+    store,
+    computed: {
+        usernameAbbreviation() {
+            if (this.username() != null) {
+                return this.username().substr(0, 2)
+            }
+            else
+                return null;
+        }
+    },
+    data: function () {
+
+
+        return {
+            message: {
+                href: 'login',
+            },
+
+
+            sliderIsOpen: true,
+        }
+
+    },
+    mounted() {
+         this.refreshJwtToken();
+
+        fetch("./getUserDetail",
+            {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'Authorization': this.jwtHeader()
+                }
+            }).then(response => {
+            if (response.status !== 200) {
+                console.log("存在一个问题，状态码为：" + response.status);
+               return false ;
+            }
+            else
+                return response.json();
+        }).then(
+            json => {
+                let storage = window.localStorage;
+                storage["username"] = json["username"];
+                storage["role"] = json["role"];
+                // this.$store.commit('setusername', json["username"]);
+                this.setusername(json["username"]);
+
+            }
+        ).catch((err) => {
+                    console.log("Fetch错误:" + err);
+
+                });
+
+    },
+    methods: {
+        ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
+        ...Vuex.mapGetters(['username','jwtHeader']),
         toggleSlide() {
             this.sliderIsOpen = !this.sliderIsOpen;
             Event.$emit('toggle-slide');
         }
+
+
+    },
+    components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
+        'userAvatar': userAvatar,
+        'menuIconButton': menuIconButton,
     }
 
 };
@@ -129,10 +212,10 @@ const ArbiterSlide = {
     }
 };
 const CodeFloatBtn = {
-    template: '#codeFloatBtn',
+    template: '#codeFloatBtn',store,
     props: {
         pypath: null,
-        casemodel:null
+        casemodel: null
 
     },
     data: function () {
@@ -152,6 +235,8 @@ const CodeFloatBtn = {
 
     },
     methods: {
+                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
+        ...Vuex.mapGetters(['username','jwtHeader']),
         openSaveDialog() {
             this.saveDialog = true;
 
@@ -177,7 +262,7 @@ const CodeFloatBtn = {
         },
         edit() {
             if (username === null) {
-                window.location.href = "login";
+                window.location.href = "/arbiter/login";
             }
             let codeContent = ace.edit("code-paper");
             if (this.editIcon === "mode_edit") {
@@ -205,7 +290,8 @@ const CodeFloatBtn = {
                         headers: {
                             "X-CSRFToken": getCookie("csrftoken"),
                             'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                             'Authorization': this.jwtHeader()
                         },
                         body: JSON.stringify({casepath: caseNamePath, content: newCodeContent})
                     }).then((response) => {
@@ -256,8 +342,8 @@ const CaseFloatBtn = {
         });
 
     },
-    destroy(){
-        console.log(casefullname+"qwerte"+this.$el);
+    destroy() {
+        console.log(casefullname + "qwerte" + this.$el);
         Event.$off("run-case");
     },
     methods: {
@@ -283,7 +369,7 @@ const CaseFloatBtn = {
         },
         run() {
             if (username === null) {
-                window.location.href = "login";
+                window.location.href = "/arbiter/login";
             }
             else {
                 run_socket.onmessage = (res) => {
@@ -303,7 +389,7 @@ const CaseFloatBtn = {
         ,
         add() {
             if (username === null) {
-                window.location.href = "login";
+                window.location.href = "/arbiter/login";
             }
         },
     }

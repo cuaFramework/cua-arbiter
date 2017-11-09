@@ -77,13 +77,13 @@ class auth_restful(APIView):
         return JsonResponse(response_data)
 
     # 注销
-    @api_view(['POST'])
+    @api_view(['GET'])
     def logout(request):
         Token.objects.get(user_id=request.user.id).delete()
-
+        Token.objects.create(user_id=request.user.id)
         response_data = {}
         response_data['success'] = True
-        return JsonResponse(response_data)
+        return JsonResponse(response_data, content_type="application/json")
 
     # 保存文件方法
     @api_view(['POST'])

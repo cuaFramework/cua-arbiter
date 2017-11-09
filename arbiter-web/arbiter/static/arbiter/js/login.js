@@ -6,10 +6,10 @@ const login_app = new Vue({
     el: '#login-form',
     data: {
         inputtext: {},
-        prompt: ""
+        prompt: "",
     },
     methods: {
-        submit() {
+        submit(e) {
             fetch("api-token-auth",
                 {
                     method: "POST",
@@ -34,29 +34,7 @@ const login_app = new Vue({
                     if (msg.token) {
                         let storage = window.localStorage;
                         storage["token"] = msg.token;
-                        fetch("./getUserDetail",
-                            {
-                                method: "POST",
-                                credentials: "same-origin",
-                                headers: {
-                                    'Accept': 'application/json, text/plain, */*',
-                                    'Content-Type': 'application/json'
-                                }
-                            }).then(response => {
-                            if (response.status !== 200
-                            ) {
-                                console.log("存在一个问题，状态码为：" + response.status);
-                                return false;
-                            }
-                            else
-                                return response.json();
-                        }).then(
-                            json => {
-                                storage["username"] = json["username"];
-                                storage["role"] = json["role"];
-                                window.location.href = ".";
-                            }
-                        );
+                     window.location.href ="."
                     }
                     else {
                         this.prompt = "获取登陆密钥失败";

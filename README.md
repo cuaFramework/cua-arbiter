@@ -15,3 +15,7 @@
 4. 安装好mysql redis，elk。在config.py中修改成相对应的配置属性
 5. 修改运行时选项，设置 manage.py路径，脚本命令为runserver
 6. 或直接使用 python manage.py　runserver
+
+## 浏览器支持
+- chrome 60+
+- firefox 55+
