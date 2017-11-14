@@ -1,6 +1,6 @@
 let app = new Vue({
     router,
-    el: '#app',
+    el: '#app',store,
     data() {
         this.$http.post("/arbiter/getCaseList").then(function (response) {
             if (response.status !== 200
@@ -13,11 +13,14 @@ let app = new Vue({
         }).then(
             (json) => {
                 this.modelList = json;
-                allCase = json;
+                this.setAllCases(json);
                 Event.$emit('change-paper', json);
                 document.getElementsByTagName("body")[0].style.display = "";
             });
         return {modelList: {}}
+    },
+    methods:{
+         ...Vuex.mapMutations(['setAllCases']),
     },
     components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
         'ArbiterNavbar': ArbiterNavbar,

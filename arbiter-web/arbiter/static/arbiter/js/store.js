@@ -1,3 +1,6 @@
+//vuex：管理各个公用变量的store
+
+//vuex用户模块：管理登陆的用户数据
 const userModule = {
     state: {
         username: null,
@@ -31,13 +34,23 @@ const userModule = {
         }
     }
 };
-
+//vuex用例模块：管理当前项目的所有用例
 const caseModule = {
-    // state: { ... },
-    // mutations: { ... },
+    state: {allCases: null, packageList: null, caseList: null, currentPyPath: null},
+    mutations: {
+        setAllCases(state, allCases) {
+            state.allCases = allCases;
+        },
+    },
+    getters: {
+        getAllCases: state => {
+            return state.allCases
+        }
+    }
     // actions: { ... }
 };
 
+//store：所有vuex模块的集合
 const store = new Vuex.Store({
     modules: {
         user: userModule,

@@ -1,8 +1,8 @@
+//所有用到的组件
 let Event = new Vue();
-let username = getusername();
-let casefullname = null;
 let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
-let allCase = null;
+//****以下为所有用到的组件：
+//用户图标和其下拉菜单组件
 const userAvatar = {
     template: '#userAvatar',
     store,
@@ -12,13 +12,12 @@ const userAvatar = {
             userMenuTrigger: null,
             userMenuOpen: false,
         }
-
     },
     mounted() {
         this.userMenuTrigger = this.$refs.UserAvatar.$el;
     },
     methods: {
-                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
         userMenuToggle() {
             this.userMenuOpen = !this.userMenuOpen
         },
@@ -30,13 +29,12 @@ const userAvatar = {
             storage.clear();
             this.setusername(null);
             this.refreshJwtToken();
-
         },
     }
-
 };
+//菜单图标和其下拉菜单组件
 const menuIconButton = {
-    template: '#menuIconButton',store,
+    template: '#menuIconButton', store,
     props: {usernameAbbreviation: null},
     data: function () {
         return {
@@ -46,14 +44,13 @@ const menuIconButton = {
             gitUrlPrefix: '',
             gitCloneStatus: 'finish',
         }
-
     },
     mounted() {
         this.appMenuTrigger = this.$refs.appIcon.$el;
     },
     methods: {
-                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
-        ...Vuex.mapGetters(['username','jwtHeader']),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         appMenuToggle() {
             this.appMenuOpen = !this.appMenuOpen
         },
@@ -76,7 +73,7 @@ const menuIconButton = {
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                         'Authorization': this.jwtHeader()
+                        'Authorization': this.jwtHeader()
                     },
                     body: JSON.stringify({url: this.gitUrlPrefix})
                 }).then((response) => {
@@ -100,16 +97,15 @@ const menuIconButton = {
 
                 });
         },
-
     }
-
 };
+//顶部bar组件
 const ArbiterNavbar = {
     template: '#arbiterNavbar',
     store,
     computed: {
         usernameAbbreviation() {
-            if (this.username() != null) {
+            if (!!this.username()) {
                 return this.username().substr(0, 2)
             }
             else
@@ -117,20 +113,15 @@ const ArbiterNavbar = {
         }
     },
     data: function () {
-
-
         return {
             message: {
                 href: 'login',
             },
-
-
             sliderIsOpen: true,
         }
-
     },
     mounted() {
-         this.refreshJwtToken();
+        this.refreshJwtToken();
 
         fetch("./getUserDetail",
             {
@@ -144,7 +135,7 @@ const ArbiterNavbar = {
             }).then(response => {
             if (response.status !== 200) {
                 console.log("存在一个问题，状态码为：" + response.status);
-               return false ;
+                return false;
             }
             else
                 return response.json();
@@ -158,20 +149,16 @@ const ArbiterNavbar = {
 
             }
         ).catch((err) => {
-                    console.log("Fetch错误:" + err);
-
-                });
-
+            console.log("请求错误:" + err);
+        });
     },
     methods: {
-        ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
-        ...Vuex.mapGetters(['username','jwtHeader']),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         toggleSlide() {
             this.sliderIsOpen = !this.sliderIsOpen;
             Event.$emit('toggle-slide');
         }
-
-
     },
     components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
         'userAvatar': userAvatar,
@@ -179,6 +166,7 @@ const ArbiterNavbar = {
     }
 
 };
+//侧边菜单组件
 const ArbiterSlide = {
     props: {modelList: {}},
     template: '#arbiterNavSlide',
@@ -211,8 +199,9 @@ const ArbiterSlide = {
 
     }
 };
+//py文件paper中的fab组件
 const CodeFloatBtn = {
-    template: '#codeFloatBtn',store,
+    template: '#codeFloatBtn', store,
     props: {
         pypath: null,
         casemodel: null
@@ -226,7 +215,6 @@ const CodeFloatBtn = {
             saveDialog: false,
             logDialog: false,
             saveStatus: 'finish',
-            casefullname: '',
             logContent: [],
             path: null
         }
@@ -235,8 +223,8 @@ const CodeFloatBtn = {
 
     },
     methods: {
-                ...Vuex.mapMutations(['setusername','refreshJwtToken',]),
-        ...Vuex.mapGetters(['username','jwtHeader']),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         openSaveDialog() {
             this.saveDialog = true;
 
@@ -261,9 +249,6 @@ const CodeFloatBtn = {
             this.logContent = [];
         },
         edit() {
-            if (username === null) {
-                window.location.href = "/arbiter/login";
-            }
             let codeContent = ace.edit("code-paper");
             if (this.editIcon === "mode_edit") {
 
@@ -291,7 +276,7 @@ const CodeFloatBtn = {
                             "X-CSRFToken": getCookie("csrftoken"),
                             'Accept': 'application/json, text/plain, */*',
                             'Content-Type': 'application/json',
-                             'Authorization': this.jwtHeader()
+                            'Authorization': this.jwtHeader()
                         },
                         body: JSON.stringify({casepath: caseNamePath, content: newCodeContent})
                     }).then((response) => {
@@ -311,40 +296,35 @@ const CodeFloatBtn = {
                             this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
 
                         } else {
-                            alert("保存失败！");
+                            alert("文件保存失败！");
                         }
                     });
                 }).catch((err) => {
                     console.log("Fetch错误:" + err);
-
                 })
             }
-
         }
     }
 };
+//用例列表中的fab组件
 const CaseFloatBtn = {
     template: '#caseFloatBtn',
     data: function () {
         return {
             modalShow: true,
             seen: false,
-            casefullname: "",
+            testcase: "",
             logDialog: false,
             logContent: [],
         }
     }, mounted() {
         let _this = this;
-        Event.$on('run-case', function (casefullname) {
+        Event.$on('run-case', function (testcase) {
 
-            _this.casefullname = casefullname;
+            _this.testcase = testcase;
             _this.run();
         });
 
-    },
-    destroy() {
-        console.log(casefullname + "qwerte" + this.$el);
-        Event.$off("run-case");
     },
     methods: {
 
@@ -368,32 +348,28 @@ const CaseFloatBtn = {
             this.logContent = [];
         },
         run() {
-            if (username === null) {
-                window.location.href = "/arbiter/login";
-            }
-            else {
+
                 run_socket.onmessage = (res) => {
                     this.logContent.push(res.data);
                     //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
 
                 };
                 run_socket.onopen = () => {
-                    run_socket.send("runCase " + this.casefullname);
+                    run_socket.send("runCase " + this.testcase);
                 };
                 // Call onopen directly if socket is already open
                 if (run_socket.readyState === WebSocket.OPEN)
                     run_socket.onopen();
-            }
+
             this.logDialog = true;
         }
         ,
         add() {
-            if (username === null) {
-                window.location.href = "/arbiter/login";
-            }
+
         },
     }
 };
+//py文件的paper组件
 const CodePaper = {
     props: {pypathx: null,},
     data: function () {
@@ -455,8 +431,9 @@ const CodePaper = {
 
     }
 };
+//每个case的paper组件
 const CasePaper = {
-    props: {casemodel: "", pyname: ""},
+    props: {casemodel: "", pyname: ""},store,
     template: '#casePaper',
     components: {
         'CodePaper': CodePaper,
@@ -468,10 +445,10 @@ const CasePaper = {
     watch: {
         casemodel: function (val) {
             if (val.split(".").length < 3) {
-                Event.$emit('change-paper', allCase);
+                Event.$emit('change-paper', this.getAllCases());
             }
             else {
-                Event.$emit('change-paper-all', allCase);
+                Event.$emit('change-paper-all', this.getAllCases());
             }
         }
     },
@@ -493,18 +470,17 @@ const CasePaper = {
             _this.caseMap = toAllpaperMap(_this.caseMap);
         });
 
-        if (!!allCase) {
-            Event.$emit('change-paper', allCase);
+        if (!!_this.getAllCases()) {
+            Event.$emit('change-paper', _this.getAllCases());
         }
 
     }
     ,
     methods: {
 
+ ...Vuex.mapGetters(['getAllCases']),
         run(testcase) {
-            console.log(testcase);
             Event.$emit('run-case', testcase);
-
         },
         showcode(key, value) {
             this.$router.push({name: 'casepathpy', params: {pyname: key}});

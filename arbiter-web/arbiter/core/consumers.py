@@ -96,7 +96,7 @@ def ws_message(message):
 
 
 
-# 断开连接时发送一个disconnect字符串，当然，他已经收不到了
+# 断开连接时发送一个disconnect字符串
 @channel_session
 def ws_disconnect(message):
     message.reply_channel.send({"disc": True})
