@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
 import datetime
+import redis
 from config import arbiter_prod_config
 
 env_config = arbiter_prod_config
@@ -22,6 +22,7 @@ elk_url=env_config['elk_url']
 redis_host = env_config['redis_host']
 redis_port = env_config['redis_port']
 redis_dj_db = env_config['redis_dj_db']
+redis_arbiter_db = env_config['redis_arbiter_db']
 redis_elk_db = env_config['redis_elk_db']
 redis_url = 'redis://'+redis_host+':'+str(redis_port)+'/'+str(redis_dj_db)
 mysql_host = env_config['mysql_host']
@@ -30,7 +31,8 @@ case_path = env_config['case_path']
 os.environ["CASEPATH"] = case_path
 os.putenv("CASEPATH", case_path)
 case_obj_name = case_path.split('/')[0]
-# connect('case_log', host=mongodb_host, port=mongodb_port)
+redis_arbiter_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_arbiter_db)
+redis_elk_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_elk_db)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))

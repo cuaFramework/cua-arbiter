@@ -3,13 +3,10 @@ from subprocess import Popen, PIPE, STDOUT
 from channels.sessions import channel_session
 
 from arbiter.models import Case_Run_Info
-from ..settings import redis_host,redis_port,redis_elk_db
+from ..settings import redis_elk_pool
 import json
 import redis
-
 from ..common import utils
-# message.reply_channel    一个客户端通道的对象
-# message.reply_channel.send(chunk)  用来唯一返回这个客户端
 
 # 一个管道大概会持续30s
 
@@ -19,12 +16,11 @@ isEditFilesName = []#全局变量，保存正在被编辑的文件名
 
 #logstash 在redis key值
 logstash_redis_key = 'logstash-arbiter-list'
-re = redis.Redis(host=redis_host, port=redis_port,db=redis_elk_db)#redis 连接
+re = redis.Redis(connection_pool=redis_elk_pool)#redis 连接
 # 当连接上时，发回去一个connect字符串
 @channel_session
 def ws_connect(message):
     message.reply_channel.send({"accept": True})
-
 
 # 将发来的信息原样返回
 @channel_session
@@ -41,14 +37,6 @@ def ws_message(message):
         }, immediately=True)
         case_name = cmd.split(' ')[1]
         run_time = utils.getNowtime(1)
-        # if os.name == 'nt':
-        #     setenv = getoutput('set PYTHONPATH='+caseBasePath)
-        #     # runcmd = Popen(['nosetests', '-vv', '-P', case_name], bufsize=0, stdout=PIPE, stderr=STDOUT)
-        # else:
-        #     # setenv = getoutput('export PYTHONPATH=' + caseBasePath)
-        #     setenv = Popen(['/bin/sh', '-c', 'export', 'PYTHONPATH='+caseBasePath], bufsize=0, stdout=PIPE, stderr=STDOUT)
-
-        # runcmd = Popen('nosetests -vv -P --exe  ' + case_name, bufsize=0, stdout=PIPE, stderr=STDOUT)
         runcmd = Popen(['nosetests', '-P', '--nologcapture', case_name], bufsize=0, stdout=PIPE, stderr=STDOUT)
         while True:
             line = runcmd.stdout.readline()
@@ -61,8 +49,6 @@ def ws_message(message):
             # 向redis中发送值
             logData = json.dumps(data)
             re.lpush(logstash_redis_key, logData)
-
-            # log_list.append(line.decode('utf-8'))
             message.reply_channel.send({
                 "text": text
             }, immediately=True)
@@ -76,12 +62,6 @@ def ws_message(message):
         # mysql 存入格式和内容需要完善
         dic = {'log_id':log_id,'case_name':case_name,'run_time': run_time,'author':'hui'}
         Case_Run_Info.objects.create(**dic)
-
-        #mongodb
-        #Run_Log.objects.create(case_info=case_name)
-        #log = Run_Log(case_info=case_name)
-        #log.content ="log_content"
-        #log.save()
 
     if (cmd.split(' ')[0] == 'validateEdit'):
 

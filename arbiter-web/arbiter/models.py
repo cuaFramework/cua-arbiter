@@ -5,22 +5,15 @@ from django.contrib.auth.models import Group
 from mongoengine import *
 import django.utils.timezone as timezone
 
-# Create your models here.
-#用户模型
-# class User (models.Model):
-#     username = models.CharField(max_length=20)
-#     password = models.CharField(max_length=20)
+
 #用例执行日志
 class Run_Log (Document):
     meta = {
         'collection': 'log',
     }
     case_info = StringField(max_length=100)
-    # case_info = models.TextField(max_length=50)
     content =  StringField(max_length=100)
-    # begin_time= models.DateTimeField(auto_now_add=True)
-    # run_time = models.IntegerField(null=True)
-    # operator = models.CharField(max_length=20,null=True)
+
 #运行日志信息模型
 class Case_Run_Info (models.Model):
     log_id = models.UUIDField()
@@ -43,7 +36,3 @@ class Case_Save_Info(models.Model):
     author = models.CharField(max_length=50)
     save_time = models.DateTimeField(default=timezone.now)
 
-# class UserAdmin(admin.ModelAdmin):
-#     list_display = ('username','password')
-#
-# admin.site.register(User,UserAdmin)

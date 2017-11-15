@@ -11,9 +11,6 @@
     margin-bottom: 0;
 }
 
-
-
-
 #arbiter-navbar {
     position: fixed;
     left: 0;
@@ -34,6 +31,7 @@
 #arbiter-navbar .mu-avatar {
 
     margin: 30px;
+    cursor: pointer;
 }
 
 #arbiter-navbar .mu-text-field {

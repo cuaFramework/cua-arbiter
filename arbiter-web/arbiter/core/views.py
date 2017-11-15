@@ -16,10 +16,6 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.views import APIView
 from .models import CaseList
 
-
-class UserForm(forms.Form):
-    username = forms.CharField(label='用户名', max_length=50)
-    password = forms.CharField(label='密码', widget=forms.PasswordInput())
 # 登录
 def login(request):
     return render(request, 'case/login.html')
@@ -29,31 +25,14 @@ def index(request):
     return render(request, 'case/index.html' )
 
 
-def detail(request, case_name):
-    # 日志
-    log_list = []
-    context = {'log_list': log_list}
-    return render(request, "case/detail.html", context)
-
-def editor(request, case_name):
-    return render(request, "case/editor.html")
-
-# 分割路径
-def spiltPath(name):
-    temp = name.split(':')[0]
-    case_class_name = temp.split('.')[-1]  # 用例类名
-    case_dir = temp.replace('.', '/')
-    return case_dir
-
-
 class restful(APIView):
-    # permission_classes = (AllowAny,)
 
+    #获取测试用例树
     @api_view(['GET','POST'])
     @permission_classes([permissions.AllowAny,])
     def get_caselist(request):
         return JsonResponse( CaseList.getList())
-
+    # 获取测试用例工程
     @api_view(['POST'])
     @permission_classes([permissions.AllowAny,])
     def get_caseobj(request):
@@ -64,11 +43,13 @@ class restful(APIView):
         response_data['success'] = True
         return JsonResponse( response_data)
 
-# 接口验证
+
+# 下列接口需要登录验证
 class auth_restful(APIView):
     # 设置permission_classes为必须登陆才能访问下列接口
     permission_classes = (IsAuthenticated,)
 
+    #获取用户信息
     @api_view(['POST'])
     def get_user_detail(request):
         response_data = {}
@@ -94,7 +75,7 @@ class auth_restful(APIView):
         if request.method == 'POST':
             json_str = ((request.body))
             json_obj = json.loads(json_str)
-            case_path = spiltPath(json_obj.get('casepath')) + '.py'
+            case_path = json_obj.get('casepath').split(':')[0].replace('.', '/') + '.py'
             time_str = time.strftime("%Y-%m-%d %H_%M_%S")
             # rename 原文件+时间格式(2017-07-20 18_34_48)
             os.rename('../arbiter-cases/'+case_path_obj+'/' + case_path,
