@@ -26,11 +26,13 @@ redis_elk_db = env_config['redis_elk_db']
 redis_url = 'redis://'+redis_host+':'+str(redis_port)+'/'+str(redis_dj_db)
 mysql_host = env_config['mysql_host']
 mysql_port = env_config['mysql_port']
+pgsql_host = env_config['pgsql_host']
+pgsql_port = env_config['pgsql_port']
 case_path = env_config['case_path']
 os.environ["CASEPATH"] = case_path
 os.putenv("CASEPATH", case_path)
 case_obj_name = case_path.split('/')[0]
-redis_arbiter_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_arbiter_db)
+redis_arbiter_pool = redis.ConnectionPool(host=redis_host,decode_responses=True, port=redis_port, db=redis_arbiter_db)
 redis_elk_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_elk_db)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -162,18 +164,15 @@ JWT_AUTH = {
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.dummy',
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'arbiter_dj',
         'USER': 'luna',  # 你的数据库用户名
         'PASSWORD': 'luna',  # 你的数据库密码
-        'HOST': mysql_host,  # 你的数据库主机，留空默认为localhost
-        'PORT': mysql_port,  # 你的数据库端口
+        'HOST': pgsql_host,  # 你的数据库主机，留空默认为localhost
+        'PORT': pgsql_port,  # 你的数据库端口
         'OPTIONS': {
-            'charset': 'utf8mb4',
-            'sql_mode': 'traditional',
+            'client_encoding': 'utf8',
         },
-
     }
 }
 # AUTHENTICATION_BACKENDS = ('mongoengine.django.auth.MongoEngineBackend',)

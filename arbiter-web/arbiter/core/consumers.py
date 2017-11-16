@@ -16,7 +16,8 @@ isEditFilesName = []#全局变量，保存正在被编辑的文件名
 
 #logstash 在redis key值
 logstash_redis_key = 'logstash-arbiter-list'
-re = redis.Redis(connection_pool=redis_elk_pool)#redis 连接
+#redis 连接
+re = redis.Redis(connection_pool=redis_elk_pool)
 # 当连接上时，发回去一个connect字符串
 @channel_session
 def ws_connect(message):
