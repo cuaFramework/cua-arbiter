@@ -39,6 +39,26 @@ def index(request):
     res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
     data =     res.json()  # 返回的数据
 
+    return render(request,'index.html')
+
+def home(request):
+    querybody = {
+        "from": 0,
+        "size": 10,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": "2017-08-30T02:03:22.566Z"
+                }
+            }
+        }
+    }
+
+    # querybody['query'] = "xxx"
+    # payload = "{'query': { 'match_all': {} }}"
+    res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
+    data =     res.json()  # 返回的数据
+
     return render(request,'home.html')
 #去Es 根据id 查询
 def search(id):

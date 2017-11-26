@@ -1,0 +1,73 @@
+{% load static %}
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon" />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>日志查询</title>
+
+    <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'arbiter/css/wholog/index.css' %}"/>
+    {% block head %}
+    {% endblock head %}
+</head>
+
+<body>
+<script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
+
+{% verbatim %}
+<div id="log-root">
+    <div class="query">
+        <div class="query-content">
+            <div class="flex-query">
+            <mu-flexbox class="mt8" orient="vertical">
+                <mu-flexbox-item order="0">
+                    <span>从</span>
+                    <mu-date-picker mode="landscape" v-bind:auto-ok="auto_ok" hint-text="请选择开始日期" container="inline"></mu-date-picker>
+                    <mu-time-picker mode="landscape" v-bind:auto-ok="auto_ok" hint-text="请选择开始时间" container="inline" format="24hr"></mu-time-picker>
+                    <span>到</span>
+                    <mu-date-picker mode="landscape" auto-ok="true" hint-text="请选择结束日期" container="inline"></mu-date-picker>
+                    <mu-time-picker mode="landscape" auto-ok="true" hint-text="请选择结束时间" container="inline" format="24hr"></mu-time-picker><br/>
+                </mu-flexbox-item>
+                <mu-flexbox-item order="2" class="query-button">
+                    <mu-raised-button class="demo-raised-button" label="查询" icon="search" primary/>
+                </mu-flexbox-item>
+            </mu-flexbox>
+        </div>
+       </div>
+    </div><!-- query end-->
+    <!--log-table begin-->
+    <div class="log-table">
+        <mu-table>
+            <mu-thead slot="header">
+              <mu-tr>
+                <mu-th width="15%" tooltip="ID" >ID</mu-th>
+                <mu-th width="25%" tooltip="用例名">用例名</mu-th>
+                <mu-th width="15%" tooltip="执行人">执行人</mu-th>
+                <mu-th width="20%" tooltip="运行时间">运行时间</mu-th>
+                <mu-th width="15%" tooltip="操作">操作</mu-th>
+              </mu-tr>
+            </mu-thead>
+            <mu-tbody>
+              <mu-tr v-for="item,index in tableData"  :key="index">
+                <mu-td width="15%">{{item.logId}}</mu-td>
+                <mu-td width="25%">{{item.caseName}}</mu-td>
+                <mu-td width="15%">{{item.author}}</mu-td>
+                <mu-td width="20%">{{item.runTime}}</mu-td>
+                <mu-td width="15%"> <mu-raised-button class="demo-raised-button" label="查看详细" icon="search" primary/></mu-td>
+
+              </mu-tr>
+            </mu-tbody>
+        </mu-table>
+    </div> <!-- table end-->
+</div><!-- root end-->
+{% endverbatim %}
+<script src="{% static 'arbiter/js/wholog/index.js' %}" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
