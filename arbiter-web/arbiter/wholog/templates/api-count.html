@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="{% get_current_language as LANGUAGE_CODE %}">
+<link rel="shortcut icon" href="{% static 'arbiter/imgs/favicon.ico' %}" type="image/vnd.microsoft.icon"/>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>接口请求统计</title>
+    <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/theme-teal.min.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/wholog/api-count.css' %}"/>
+    {% block head %}
+    {% endblock head %}
+</head>
+<body>
+<script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
+ <!-- 引入 echarts.js -->
+<script src="{% static 'arbiter/js/echarts.js'%}"></script>
+{% verbatim %}
+<div id="main">
+    <div id="search_content">
+        <mu-text-field icon="search" label="输入查询的接口" v-model="api_name" label-float v-on:keyup.enter.native="search"></mu-text-field>
+        <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="search" primary></mu-flat-button>
+    </div>
+    <div id="result">
+        <div id="result-header">
+            <span>共请求{{ total }}</span>
+        </div>
+        <div id="result-content">
+           <div id="main-chart">
+
+           </div>
+        </div>
+        </div>
+    </div>
+</div>
+ {% endverbatim %}
+<script src="{% static 'arbiter/js/wholog/api-count.js' %}" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

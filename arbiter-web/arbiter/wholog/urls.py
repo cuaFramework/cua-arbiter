@@ -4,7 +4,8 @@ from . import views
 from rest_framework_jwt.views import obtain_jwt_token,verify_jwt_token
 
 urlpatterns = [
-
+     url(r'^query-api-data', views.query_api_data,name='query-api-data'),
+     url(r'^api-count', views.api_count, name='api-count'),
      url(r'^getAllLog', views.getAllLog, name='getAllLog'),
      url(r'^logDetail', views.getDetailLog, name='getDeatailLog'),
      url(r'^queryLogData', views.queryLogData, name='queryLogData'),

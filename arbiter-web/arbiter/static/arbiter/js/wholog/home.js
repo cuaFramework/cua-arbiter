@@ -254,7 +254,10 @@ function openLogDetail(adata){
 
           },
           error:function (err,status) {
-              alert("出现了一个错误:"+status);
+              if (response.status === 401){
+                      alert("请先登录");
+                      location.href='../login';
+                  }
           }
       });
 
