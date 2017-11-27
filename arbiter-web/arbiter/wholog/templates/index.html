@@ -29,14 +29,14 @@
             <mu-flexbox class="mt8" orient="vertical">
                 <mu-flexbox-item order="0">
                     <span>从</span>
-                    <mu-date-picker mode="landscape" v-bind:auto-ok="auto_ok" hint-text="请选择开始日期" container="inline"></mu-date-picker>
-                    <mu-time-picker mode="landscape" v-bind:auto-ok="auto_ok" hint-text="请选择开始时间" container="inline" format="24hr"></mu-time-picker>
+                    <mu-date-picker mode="landscape" :auto-ok="true" hint-text="请选择开始日期" container="inline"></mu-date-picker>
+                    <mu-time-picker mode="landscape" :auto-ok="false" hint-text="请选择开始时间" container="inline" format="24hr"></mu-time-picker>
                     <span>到</span>
-                    <mu-date-picker mode="landscape" auto-ok="true" hint-text="请选择结束日期" container="inline"></mu-date-picker>
-                    <mu-time-picker mode="landscape" auto-ok="true" hint-text="请选择结束时间" container="inline" format="24hr"></mu-time-picker><br/>
+                    <mu-date-picker mode="landscape" :auto-ok="true" hint-text="请选择结束日期" container="inline"></mu-date-picker>
+                    <mu-time-picker mode="landscape" :auto-ok="false" hint-text="请选择结束时间" container="inline" format="24hr"></mu-time-picker><br/>
                 </mu-flexbox-item>
                 <mu-flexbox-item order="2" class="query-button">
-                    <mu-raised-button class="demo-raised-button" label="查询" icon="search" primary/>
+                    <mu-raised-button background-color="#6495ED" label="查询" icon="search" primary/>
                 </mu-flexbox-item>
             </mu-flexbox>
         </div>
@@ -44,7 +44,7 @@
     </div><!-- query end-->
     <!--log-table begin-->
     <div class="log-table">
-        <mu-table>
+        <mu-table :fixed-header="true" height="540px">
             <mu-thead slot="header">
               <mu-tr>
                 <mu-th width="15%" tooltip="ID" >ID</mu-th>
@@ -60,7 +60,7 @@
                 <mu-td width="25%">{{item.caseName}}</mu-td>
                 <mu-td width="15%">{{item.author}}</mu-td>
                 <mu-td width="20%">{{item.runTime}}</mu-td>
-                <mu-td width="15%"> <mu-raised-button class="demo-raised-button" label="查看详细" icon="search" primary/></mu-td>
+                <mu-td width="15%"> <mu-raised-button background-color="#6495ED" label="查看详细" icon="search" primary/></mu-td>
 
               </mu-tr>
             </mu-tbody>
