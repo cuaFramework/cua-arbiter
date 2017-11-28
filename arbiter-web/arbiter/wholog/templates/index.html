@@ -44,7 +44,7 @@
     </div><!-- query end-->
     <!--log-table begin-->
     <div class="log-table">
-        <mu-table :fixed-header="true" height="540px">
+        <mu-table  :fixed-header="true" height="540px">
             <mu-thead slot="header">
               <mu-tr>
                 <mu-th width="25%" tooltip="ID" >ID</mu-th>
@@ -54,16 +54,16 @@
                 <mu-th width="15%" tooltip="操作">操作</mu-th>
               </mu-tr>
             </mu-thead>
-            <mu-tbody>
+            <mu-tbody v-if="tableData!=null">
               <mu-tr v-for="item,index in tableData"  :key="index">
                 <mu-td width="25%">{{item.log_id}}</mu-td>
                 <mu-td width="25%">{{item.case_name}}</mu-td>
                 <mu-td width="10%">{{item.author}}</mu-td>
                 <mu-td width="15%">{{item.run_time}}</mu-td>
                 <mu-td width="15%"> <mu-raised-button background-color="#6495ED" label="查看详细" icon="search" primary/></mu-td>
-
               </mu-tr>
             </mu-tbody>
+            <p class="nodata" v-if="tableData==null">暂无数据</p>
         </mu-table>
     </div> <!-- table end-->
 </div><!-- root end-->

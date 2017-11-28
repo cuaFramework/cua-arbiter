@@ -10,7 +10,7 @@ var log_app = new Vue({
         startTime:'00:00',
         endDate:'2017-11-28',
         endTime:'23:59',
-        tableData: [],
+        tableData: null,
     },
 
     /*方法*/
@@ -23,7 +23,6 @@ var log_app = new Vue({
                 }).then((response) => {
                     return response.json();
                 }).then((json) => {
-                    console.log(json['data']);
                     this.tableData = json['data'];
                 }).catch((err) => {
                     console.log(err)
