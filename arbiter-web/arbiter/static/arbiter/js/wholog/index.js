@@ -6,118 +6,31 @@
 var log_app = new Vue({
     el: '#log-root',
     data: {
-        tableData: [
-        {
-          logId: '123455-22667728800-222-1128',
-          caseName: 'test-123',
-          author:'hui',
-          runTime:'2019-10-22T10:11:12 122'
-        },
-        {
-          logId: '74363673822',
-          caseName: 'yuyueu',
-          author:'hui',
-          runTime:'2018-10-22'
-        },
-        {
-          logId: 'Ju383838321',
-          caseName: 'ghyueueueueeyysususussuususuusuususjxjs',
-          author:'hui',
-          runTime:'2017-11-22'
-        },
-        {
-          logId: '9303-33-333h',
-          caseName: '干哈个和尚师父时间计算机决绝与诶',
-          author:'hui',
-          runTime:'2017-10-23'
-        },
-            {
-          logId: '123455-22667728800-222-1128',
-          caseName: 'test-123',
-          author:'hui',
-          runTime:'2019-10-22T10:11:12 122'
-        },
-        {
-          logId: '74363673822',
-          caseName: 'yuyueu',
-          author:'hui',
-          runTime:'2018-10-22'
-        },
-        {
-          logId: 'Ju383838321',
-          caseName: 'ghyueueueueeyysususussuususuusuususjxjs',
-          author:'hui',
-          runTime:'2017-11-22'
-        },
-        {
-          logId: '9303-33-333h',
-          caseName: '干哈个和尚师父时间计算机决绝与诶',
-          author:'hui',
-          runTime:'2017-10-23'
-        },
-            {
-          logId: '123455-22667728800-222-1128',
-          caseName: 'test-123',
-          author:'hui',
-          runTime:'2019-10-22T10:11:12 122'
-        },
-        {
-          logId: '74363673822',
-          caseName: 'yuyueu',
-          author:'hui',
-          runTime:'2018-10-22'
-        },
-        {
-          logId: 'Ju383838321',
-          caseName: 'ghyueueueueeyysususussuususuusuususjxjs',
-          author:'hui',
-          runTime:'2017-11-22'
-        },
-        {
-          logId: '9303-33-333h',
-          caseName: '干哈个和尚师父时间计算机决绝与诶',
-          author:'hui',
-          runTime:'2017-10-23'
-        },
-{
-          logId: '74363673822',
-          caseName: 'yuyueu',
-          author:'hui',
-          runTime:'2018-10-22'
-        },
-        {
-          logId: 'Ju383838321',
-          caseName: 'ghyueueueueeyysususussuususuusuususjxjs',
-          author:'hui',
-          runTime:'2017-11-22'
-        },
-        {
-          logId: '9303-33-333h',
-          caseName: '干哈个和尚师父时间计算机决绝与诶',
-          author:'hui',
-          runTime:'2017-10-23'
-        },
-            {
-          logId: '74363673822',
-          caseName: 'yuyueu',
-          author:'hui',
-          runTime:'2018-10-22'
-        },
-        {
-          logId: 'Ju383838321',
-          caseName: 'ghyueueueueeyysususussuususuusuususjxjs',
-          author:'hui',
-          runTime:'2017-11-22'
-        },
-        {
-          logId: '9303-33-333h',
-          caseName: '干哈个和尚师父时间计算机决绝与诶',
-          author:'hui',
-          runTime:'2017-10-23'
-        },
-      ],
+        startDate:"2017-10-27",
+        startTime:'00:00',
+        endDate:'2017-11-28',
+        endTime:'23:59',
+        tableData: [],
     },
 
+    /*方法*/
+    methods:{
+        queryData(){
+            startTime = this.startDate + " " + this.startTime;
+            endTime = this.endDate + " " + this.endTime;
+            fetch('../wholog/getAllLog?startTime=' + startTime + '&endTime=' + endTime, {
+                    method: 'get'
+                }).then((response) => {
+                    return response.json();
+                }).then((json) => {
+                    console.log(json['data']);
+                    this.tableData = json['data'];
+                }).catch((err) => {
+                    console.log(err)
+                });
+
+        }/*queryData*/
+    }
 });
 
 

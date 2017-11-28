@@ -142,21 +142,31 @@ def queryLogData(request):
     response_data = {"data": log_data_list}
     return JsonResponse(response_data)
 
-@api_view(['GET'])
+# todo 加上api_view
 def getAllLog(request):
-    "获取数据库所有日志列表"
+    # "获取数据库所有日志列表"
     #获取前台发送来的参数
     start_time = request.GET.get('startTime')
     end_time = request.GET.get('endTime')
-    key_word = request.GET.get('keyWords')
     #将字符串转换成对应数据库日期时间
     date_from =datetime.datetime.strptime(start_time,'%Y-%m-%d %H:%M')
     date_to =datetime.datetime.strptime(end_time,'%Y-%m-%d %H:%M')
-    #查询时间范围内的数据库
-    log_list = Case_Run_Info.objects.filter(run_time__range=(date_from,date_to)).order_by('run_time')
-    data = serializers.serialize('json',log_list)
-    return HttpResponse(data)
-
+    # 查询时间范围内的数据库结果
+    log_results = Case_Run_Info.objects.filter(run_time__range=(date_from,date_to)).order_by('run_time')
+    # 将queryset转成json串
+    log_results = serializers.serialize('json',log_results)
+    res_jsons = json.loads(log_results)
+    response_data_list = []
+    response_data_dict = {}
+    # 循环将fields字段内容取出 追加到list中，在存放到字典中返回
+    if res_jsons:
+        for res_json in res_jsons:
+            response_data_list.append(res_json['fields'])
+        response_data_dict['data'] = response_data_list  # 存放到字典中返回给前端
+    else:
+        response_data_dict['data'] = None
+    return JsonResponse(response_data_dict)
+# todo 加上api_view
 @api_view(['GET'])
 def getDetailLog(request):
     #通过logid 获取具体日志
