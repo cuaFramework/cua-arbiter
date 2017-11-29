@@ -18,14 +18,30 @@ var log_app = new Vue({
         queryData(){
             startTime = this.startDate + " " + this.startTime;
             endTime = this.endDate + " " + this.endTime;
-            fetch('../wholog/getAllLog?startTime=' + startTime + '&endTime=' + endTime, {
-                    method: 'get'
+
+            fetch('../wholog/getAllLog',
+                {
+                    method: 'POST',
+                    credentials:"same-origin",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json',
+                    },
+                    body:JSON.stringify({startTime:startTime,endTime:endTime})
                 }).then((response) => {
-                    return response.json();
+                    /*判断请求状态码*/
+                    if (response.status !== 200){
+                        console.log("请求失败，状态码为：" + response.status);
+                        return;
+                    }else {
+                        return response.json();
+                    }
                 }).then((json) => {
+                    /*给tableData赋值*/
                     this.tableData = json['data'];
                 }).catch((err) => {
-                    console.log(err)
+                    console.log("请求wholog/getAllLog出错：" + err);
                 });
 
         }/*queryData*/

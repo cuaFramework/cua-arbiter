@@ -144,10 +144,12 @@ def queryLogData(request):
 
 # todo 加上api_view
 def getAllLog(request):
-    # "获取数据库所有日志列表"
     #获取前台发送来的参数
-    start_time = request.GET.get('startTime')
-    end_time = request.GET.get('endTime')
+    if request.method == 'POST':
+        json_str = ((request.body))
+        json_obj = json.loads(json_str)
+        start_time = json_obj.get('startTime')
+        end_time = json_obj.get('endTime')
     #将字符串转换成对应数据库日期时间
     date_from =datetime.datetime.strptime(start_time,'%Y-%m-%d %H:%M')
     date_to =datetime.datetime.strptime(end_time,'%Y-%m-%d %H:%M')
