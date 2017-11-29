@@ -33,17 +33,10 @@ body {
     font-size:120%;
  }
 
- /*#detail-log-dialog {*/
-     /*max-height: 300px;*/
-     /*height: 300px;*/
- /*}*/
- /*#detail-log-dialog > mu-dialog{*/
-     /*max-height: 300px;*/
-     /*height: 300px;*/
- /*}*/
-
-
-.log-dialog {
-    max-height: 300px;
-    height: 300px;
+.log-dialog mu-dialog {
+    max-height: 400px;
+    height: 400px;
+}
+#log-content li {
+    list-style-type:none;
 }
