@@ -33,10 +33,10 @@ body {
     font-size:120%;
  }
 
-.log-dialog mu-dialog {
-    max-height: 400px;
-    height: 400px;
+.log-dialog {
+    max-height: 360px;
 }
-#log-content li {
-    list-style-type:none;
+.log-dialog p {
+    margin: 5px;
+    font-size: 12px;
 }

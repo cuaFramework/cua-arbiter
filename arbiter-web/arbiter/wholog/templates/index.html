@@ -67,13 +67,9 @@
         </mu-table>
     </div> <!-- table end-->
     <!--运行详情记录-->
-    <div class="log-dialog">
-      <mu-dialog :open="logDialog.switch" @close="closeDialog" title="详细运行记录" scrollable>
-          <ul id="log-content">
-              <li v-for="item, index in logDialog.menus" :key="index">
-                {{ item }}
-              </li>
-          </ul>
+    <div>
+      <mu-dialog dialog-class="log-dialog" :open="logDialog.switch" @close="closeDialog" title="详细运行记录" scrollable>
+          <p v-for="item, index in logDialog.menus" :key="index">{{ item }}</p>
         <mu-flat-button primary label="关闭" @click="closeDialog" slot="actions"/>
       </mu-dialog>
     </div>
