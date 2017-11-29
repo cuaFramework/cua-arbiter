@@ -25,51 +25,25 @@ body {
     display: flex;
     justify-content: center;
 }
+ a {
+    text-decoration:underline;
+    color: #6495ED;
+}
+ a:hover {
+    font-size:120%;
+ }
 
-/*
-#start-date {
-    margin-right: 15px;
-}
-#start-time {
-    margin-right: 30px;
-}
-#end-date {
-    margin-right: 15px;
-}
-#end-time {
-    margin-right: 0;
-}
+ /*#detail-log-dialog {*/
+     /*max-height: 300px;*/
+     /*height: 300px;*/
+ /*}*/
+ /*#detail-log-dialog > mu-dialog{*/
+     /*max-height: 300px;*/
+     /*height: 300px;*/
+ /*}*/
 
-#start-text {
-    font-weight: bold;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-#end-text {
-    font-weight: bold;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-#key_name > input{
-    width: 824px;
-}
 
-#search-btn {
-    width: 120px;
-    margin-left: 720px;
+.log-dialog {
+    max-height: 300px;
+    height: 300px;
 }
-
-#search-btn > a {
-    width: 120px;
-}
-.log_content {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-#log_content_search{
-    float: right;
-    margin-right: 30px;
-    width: 380px;
-}
-
-*/

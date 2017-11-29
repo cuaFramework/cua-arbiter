@@ -113,10 +113,12 @@ def search(id):
     return  response_data
 
 #去Es 根据id 只查询具体日志数据
-@api_view(['GET'])
+# todo 加上api_view
 def queryLogData(request):
-    log_id = request.GET.get('logId')
-    # 组合查询DSL
+    if request.method == "POST":
+        json_str = ((request.body))
+        json_obj = json.loads(json_str)
+        log_id = json_obj.get('logId')
     querybody = {
         "size": 1000,
         "query": {
