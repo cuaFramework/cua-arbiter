@@ -21,7 +21,7 @@ class Case_Run_Info (models.Model):
     run_time = models.DateTimeField()
     author = models.CharField(max_length=50)
 
-    result = models.CharField(max_length=50,default='waiting')
+    result = models.CharField(max_length=50,default='done')
     version = models.IntegerField(default='10000000')
 
 #用例版本号信息

@@ -19,10 +19,21 @@
 
 <body>
 <script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vuex.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vue-router.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vue-resource.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
 
 {% verbatim %}
-<div id="log-root">
+<div id="app">
+    <div id="root">
+        <router-view name="logApp"></router-view>
+    </div>
+</div>
+{% endverbatim %}
+{% verbatim %}
+<template id="logApp">
+    <div id="log-app">
     <div class="query">
         <div class="query-content">
             <div class="flex-query">
@@ -73,9 +84,14 @@
         <mu-flat-button primary label="关闭" @click="closeDialog" slot="actions"/>
       </mu-dialog>
     </div>
-</div><!-- root end-->
+    </div><!--log-app end-->
+
+</template>
 {% endverbatim %}
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/wholog/index.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

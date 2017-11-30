@@ -113,7 +113,8 @@ def search(id):
     return  response_data
 
 #去Es 根据id 只查询具体日志数据
-# todo 加上api_view
+
+@api_view(['POST'])
 def queryLogData(request):
     if request.method == "POST":
         json_str = ((request.body))
@@ -144,7 +145,7 @@ def queryLogData(request):
     response_data = {"data": log_data_list}
     return JsonResponse(response_data)
 
-# todo 加上api_view
+@api_view(['POST'])
 def getAllLog(request):
     #获取前台发送来的参数
     if request.method == 'POST':
@@ -170,7 +171,7 @@ def getAllLog(request):
     else:
         response_data_dict['data'] = None
     return JsonResponse(response_data_dict)
-# todo 加上api_view
+
 @api_view(['GET'])
 def getDetailLog(request):
     #通过logid 获取具体日志
