@@ -6,11 +6,12 @@ const LogApp = {
     store,
     data:function () {
         return {
+            loginPopup:false, /*未登录是提示popup*/
             startDate: "2017-10-27",
             startTime: '00:00',
             endDate: '2017-12-28',
             endTime: '23:59',
-            tableData: null,
+            tableData: [],
             logDialog: {
                 menus: [],
                 content: [],
@@ -18,9 +19,14 @@ const LogApp = {
             }
         }
     },
-
+    mounted(){
+        this.refreshJwtToken();
+    },
     /*方法*/
     methods:{
+        /*存到vuex map 方便调用store里函数*/
+         ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         /*查询运行列表*/
         queryData(){
             startTime = this.startDate + " " + this.startTime;
@@ -33,13 +39,18 @@ const LogApp = {
                         "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
+                        'Authorization': this.jwtHeader(),
                     },
                     body:JSON.stringify({startTime:startTime,endTime:endTime})
                 }).then((response) => {
                     /*判断请求状态码*/
                     if (response.status !== 200){
-                        console.log("请求失败，状态码为：" + response.status);
-                        return;
+                        if (response.status ===401){
+                              this.openLoginPopup();/*判断未登录时 去打开登录提示*/
+                        }else {
+                            console.log("请求失败，状态码为：" + response.status);
+                            return;
+                        }
                     }else {
                         return response.json();
                     }
@@ -63,12 +74,17 @@ const LogApp = {
                         "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
+                        'Authorization': this.jwtHeader()
                     },
                     body:JSON.stringify({logId:logId})
                 }).then((response) => {
                     /*判断请求状态码*/
                     if (response.status !== 200){
-                        console.log("请求失败，状态码为：" + response.status);
+                        if (response.status ===401){
+                            this.openLoginPopup();/*判断未登录时 去打开登录提示*/
+                        }else {
+                            console.log("请求失败，状态码为：" + response.status);
+                        }
                         return;
                     }else {
                          return response.json();
@@ -89,7 +105,21 @@ const LogApp = {
         },
         closeDialog(){
             this.logDialog.switch = false;
-        }
+        },
+        /*打开登录提示框*/
+        openLoginPopup(){
+            this['loginPopup'] = true;
+        },
+    }, /*method end*/
 
-    }
+    watch:{
+       loginPopup(val){
+           if (val){
+               setTimeout(() =>{
+                   this.loginPopup = false;
+               },1500);
+           }
+       }
+    }, /*watch end*/
+
 };

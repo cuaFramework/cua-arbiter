@@ -84,6 +84,11 @@
         <mu-flat-button primary label="关闭" @click="closeDialog" slot="actions"/>
       </mu-dialog>
     </div>
+    <div>
+         <mu-popup position="top" :overlay="false" popup-class="login-popup-top" :open="loginPopup">
+            请登录后在操作
+        </mu-popup>
+    </div>
     </div><!--log-app end-->
 
 </template>
