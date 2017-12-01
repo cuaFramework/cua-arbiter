@@ -41,14 +41,15 @@ body {
     font-size: 12px;
 }
 .login-popup-top {
-    width: 100%;
-    opacity: .8;
+    width: 80%;
+    opacity: .6;
     height: 48px;
     line-height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     max-width: 375px;
-    margin-top: 20px;
+    margin-top: 5px;
+    color: red;
     background-color: #6495ED;
 }
