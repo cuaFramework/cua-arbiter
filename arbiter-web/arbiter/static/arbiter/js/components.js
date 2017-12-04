@@ -123,7 +123,7 @@ const ArbiterNavbar = {
     mounted() {
         this.refreshJwtToken();
 
-        fetch("./getUserDetail",
+        fetch("/arbiter/getUserDetail",
             {
                 method: "POST",
                 credentials: "same-origin",

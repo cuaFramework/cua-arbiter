@@ -15,9 +15,7 @@ from arbiter.models import Case_Run_Info
 import requests
 import datetime
 
-#sqlserver
-import pyodbc
-import pymssql
+
 #权限
 
 
