@@ -43,8 +43,8 @@
                 <mu-menu>
                     <mu-menu-item title="用例导入" left-icon="add"
                                   @click="openImportDialog"></mu-menu-item>
-                    <mu-menu-item title="用例管理" left-icon="mode_edit"></mu-menu-item>
-                    <mu-menu-item href="./wholog/" title="日志查询" left-icon="history"></mu-menu-item>
+                    <mu-menu-item href="./"title="用例管理" left-icon="mode_edit"></mu-menu-item>
+                    <mu-menu-item href="./index.html" title="日志查询" left-icon="history"></mu-menu-item>
                 </mu-menu>
             </mu-popover>
         <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
@@ -80,7 +80,7 @@
 <template id="arbiterHeader">
     <div id="arbiter-header" :class="{ 'slider-open': sliderIsOpen}">
         <mu-appbar :z-depth="2">
-            <mu-icon-button icon="menu" slot="left" @click="toggleSlide()"></mu-icon-button>
+            <mu-icon-button icon="extension" slot="left"></mu-icon-button>
             <h2 slot="left">日志查询</h2>
             <mu-icon-button v-if="usernameAbbreviation!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat"
                             slot="right"></mu-icon-button>
