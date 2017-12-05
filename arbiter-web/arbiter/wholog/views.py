@@ -9,7 +9,11 @@ from django.core.files import File
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
-
+from rest_framework import permissions
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.views import APIView
 from django.core import serializers
 from arbiter.models import Case_Run_Info
 import requests
@@ -222,3 +226,26 @@ def query_api_data(request):
     response_data = {"data": response_data_dict}
     return JsonResponse(response_data)
 
+
+#登录登出操作
+# 下列接口需要登录验证
+class auth_restful(APIView):
+    # 设置permission_classes为必须登陆才能访问下列接口
+    permission_classes = (IsAuthenticated,)
+
+    # 获取用户信息
+    @api_view(['POST'])
+    def get_user_detail(request):
+        response_data = {}
+        response_data['username'] = request.user.username
+        response_data['role'] = list(request.user.groups.values_list('name', flat=True))
+        return JsonResponse(response_data)
+
+    # 注销 没用到
+    @api_view(['GET'])
+    def logout(request):
+        Token.objects.get(user_id=request.user.id).delete()
+        Token.objects.create(user_id=request.user.id)
+        response_data = {}
+        response_data['success'] = True
+        return JsonResponse(response_data, content_type="application/json")

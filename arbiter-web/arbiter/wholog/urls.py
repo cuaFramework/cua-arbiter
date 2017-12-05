@@ -8,13 +8,10 @@ urlpatterns = [
      url(r'^api-count', views.api_count, name='api-count'),
      url(r'^getAllLog', views.getAllLog, name='getAllLog'),
      url(r'^logDetail111', views.getDetailLog, name='getDeatailLog'),
+     #todo 登录登出抽离出来，现在core和wholog下的view均有
+     url(r'^getUserDetail', views.auth_restful.get_user_detail),
      url(r'^queryLogData', views.queryLogData, name='queryLogData'),
      url(r'^home',views.home,name='home'),
      url(r'^index', views.index, name='index'),
-     # url(r'^api-token-auth/', obtain_jwt_token),
-    # url(r'^getUserDetail', views.restful.get_user_detail),
-    # url(r'^save', views.restful.save_casefile, name='save'),
-    # url(r'^$', views.index, name='index'),
-    # url(r'^(?P<case_name>[\w.:]+)/editor/$', views.editor, name='editor'),
 
 ]

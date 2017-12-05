@@ -4,7 +4,7 @@ const router = new VueRouter({
     routes: [
         {
             path: '/index.html',
-            components: {logApp:LogApp,},
+            components: {logApp:LogApp},
         },
 
     ]
