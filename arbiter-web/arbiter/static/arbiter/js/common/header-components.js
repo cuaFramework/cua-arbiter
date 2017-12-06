@@ -117,6 +117,12 @@ const ArbiterHeader = {
                 href: 'login',
             },
             sliderIsOpen: true,
+            loginDialog :{
+                switch: false,
+                username:"",
+                password:"",
+
+            },
         }
     },
     mounted() {
@@ -157,7 +163,18 @@ const ArbiterHeader = {
         toggleSlide() {
             this.sliderIsOpen = !this.sliderIsOpen;
             Event.$emit('toggle-slide');
-        }
+        },
+        /*点击登录*/
+        toLogin(){
+            this.openLoginDialog();
+        },
+         /*打开和关闭登录对话框*/
+        openLoginDialog(){
+            this.loginDialog.switch = true;
+        },
+        closeLoginDialog(){
+            this.loginDialog.switch = false;
+        },
     },
     components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件
         'userAvatar': userAvatar,

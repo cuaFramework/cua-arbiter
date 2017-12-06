@@ -58,3 +58,7 @@ body {
 .mu-appbar {
     background-color: #6495ED;
 }
+.login-dialog {
+    height: 500px;
+    width: 440px;
+}
