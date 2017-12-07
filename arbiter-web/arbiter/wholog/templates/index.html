@@ -79,12 +79,13 @@
 </template>
 <template id="arbiterHeader">
     <div id="arbiter-header" :class="{ 'slider-open': sliderIsOpen}">
-        <mu-dialog dialog-class="login-dialog" :open="loginDialog.switch" @close="closeLoginDialog" title="登录" scrollable>
-               <mu-text-field icon="account_circle" name="username" v-model="loginDialog.username" label="用户名"
+        <mu-dialog dialog-class="login-dialog" :open="loginDialog.switch" @close="closeLoginDialog">
+               <mu-text-field  icon="account_circle" class="username" name="username" v-model="loginDialog.username" label="用户名"
                                label-float></mu-text-field>
-             <mu-text-field icon="vpn_key" name="username" v-model="loginDialog.password" label="密码" type="password"
+               <mu-text-field icon="vpn_key" name="username" v-model="loginDialog.password" label="密码" type="password"
                                label-float></mu-text-field>
-            <mu-flat-button primary label="关闭" @click="closeLoginDialog" slot="actions"/>
+               <mu-raised-button @click="submit" class="demo-raised-button login-dialog-btn" name="login-dialog-btn" label="登录"
+                                  primary></mu-raised-button>
           </mu-dialog>
         <mu-appbar :z-depth="2">
             <mu-icon-button icon="extension" slot="left"></mu-icon-button>

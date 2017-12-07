@@ -59,6 +59,15 @@ body {
     background-color: #6495ED;
 }
 .login-dialog {
-    height: 500px;
-    width: 440px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    height: 360px;
+    width: 320px;
+}
+
+.login-dialog-btn {
+    margin-right: 30px;
+    margin-left: 25px;
+    margin-top: 25px;
+    width: 90%;
 }
