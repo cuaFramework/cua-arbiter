@@ -124,3 +124,4 @@ const LogApp = {
     }, /*watch end*/
 
 };
+

@@ -18,29 +18,112 @@
 </head>
 <body>
 <script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/jquery-3.2.1.min.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vuex.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vue-router.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/vue/vue-resource.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
  <!-- 引入 echarts.js -->
 <script src="{% static 'arbiter/js/echarts.js'%}"></script>
 {% verbatim %}
-<div id="main">
-    <div id="search_content">
-        <mu-text-field icon="search" label="输入查询的接口" v-model="api_name" label-float v-on:keyup.enter.native="search"></mu-text-field>
-        <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="search" primary></mu-flat-button>
-    </div>
-    <div id="result">
-        <div id="result-header">
-            <span>共请求{{ total }}</span>
-        </div>
-        <div id="result-content">
-           <div id="main-chart">
-
-           </div>
-        </div>
-        </div>
+<div id="app">
+        <arbiter-header></arbiter-header>
+    <div id="root">
+        <router-view name="apiCountApp"></router-view>
     </div>
 </div>
+<template id="menuIconButton">
+    <div id="menu-icon-button">
+                   <mu-icon-button icon="apps" slot="right" ref="appIcon" @click="appMenuToggle"></mu-icon-button>
+            <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
+                        :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="appMenuTrigger"
+                        :open="appMenuOpen" @close="appMenuHandleClose">
+                <mu-menu>
+                    <mu-menu-item title="用例导入" left-icon="add"
+                                  @click="openImportDialog"></mu-menu-item>
+                    <mu-menu-item href="/arbiter/"title="用例管理" left-icon="mode_edit"></mu-menu-item>
+                    <mu-menu-item href="./index.html" title="日志查询" left-icon="history"></mu-menu-item>
+                </mu-menu>
+            </mu-popover>
+        <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
+            <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix"
+                           label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100"
+                           label-float></mu-text-field>
+            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary
+                            label="取消"></mu-flat-button>
+            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="cloneCaseObj" primary
+                            label="导入"></mu-flat-button>
+            <mu-linear-progress v-if="gitCloneStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
+        </mu-dialog>
+    </div>
+</template>
+<template id="userAvatar">
+    <div id="user-avatar">
+        <mu-avatar v-if="usernameAbbreviation!=null" background-color="lime700" ref="UserAvatar" color="black"
+                   :size="40" slot="right" @click="userMenuToggle">{{ usernameAbbreviation }}
+        </mu-avatar>
+        <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
+                    :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="userMenuTrigger"
+                    :open="userMenuOpen" @close="userMenuHandleClose">
+            <mu-menu>
+                <mu-menu-item title="设置" left-icon="settings"></mu-menu-item>
+                <mu-menu-item title="帮助" left-icon="help_outline"></mu-menu-item>
+                <mu-divider></mu-divider>
+                <mu-menu-item title="退出"
+                              @click="logout()" left-icon="power_settings_new"></mu-menu-item>
+            </mu-menu>
+        </mu-popover>
+    </div>
+</template>
+<template id="arbiterHeader">
+    <div id="arbiter-header" :class="{ 'slider-open': sliderIsOpen}">
+        <mu-dialog dialog-class="login-dialog" :open="loginDialog.switch" @close="closeLoginDialog">
+               <mu-text-field  icon="account_circle" class="username" name="username" v-model="loginDialog.username" label="用户名"
+                               label-float></mu-text-field>
+               <mu-text-field icon="vpn_key" name="username" v-model="loginDialog.password" label="密码" type="password"
+                               label-float></mu-text-field>
+               <mu-raised-button  class="demo-raised-button login-dialog-btn" name="login-dialog-btn" label="登录"
+                                  primary></mu-raised-button>
+          </mu-dialog>
+        <mu-appbar :z-depth="2">
+            <mu-icon-button icon="extension" slot="left"></mu-icon-button>
+            <h2 slot="left">接口统计</h2>
+            <mu-icon-button v-if="usernameAbbreviation!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat"
+                            slot="right"></mu-icon-button>
+            <menu-icon-button slot="right" :username-abbreviation="usernameAbbreviation"></menu-icon-button>
+            <user-avatar slot="right" v-if="usernameAbbreviation!=null" :username-abbreviation="usernameAbbreviation"></user-avatar>
+            <mu-flat-button v-if="usernameAbbreviation==null" @click="toLogin" label="登陆" icon="account_circle"
+                            class="demo-flat-button" color="lime700" slot="right"></mu-flat-button>
+        </mu-appbar>
+
+    </div>
+</template>
+
+<template id="apiCountApp">
+    <div id="api-count-app">
+        <div id="search_content">
+            <mu-text-field icon="search" label="输入查询的接口" v-model="api_name" label-float v-on:keyup.enter.native="search"></mu-text-field>
+            <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="search" primary></mu-flat-button>
+        </div>
+        <div id="result">
+            <div id="result-header">
+                <span>共请求{{ total }}</span>
+            </div>
+            <div id="result-content">
+               <div id="main-chart">
+
+               </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</template>
  {% endverbatim %}
-<script src="{% static 'arbiter/js/wholog/api-count.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
+
+<script src="{% static 'arbiter/js/wholog/api-count-components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/api-count-route.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/api-count-app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

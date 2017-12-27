@@ -19,8 +19,7 @@ from arbiter.models import Case_Run_Info
 import requests
 import datetime
 
-
-#权限
+# 权限
 
 
 from rest_framework.views import APIView
@@ -30,6 +29,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 # 日志管理
 from rest_framework.decorators import api_view
 from ..settings import elk_url
+
 ES_URL = elk_url
 
 
@@ -49,9 +49,10 @@ def index(request):
     # querybody['query'] = "xxx"
     # payload = "{'query': { 'match_all': {} }}"
     res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
-    data =     res.json()  # 返回的数据
+    data = res.json()  # 返回的数据
 
-    return render(request,'index.html')
+    return render(request, 'index.html')
+
 
 def home(request):
     querybody = {
@@ -69,52 +70,54 @@ def home(request):
     # querybody['query'] = "xxx"
     # payload = "{'query': { 'match_all': {} }}"
     res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
-    data =     res.json()  # 返回的数据
+    data = res.json()  # 返回的数据
 
-    return render(request,'home.html')
-#去Es 根据id 查询
+    return render(request, 'home.html')
+
+
+# 去Es 根据id 查询
 def search(id):
-    #组合查询DSL
+    # 组合查询DSL
     querybody = {
         "size": 1000,
         "query": {
-          "match": {
-            "logId": id
+            "match": {
+                "logId": id
             }
-          },
+        },
         "sort": {"@timestamp": {"order": "asc"}}
-}
-
+    }
 
     res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
-    #转换成json
+    # 转换成json
     res_json = res.json()
-    #符合查询条件的数量
+    # 符合查询条件的数量
     result_total = res_json['hits']['total']
-    #获取source节点
+    # 获取source节点
     result_source = res_json['hits']['hits'][0]['_source']
-    #最内层数据
+    # 最内层数据
     response_data_dict = {}
     response_data_dict['id'] = result_source['logId']
     response_data_dict['caseName'] = result_source['case']
     response_data_dict['author'] = result_source['author']
     response_data_dict['beginTime'] = result_source['@timestamp']
-    #每条返回的数据组合到list
+    # 每条返回的数据组合到list
     response_data_list = []
-    #每条日志内容组合list
+    # 每条日志内容组合list
     log_data_list = []
-    for i in range(0,result_total):
+    for i in range(0, result_total):
         result_source_var = res_json['hits']['hits'][i]['_source']
         print(result_source_var)
         log_data_list.append(result_source_var['logData'])
 
     response_data_dict['logData'] = log_data_list
     response_data_list.append(response_data_dict)
-    #最终返回的json
-    response_data={"data":response_data_list}
-    return  response_data
+    # 最终返回的json
+    response_data = {"data": response_data_list}
+    return response_data
 
-#去Es 根据id 只查询具体日志数据
+
+# 去Es 根据id 只查询具体日志数据
 
 @api_view(['POST'])
 def queryLogData(request):
@@ -147,21 +150,22 @@ def queryLogData(request):
     response_data = {"data": log_data_list}
     return JsonResponse(response_data)
 
+
 @api_view(['POST'])
 def getAllLog(request):
-    #获取前台发送来的参数
+    # 获取前台发送来的参数
     if request.method == 'POST':
         json_str = ((request.body))
         json_obj = json.loads(json_str)
         start_time = json_obj.get('startTime')
         end_time = json_obj.get('endTime')
-    #将字符串转换成对应数据库日期时间
-    date_from =datetime.datetime.strptime(start_time,'%Y-%m-%d %H:%M')
-    date_to =datetime.datetime.strptime(end_time,'%Y-%m-%d %H:%M')
+    # 将字符串转换成对应数据库日期时间
+    date_from = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
+    date_to = datetime.datetime.strptime(end_time, '%Y-%m-%d %H:%M')
     # 查询时间范围内的数据库结果
-    log_results = Case_Run_Info.objects.filter(run_time__range=(date_from,date_to)).order_by('run_time')
+    log_results = Case_Run_Info.objects.filter(run_time__range=(date_from, date_to)).order_by('run_time')
     # 将queryset转成json串
-    log_results = serializers.serialize('json',log_results)
+    log_results = serializers.serialize('json', log_results)
     res_jsons = json.loads(log_results)
     response_data_list = []
     response_data_dict = {}
@@ -174,22 +178,23 @@ def getAllLog(request):
         response_data_dict['data'] = None
     return JsonResponse(response_data_dict)
 
+
 @api_view(['GET'])
 def getDetailLog(request):
-    #通过logid 获取具体日志
+    # 通过logid 获取具体日志
     log_id = request.GET.get('logId')
     return JsonResponse(search(log_id))
 
 
 def api_count(request):
     '''统计接口请求'''
-    #通过logid 获取具体日志
-    #log_id = request.GET.get('logId')
+    # 通过logid 获取具体日志
+    # log_id = request.GET.get('logId')
     return render(request, 'api-count.html')
 
 
 def query_api_data(request):
-    #通过api_name 获取es数据
+    # 通过api_name 获取es数据
     api_name = request.GET.get('api_name')
     # 组合查询DSL
     querybody = {
@@ -212,22 +217,31 @@ def query_api_data(request):
 
     response_data_dict = {}
     response_data_list = []
-    api_time_list = []
+    creat_time_list = []
+    case_name_list = []
+    consume_time_list = []
     response_data_dict['total'] = result_total
 
     for i in range(0, result_total):
         result_source_var = res_json['hits']['hits'][i]['_source']
-        #取查询结果的creat_time
-        api_time_list.append(result_source_var['creat_time'])
-
-    response_data_dict['time'] = api_time_list
-    #response_data_list.append(response_data_dict)
+        # 取查询结果的creat_time
+        logId = result_source_var['logId']
+        logData = result_source_var['logData']
+        creat_time_list.append(result_source_var['creat_time'])
+        case_name_list.append(result_source_var['case'])
+        consume_time_list.append(i)
+    response_data_dict["creat_time"] = creat_time_list
+    response_data_dict["case_name"] = case_name_list
+    response_data_dict["consume_time"] = consume_time_list
+    print(response_data_dict)
+    # response_data_list.append(response_data_dict)
     # 最终返回的json
-    response_data = {"data": response_data_dict}
+    response_data = {"msg": "success", "status": "true", "data": response_data_dict}
+    print(str(response_data))
     return JsonResponse(response_data)
 
 
-#登录登出操作
+# 登录登出操作
 # 下列接口需要登录验证
 class auth_restful(APIView):
     # 设置permission_classes为必须登陆才能访问下列接口
