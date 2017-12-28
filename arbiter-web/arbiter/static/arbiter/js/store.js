@@ -16,7 +16,7 @@ const userModule = {
         setusername(state, username) {
             state.username = username;
         },
-        refreshJwtToken(state,) {
+        refreshJwtToken(state) {
             state.jwtToken = window.localStorage["token"];
         }
     },
@@ -41,6 +41,15 @@ const caseModule = {
         setAllCases(state, allCases) {
             state.allCases = allCases;
         },
+    },
+    actions: {
+        flushAllCases({ state, commit, rootState,rootGetters }) {
+            return getRes("/arbiter/getCaseList",null,rootGetters.jwtHeader).then( (json) => {
+                commit("setAllCases", json);
+                return json;
+            });
+
+        }
     },
     getters: {
         getAllCases: state => {

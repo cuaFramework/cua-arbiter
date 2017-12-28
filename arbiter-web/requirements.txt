@@ -1,3 +1,4 @@
+
 ####### dj #######
 Django==1.11.7
 django-redis==4.8.0
@@ -10,6 +11,7 @@ Twisted[tls,http2]==17.9.0
 psycopg2==2.7.3.2
 pymysql==0.7.11
 asgi_redis==1.4.3
+redis==
 ####### elk #######
 elasticsearch==5.4.0
 ####### git #######

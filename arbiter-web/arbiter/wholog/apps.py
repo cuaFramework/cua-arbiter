@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class LogmanageConfig(AppConfig):
+class LogManageConfig(AppConfig):
     name = 'arbiter.wholog'

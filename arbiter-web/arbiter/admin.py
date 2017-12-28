@@ -1,14 +1,10 @@
-from django.contrib import admin
-
 from django import forms
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
 
-admin.AdminSite.site_header="arbiter接口测试数据管理"
-
-
+admin.AdminSite.site_header = "arbiter接口测试数据管理"
 
 User = get_user_model()
 
@@ -21,10 +17,10 @@ class GroupAdminForm(forms.ModelForm):
 
     # Add the users field.
     users = forms.ModelMultipleChoiceField(
-         queryset=User.objects.all(),
-         required=False,
-         # Use the pretty 'filter_horizontal widget'.
-         widget=FilteredSelectMultiple('users', False)
+        queryset=User.objects.all(),
+        required=False,
+        # Use the pretty 'filter_horizontal widget'.
+        widget=FilteredSelectMultiple('users', False)
     )
 
     def __init__(self, *args, **kwargs):
@@ -47,12 +43,9 @@ class GroupAdminForm(forms.ModelForm):
         return instance
 
 
-
-
-
-
 # Unregister the original Group admin.
 admin.site.unregister(Group)
+
 
 # Create a new Group admin.
 class GroupAdmin(admin.ModelAdmin):
@@ -60,6 +53,7 @@ class GroupAdmin(admin.ModelAdmin):
     form = GroupAdminForm
     # Filter permissions horizontal as well.
     filter_horizontal = ['permissions']
+
 
 # Register the new Group ModelAdmin.
 admin.site.register(Group, GroupAdmin)

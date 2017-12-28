@@ -1,18 +1,14 @@
 from django.conf.urls import url
-from django.views.generic import RedirectView
 from . import views
-from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     url(r'^login', views.login, name='login'),
-    # url(r'^logoutxxx', views.auth_restful.logout, name='logout'),
     url(r'^api-token-auth', obtain_jwt_token),
     url(r'^getUserDetail', views.auth_restful.get_user_detail),
-    url(r'^save', views.auth_restful.save_casefile, name='save'),
-    url(r'^getCaseList', views.restful.get_caselist),
+    url(r'^save', views.auth_restful.save_case_file, name='save'),
+    url(r'^getCaseList', views.restful.get_case_list),
     url(r'^cloneCaseObj', views.restful.get_caseobj),
     url(r'^$', views.index, name='index'),
     url(r'^.*$', views.index),
-    # url(r'^(?P<case_name>[\w.:]+)/editor/$', views.editor, name='editor'),
-
 ]

@@ -127,7 +127,6 @@ const ArbiterHeader = {
     },
     mounted() {
         this.refreshJwtToken();
-
         fetch("./getUserDetail",
             {
                 method: "POST",

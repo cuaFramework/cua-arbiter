@@ -9,14 +9,14 @@ services:
       command: python ./manage.py makemigrations arbiter&& python ./manage.py migrate && python ./manage.py shell < initadmin.py
 
     db: 
-      image: mysql
+      image: postgres
       ports:
-        - "3306:3306"
+        - "5432:5432"
       environment: 
-        - MYSQL_ROOT_PASSWORD=123456
-        - MYSQL_DATABASE=arbiter_dj
-        - MYSQL_USER=luna 
-        - MYSQL_PASSWORD=luna
+        - POSTGRES_PASSWORD=123456
+        - POSTGRES_DB=arbiter_dj
+        - POSTGRES_USER=luna
+        - POSTGRES_PASSWORD=luna
 
     redis: 
       image: redis

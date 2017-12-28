@@ -4,16 +4,14 @@ import os
 import time
 import git
 import redis
-
-from ..settings import redis_arbiter_pool
 from django.core.files import File
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from .models import CaseList
 
@@ -30,9 +28,13 @@ def index(request):
 
 class restful(APIView):
     # 获取测试用例树
-    @api_view(['GET', 'POST'])
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.body = None
+
+    @api_view(['POST'])
     @permission_classes([permissions.AllowAny, ])
-    def get_caselist(request):
+    def get_case_list(self):
         # re = redis.Redis(connection_pool=redis_arbiter_pool)
         # res = re.hgetall("casemap")
         # if res == {}:
@@ -44,12 +46,11 @@ class restful(APIView):
     # 获取测试用例工程
     @api_view(['POST'])
     @permission_classes([permissions.AllowAny, ])
-    def get_caseobj(request):
+    def get_caseobj(self):
         case_path = os.getenv("CASEPATH")
-        json_obj = json.loads(request.body)
+        json_obj = json.loads(self.body)
         repo = git.Repo.clone_from(json_obj.get('url'), '../arbiter-cases/' + case_path.split('/')[0], branch='master')
-        response_data = {}
-        response_data['success'] = True
+        response_data = {'success': True}
         return JsonResponse(response_data)
 
 
@@ -59,36 +60,39 @@ class auth_restful(APIView):
     permission_classes = (IsAuthenticated,)
 
     # 获取用户信息
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.user = None
+        self.method = None
+        self.body = None
+
     @api_view(['POST'])
-    def get_user_detail(request):
-        response_data = {}
-        response_data['username'] = request.user.username
-        response_data['role'] = list(request.user.groups.values_list('name', flat=True))
+    def get_user_detail(self):
+        response_data = {'username': self.user.username,
+                         'role': list(self.user.groups.values_list('name', flat=True))}
         return JsonResponse(response_data)
 
     # 注销
     @api_view(['GET'])
-    def logout(request):
-        Token.objects.get(user_id=request.user.id).delete()
-        Token.objects.create(user_id=request.user.id)
-        response_data = {}
-        response_data['success'] = True
+    def logout(self):
+        Token.objects.get(user_id=self.user.id).delete()
+        Token.objects.create(user_id=self.user.id)
+        response_data = {'success': True}
         return JsonResponse(response_data, content_type="application/json")
 
     # 保存文件方法
     @api_view(['POST'])
-    def save_casefile(request):
+    def save_case_file(self):
         case_path = os.getenv("CASEPATH")
         case_path_obj = case_path.split('/')[0]
         # 获取发送的请求
-        if request.method == 'POST':
-            json_str = ((request.body))
-            json_obj = json.loads(json_str)
-            case_path = json_obj.get('casepath').split(':')[0].replace('.', '/') + '.py'
-            time_str = time.strftime("%Y-%m-%d %H_%M_%S")
-            # rename 原文件+时间格式(2017-07-20 18_34_48)
-            os.rename('../arbiter-cases/' + case_path_obj + '/' + case_path,
-                      '../arbiter-cases/' + case_path_obj + '/' + case_path + '_' + time_str + '.history')
+        json_str = self.body
+        json_obj = json.loads(json_str)
+        case_path = json_obj.get('casepath').split(':')[0].replace('.', '/') + '.py'
+        time_str = time.strftime("%Y-%m-%d %H_%M_%S")
+        # rename 原文件+时间格式(2017-07-20 18_34_48)
+        os.rename('../arbiter-cases/' + case_path_obj + '/' + case_path,
+                  '../arbiter-cases/' + case_path_obj + '/' + case_path + '_' + time_str + '.history')
         # 使用codecs解决乱码问题
         with codecs.open('../arbiter-cases/' + case_path_obj + '/' + case_path, 'w', 'utf-8') as f:
             mfile = File(f)
@@ -96,6 +100,6 @@ class auth_restful(APIView):
             mfile.flush()
             mfile.seek(0)
             mfile.close()
-            if (mfile.closed):
+            if mfile.closed:
                 result = 'ok'
                 return HttpResponse(json.dumps({"result": result}), content_type="application/json")
