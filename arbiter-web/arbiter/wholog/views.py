@@ -1,5 +1,6 @@
 import codecs
 import json
+import re
 import os
 import time
 from subprocess import Popen, PIPE, STDOUT
@@ -18,6 +19,7 @@ from django.core import serializers
 from arbiter.models import Case_Run_Info
 import requests
 import datetime
+from arbiter.common import utils
 
 # 权限
 
@@ -217,27 +219,43 @@ def query_api_data(request):
 
     response_data_dict = {}
     response_data_list = []
+    log_id_list = []
     creat_time_list = []
     case_name_list = []
+    request_type_list = []
+    response_code_list = []
     consume_time_list = []
-    response_data_dict['total'] = result_total
 
     for i in range(0, result_total):
         result_source_var = res_json['hits']['hits'][i]['_source']
         # 取查询结果的creat_time
-        logId = result_source_var['logId']
+        log_id = result_source_var['logId']
         logData = result_source_var['logData']
+
+        # 处理logData数据，获取请求类型，返回码，耗时
+        result_data = utils.get_log_data(log_data=logData)
+        request_type = result_data["request_type"]
+        response_code = result_data["response_code"]
+        consume_time = result_data["consume_time"]
+        # 组装数据到各个类型list
+        log_id_list.append(log_id)
         creat_time_list.append(result_source_var['creat_time'])
         case_name_list.append(result_source_var['case'])
-        consume_time_list.append(i)
+        request_type_list.append(request_type)
+        response_code_list.append(response_code)
+        consume_time_list.append(consume_time)
+
+    response_data_dict['total'] = result_total
+    response_data_dict["log_id"] = log_id_list
     response_data_dict["creat_time"] = creat_time_list
     response_data_dict["case_name"] = case_name_list
+    response_data_dict["request_type"] = request_type_list
+    response_data_dict["response_code"] = response_code_list
     response_data_dict["consume_time"] = consume_time_list
-    print(response_data_dict)
     # response_data_list.append(response_data_dict)
     # 最终返回的json
     response_data = {"msg": "success", "status": "true", "data": response_data_dict}
-    print(str(response_data))
+    print(response_data)
     return JsonResponse(response_data)
 
 
