@@ -9,12 +9,13 @@ const ApiCountApp = {
         return {
             api_name: null,
             total: null,
-            apiData: {},
+            apiData: {
+            },
 
         }
     },
     methods: {
-        search() {
+        queryData() {
             if (this.api_name !== null) {
                 fetch('../wholog/query-api-data/?api_name=' + this.api_name, {
                     method: 'get'
@@ -23,7 +24,8 @@ const ApiCountApp = {
                 }).then((json) => {
                     this.apiData = json['data'];
                     if(json['status'] == "true"){
-                    this.draw();
+                        console.log("重新开始draw")
+                        this.draw();
                     }else {
                         console.log(json['msg']);
                     }
@@ -43,16 +45,15 @@ const ApiCountApp = {
                 },
                 tooltip: {
                     trigger: "axis",
-
                     formatter: (params) => {
                         var result = '';
                         params.forEach((item) => {
-                            result += '<p>' + item.seriesName + ':' + item.data + '</p>' + '<br/>' +
-                                '<p>' + "用例名:" + ':' + this.apiData.case_name[item.dataIndex] + '</p>' + '<br/>' +
-                                '<p>' + "请求时间:" + ':' + this.apiData.creat_time[item.dataIndex] + '</p>' + '<br/>'
+                            result +=
+                                '<p>' + "耗时:" + this.apiData.consume_time[item.dataIndex] + '</p>' + '<br/>' +
+                                '<p>' + "用例名:" + this.apiData.case_name[item.dataIndex] + '</p>' + '<br/>' +
+                                '<p>' + "请求时间:" + this.apiData.creat_time[item.dataIndex] + '</p>' + '<br/>'
                             ;
                         });
-
                         return result;
                     }
                 },
@@ -84,7 +85,7 @@ const ApiCountApp = {
                 calculable: true,
                 xAxis: [
                     {
-                        name: "耗时",
+                        name: "时间",
                         type: "category",
                         boundaryGap: false,
                         data: this.apiData.creat_time,
@@ -93,7 +94,7 @@ const ApiCountApp = {
                 ],
                 yAxis: [
                     {
-                        name: "时间",
+                        name: "耗时",
                         type: "value",
                         axisLabel: {
                             formatter: '{value} ms'
@@ -123,6 +124,7 @@ const ApiCountApp = {
     },
     watch: {  //数据变化时自动重画，在控制台修改message,会自动重画
         message: () => {
+
             this.draw();
         }
     },

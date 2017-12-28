@@ -102,7 +102,7 @@
     <div id="api-count-app">
         <div id="search_content">
             <mu-text-field icon="search" label="输入查询的接口" v-model="api_name" label-float v-on:keyup.enter.native="search"></mu-text-field>
-            <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="search" primary></mu-flat-button>
+            <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="queryData" primary></mu-flat-button>
         </div>
         <div id="result">
             <div id="result-header">
@@ -110,7 +110,6 @@
             </div>
             <div id="result-content">
                <div id="main-chart">
-
                </div>
             </div>
             </div>
