@@ -25,3 +25,23 @@ body {
     width: 1000px;
     height: 600px;
 }
+.login-dialog {
+    padding-right: 20px;
+    padding-bottom: 20px;
+    height: 360px;
+    width: 320px;
+}
+
+.login-dialog-btn {
+    margin-right: 30px;
+    margin-left: 25px;
+    margin-top: 25px;
+    width: 90%;
+}
+.log-dialog {
+    max-height: 360px;
+}
+.log-dialog p {
+    margin: 5px;
+    font-size: 12px;
+}
