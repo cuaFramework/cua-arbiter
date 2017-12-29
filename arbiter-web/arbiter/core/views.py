@@ -21,7 +21,6 @@ def login(request):
     return render(request, 'case/login.html')
 
 
-@ensure_csrf_cookie
 def index(request):
     return render(request, 'case/index.html')
 

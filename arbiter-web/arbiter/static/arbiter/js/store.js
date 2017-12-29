@@ -30,7 +30,7 @@ const userModule = {
             return state.username
         },
         jwtHeader: state => {
-            return 'JWT ' + state.jwtToken
+            return state.jwtToken
         }
     }
 };

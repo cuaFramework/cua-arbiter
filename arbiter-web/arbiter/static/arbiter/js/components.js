@@ -67,35 +67,14 @@ const menuIconButton = {
         cloneCaseObj() {
             this.gitCloneStatus = 'running';
 
-            fetch("./cloneCaseObj",
-                {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json',
-                        'Authorization': this.jwtHeader()
-                    },
-                    body: JSON.stringify({url: this.gitUrlPrefix})
-                }).then((response) => {
-
-
-                if (response.status !== 200
-                ) {
-                    console.log("存在一个问题，状态码为：" + response.status);
-                    const error = new Error(response.statusText);
-                    error.response = response;
-                    this.gitCloneStatus = 'fail';
-                    throw error;
-                }
-                else
-                    return response.json();
-            }).then(
+            getRes("./cloneCaseObj", {url: this.gitUrlPrefix}, this.jwtHeader()).then(
                 json => {
                     this.gitCloneStatus = 'finish';
                     window.location.href = ".";
-
-
-                });
+                }).catch((err) => {
+                this.gitCloneStatus = 'fail';
+                console.log("请求错误:" + err);
+            });
         },
     }
 };
@@ -122,24 +101,7 @@ const ArbiterNavbar = {
     },
     mounted() {
         this.refreshJwtToken();
-
-        fetch("/arbiter/getUserDetail",
-            {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json',
-                    'Authorization': this.jwtHeader()
-                }
-            }).then(response => {
-            if (response.status !== 200) {
-                console.log("存在一个问题，状态码为：" + response.status);
-                return false;
-            }
-            else
-                return response.json();
-        }).then(
+        getRes("/arbiter/getUserDetail", null, this.jwtHeader()).then(
             json => {
                 let storage = window.localStorage;
                 storage["username"] = json["username"];
@@ -264,43 +226,25 @@ const CodeFloatBtn = {
                         break;
                     }
                 }
-
                 this.saveStatus = "running";
                 this.saveDialog = true;
                 let newCodeContent = codeContent.getValue();
-                fetch("/arbiter/save/",
-                    {
-                        method: "POST",
-                        credentials: "same-origin",
-                        headers: {
-                            "X-CSRFToken": getCookie("csrftoken"),
-                            'Accept': 'application/json, text/plain, */*',
-                            'Content-Type': 'application/json',
-                            'Authorization': this.jwtHeader()
-                        },
-                        body: JSON.stringify({casepath: caseNamePath, content: newCodeContent})
-                    }).then((response) => {
-                    if (response.status !== 200) {
-                        console.log("请求失败，状态码为：" + response.status);
-                        deleteAllCookies();
-                        window.location.href = "/arbiter/login";
-                        return;
+                //检查响应文本
+                getRes("/arbiter/save/", {
+                    casepath: caseNamePath,
+                    content: newCodeContent
+                }, this.jwtHeader()).then((data) => {
+                    if (data['result'] === "ok") {
+                        this.editIcon = "mode_edit";
+                        let codeContent = ace.edit("code-paper");
+                        codeContent.setReadOnly(true);//设置为不可编辑模式
+                        this.saveDialog = false;
+                        this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
+                    } else {
+                        alert("文件保存失败！");
                     }
-                    //检查响应文本
-                    response.json().then((data) => {
-                        if (data['result'] === "ok") {
-                            this.editIcon = "mode_edit";
-                            let codeContent = ace.edit("code-paper");
-                            codeContent.setReadOnly(true);//设置为不可编辑模式
-                            this.saveDialog = false;
-                            this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
-
-                        } else {
-                            alert("文件保存失败！");
-                        }
-                    });
                 }).catch((err) => {
-                    console.log("Fetch错误:" + err);
+                    console.log("请求错误:" + err);
                 })
             }
         }
@@ -349,17 +293,17 @@ const CaseFloatBtn = {
         },
         run() {
 
-                run_socket.onmessage = (res) => {
-                    this.logContent.push(res.data);
-                    //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
+            run_socket.onmessage = (res) => {
+                this.logContent.push(res.data);
+                //   document.getElementById("insert").innerHTML += "<div><p>" + e.data + "</p></div>";
 
-                };
-                run_socket.onopen = () => {
-                    run_socket.send("runCase " + this.testcase);
-                };
-                // Call onopen directly if socket is already open
-                if (run_socket.readyState === WebSocket.OPEN)
-                    run_socket.onopen();
+            };
+            run_socket.onopen = () => {
+                run_socket.send("runCase " + this.testcase);
+            };
+            // Call onopen directly if socket is already open
+            if (run_socket.readyState === WebSocket.OPEN)
+                run_socket.onopen();
 
             this.logDialog = true;
         }
@@ -433,7 +377,7 @@ const CodePaper = {
 };
 //每个case的paper组件
 const CasePaper = {
-    props: {casemodel: "", pyname: ""},store,
+    props: {casemodel: "", pyname: ""}, store,
     template: '#casePaper',
     components: {
         'CodePaper': CodePaper,
@@ -478,7 +422,7 @@ const CasePaper = {
     ,
     methods: {
 
- ...Vuex.mapGetters(['getAllCases']),
+        ...Vuex.mapGetters(['getAllCases']),
         run(testcase) {
             Event.$emit('run-case', testcase);
         },

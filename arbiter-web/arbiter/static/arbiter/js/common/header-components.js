@@ -66,35 +66,14 @@ const menuIconButton = {
         cloneCaseObj() {
             this.gitCloneStatus = 'running';
 
-            fetch("./cloneCaseObj",
-                {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json',
-                        'Authorization': this.jwtHeader()
-                    },
-                    body: JSON.stringify({url: this.gitUrlPrefix})
-                }).then((response) => {
-
-
-                if (response.status !== 200
-                ) {
-                    console.log("存在一个问题，状态码为：" + response.status);
-                    const error = new Error(response.statusText);
-                    error.response = response;
-                    this.gitCloneStatus = 'fail';
-                    throw error;
-                }
-                else
-                    return response.json();
-            }).then(
+            getRes("./cloneCaseObj", {url: this.gitUrlPrefix}, this.jwtHeader()).then(
                 json => {
                     this.gitCloneStatus = 'finish';
                     window.location.href = ".";
-
-
-                });
+                }).catch((err) => {
+                this.gitCloneStatus = 'fail';
+                console.log("请求错误:" + err);
+            });
         },
     }
 };
@@ -117,40 +96,24 @@ const ArbiterHeader = {
                 href: 'login',
             },
             sliderIsOpen: true,
-            loginDialog :{
+            loginDialog: {
                 switch: false,
-                username:"",
-                password:"",
+                username: "",
+                password: "",
 
             },
         }
     },
     mounted() {
         this.refreshJwtToken();
-        fetch("./getUserDetail",
-            {
-                method: "POST",
-                credentials: "same-origin",
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json',
-                    'Authorization': this.jwtHeader()
-                }
-            }).then(response => {
-            if (response.status !== 200) {
-                console.log("存在一个问题，状态码为：" + response.status);
-                return false;
-            }
-            else
-                return response.json();
-        }).then(
+
+        getRes("./getUserDetail", null, this.jwtHeader()).then(
             json => {
                 let storage = window.localStorage;
                 storage["username"] = json["username"];
                 storage["role"] = json["role"];
                 // this.$store.commit('setusername', json["username"]);
                 this.setusername(json["username"]);
-
             }
         ).catch((err) => {
             console.log("请求错误:" + err);
@@ -164,14 +127,14 @@ const ArbiterHeader = {
             Event.$emit('toggle-slide');
         },
         /*点击登录*/
-        toLogin(){
+        toLogin() {
             this.openLoginDialog();
         },
-         /*打开和关闭登录对话框*/
-        openLoginDialog(){
+        /*打开和关闭登录对话框*/
+        openLoginDialog() {
             this.loginDialog.switch = true;
         },
-        closeLoginDialog(){
+        closeLoginDialog() {
             this.loginDialog.switch = false;
         },
     },

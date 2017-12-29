@@ -40,7 +40,7 @@ const LogApp = {
                         "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                        'Authorization': this.jwtHeader(),
+                        'Authorization': "JWT "+this.jwtHeader(),
                     },
                     body:JSON.stringify({startTime:startTime,endTime:endTime})
                 }).then((response) => {
@@ -75,7 +75,7 @@ const LogApp = {
                         "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                        'Authorization': this.jwtHeader()
+                        'Authorization': "JWT "+this.jwtHeader()
                     },
                     body:JSON.stringify({logId:logId})
                 }).then((response) => {

@@ -142,7 +142,7 @@ const ApiCountApp = {
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                        'Authorization': this.jwtHeader()
+                        'Authorization': "JWT "+this.jwtHeader()
                     },
                     body: JSON.stringify({logId: logId})
                 }).then((response) => {
