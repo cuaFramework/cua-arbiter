@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
     <title>登录</title>
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}"/>
@@ -16,11 +15,9 @@
     {% block head %}
     {% endblock head %}
 </head>
-
 <body>
 <script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
-
 {% verbatim %}
 <div class="root">
     <div id="login-form" class="login">
@@ -32,8 +29,7 @@
             </div>
             <div>
                 <mu-text-field icon="vpn_key" name="password" v-model="inputtext.password" label="密码" hintext="请输入密码"
-                               type="password"
-                               label-float></mu-text-field>
+                               type="password" label-float></mu-text-field>
             </div>
             <div>
                 <mu-raised-button @click="submit" class="demo-raised-button" name="login-btn" label="登录"

@@ -1,3 +1,7 @@
+//所有用到的组件
+let Event = new Vue();
+let run_socket = new WebSocket("ws://" + window.location.host + "/arbiter/");
+
 function deleteAllCookies() {
     let cookies = document.cookie.split(";");
 

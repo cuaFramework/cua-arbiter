@@ -1,0 +1,19 @@
+
+
+.my-scrollbar {
+  max-height: 100%;
+}
+
+.scroll-me {
+  background: #EEE;
+  /*min-width: 750px;*/
+}
+
+.kolom {
+  display: inline-block;
+  margin: 15px;
+}
+
+.clearfix {
+  clear: both;
+}

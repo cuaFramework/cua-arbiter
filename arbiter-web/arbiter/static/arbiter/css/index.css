@@ -41,7 +41,7 @@ body {
     right: 0;
     width: auto;
     bottom: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     size: 14px;
     z-index: -1;
 }

@@ -336,8 +336,7 @@ const CodePaper = {
             this.loadCaseFile(this.path)
         }
 
-    }
-    ,
+    },
     methods: {
         showcode(key, value) {
             this.$router.push({name: 'casepathpy', params: {pyname: key}});
@@ -421,7 +420,6 @@ const CasePaper = {
     }
     ,
     methods: {
-
         ...Vuex.mapGetters(['getAllCases']),
         run(testcase) {
             Event.$emit('run-case', testcase);
