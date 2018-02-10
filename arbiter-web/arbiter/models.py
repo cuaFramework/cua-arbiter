@@ -2,17 +2,8 @@ from __future__ import unicode_literals
 from django.contrib import admin
 from django.db import models
 from django.contrib.auth.models import Group
-from mongoengine import *
 import django.utils.timezone as timezone
 
-
-# 用例执行日志
-class Run_Log(Document):
-    meta = {
-        'collection': 'log',
-    }
-    case_info = StringField(max_length=100)
-    content = StringField(max_length=100)
 
 
 # 运行日志信息模型
