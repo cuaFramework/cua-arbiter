@@ -13,27 +13,32 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import datetime
 import redis
+from psycopg2.pool import ThreadedConnectionPool
 from config import arbiter_prod_config as env_config
 
 # mongodb_host = env_config['mongodb_host']
 # mongodb_port = env_config['mongodb_port']
-elk_url=env_config['elk_url']
+elk_url = env_config['elk_url']
 redis_host = env_config['redis_host']
 redis_port = env_config['redis_port']
 redis_dj_db = env_config['redis_dj_db']
 redis_arbiter_db = env_config['redis_arbiter_db']
 redis_elk_db = env_config['redis_elk_db']
-redis_url = 'redis://'+redis_host+':'+str(redis_port)+'/'+str(redis_dj_db)
+redis_url = 'redis://' + redis_host + ':' + str(redis_port) + '/' + str(redis_dj_db)
 mysql_host = env_config['mysql_host']
 mysql_port = env_config['mysql_port']
 pgsql_host = env_config['pgsql_host']
 pgsql_port = env_config['pgsql_port']
+pgsql_user = env_config['pgsql_user']
+pgsql_password = env_config['pgsql_password']
+pgsql_dbname = env_config['pgsql_dbname']
 case_path = env_config['case_path']
 os.environ["CASEPATH"] = case_path
 os.putenv("CASEPATH", case_path)
 case_obj_name = case_path.split('/')[0]
-redis_arbiter_pool = redis.ConnectionPool(host=redis_host,decode_responses=True, port=redis_port, db=redis_arbiter_db)
+redis_arbiter_pool = redis.ConnectionPool(host=redis_host, decode_responses=True, port=redis_port, db=redis_arbiter_db)
 redis_elk_pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_elk_db)
+pgsql_pool = ThreadedConnectionPool(1, 10, port=pgsql_port, host=pgsql_host,dbname=pgsql_dbname, user=pgsql_user, password=pgsql_password)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))

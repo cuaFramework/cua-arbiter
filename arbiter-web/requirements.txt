@@ -9,7 +9,6 @@ channels==1.1.8
 Twisted[tls,http2]==17.9.0
 ####### db #######
 psycopg2==2.7.3.2
-pymysql==0.7.11
 asgi_redis==1.4.3
 redis==
 ####### elk #######

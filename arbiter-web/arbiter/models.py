@@ -1,9 +1,14 @@
 from __future__ import unicode_literals
-from django.contrib import admin
 from django.db import models
 from django.contrib.auth.models import Group
+from django.contrib.postgres.fields import JSONField
 import django.utils.timezone as timezone
 
+
+# 用例列表
+class Case_List(models.Model):
+    name = models.CharField(max_length=200)
+    data = JSONField()
 
 
 # 运行日志信息模型
@@ -12,7 +17,6 @@ class Case_Run_Info(models.Model):
     case_name = models.TextField(max_length=200)
     run_time = models.DateTimeField()
     author = models.CharField(max_length=50)
-
     result = models.CharField(max_length=50, default='done')
     version = models.IntegerField(default='10000000')
 

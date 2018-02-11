@@ -3,17 +3,18 @@ import json
 import os
 import time
 import git
-import redis
 from django.core.files import File
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-from .models import CaseList
+
+from arbiter.core.models import CaseList
+from arbiter.models import Case_List
+
 
 
 # 登录
@@ -34,13 +35,8 @@ class restful(APIView):
     @api_view(['POST'])
     @permission_classes([permissions.AllowAny, ])
     def get_case_list(self):
-        # re = redis.Redis(connection_pool=redis_arbiter_pool)
-        # res = re.hgetall("casemap")
-        # if res == {}:
-        #     tmp =  CaseList.getList()
-        #     re.hmset("casemap",tmp)
-        #     res = tmp
-        return JsonResponse(CaseList.getList())
+        cases_results = Case_List.objects.filter(name="arbiter_cases").first().data
+        return JsonResponse(cases_results)
 
     # 获取测试用例工程
     @api_view(['POST'])
@@ -50,6 +46,7 @@ class restful(APIView):
         json_obj = json.loads(self.body)
         repo = git.Repo.clone_from(json_obj.get('url'), '../arbiter-cases/' + case_path.split('/')[0], branch='master')
         response_data = {'success': True}
+        Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
         return JsonResponse(response_data)
 
 
@@ -101,4 +98,5 @@ class auth_restful(APIView):
             mfile.close()
             if mfile.closed:
                 result = 'ok'
+                Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
                 return HttpResponse(json.dumps({"result": result}), content_type="application/json")
