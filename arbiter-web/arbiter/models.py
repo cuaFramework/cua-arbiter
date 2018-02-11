@@ -5,6 +5,12 @@ from django.contrib.postgres.fields import JSONField
 import django.utils.timezone as timezone
 
 
+# GIT权限信息
+class Git_Info(models.Model):
+    user_name = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+
+
 # 用例列表
 class Case_List(models.Model):
     name = models.CharField(max_length=200)

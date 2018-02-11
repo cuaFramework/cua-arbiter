@@ -13,8 +13,14 @@
             </mu-menu>
         </mu-popover>
         <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
-            <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix"
+            <mu-text-field style="width: 600px;" v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitInfo.url"
                            label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100"
+                           label-float></mu-text-field>
+                        <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitInfo.git_username"
+                           label="git有权限的用户名" :width="30"
+                           label-float></mu-text-field>
+                        <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitInfo.git_password"
+                           label="git用户名的密码" :width="30"
                            label-float></mu-text-field>
             <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary
                             label="取消"></mu-flat-button>

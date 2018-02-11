@@ -13,8 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from arbiter.core.models import CaseList
-from arbiter.models import Case_List
-
+from arbiter.models import Case_List, Git_Info
 
 
 # 登录
@@ -35,15 +34,27 @@ class restful(APIView):
     @api_view(['POST'])
     @permission_classes([permissions.AllowAny, ])
     def get_case_list(self):
-        cases_results = Case_List.objects.filter(name="arbiter_cases").first().data
-        return JsonResponse(cases_results)
+        try:
+            cases_results = Case_List.objects.filter(name="arbiter_cases").first().data
+            return JsonResponse(cases_results)
+        except AttributeError:
+            cases_results = CaseList.getList()
+            Case_List.objects.create(name="arbiter_cases", data=cases_results)
+            return JsonResponse(cases_results)
 
-    # 获取测试用例工程
+    # 获取测试用例GIT工程
     @api_view(['POST'])
     @permission_classes([permissions.AllowAny, ])
     def get_caseobj(self):
         case_path = os.getenv("CASEPATH")
         json_obj = json.loads(self.body)
+        if Git_Info.objects.count() > 0:
+            info = Git_Info.objects.get()
+            info.user_name = json_obj.get("git_username")
+            info.password = json_obj.get("git_password")
+            info.save()
+        else:
+            Git_Info.objects.create(user_name=json_obj.get("git_username"), password=json_obj.get("git_password"))
         repo = git.Repo.clone_from(json_obj.get('url'), '../arbiter-cases/' + case_path.split('/')[0], branch='master')
         response_data = {'success': True}
         Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
@@ -98,5 +109,16 @@ class auth_restful(APIView):
             mfile.close()
             if mfile.closed:
                 result = 'ok'
+                repo = git.Repo('../arbiter-cases/caseobj')
+                repo.git.add(update=True)
+                repo_index = repo.index
+                repo_index.commit(self.user.username + "修改文件" + case_path)
+                # 获取远程仓库
+                remote = repo.remote()
+                remote.pull()
+                test = os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util'), 'askpass.py')
+                # 推送本地修改到远程仓库
+                remote.push()
+                # 同步最新用例列表到数据库
                 Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
                 return HttpResponse(json.dumps({"result": result}), content_type="application/json")

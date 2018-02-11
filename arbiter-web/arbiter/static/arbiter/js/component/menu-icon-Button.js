@@ -7,7 +7,7 @@ const menuIconButton = {
             appMenuTrigger: null,
             appMenuOpen: false,
             dialog: false,
-            gitUrlPrefix: '',
+            gitInfo:{},
             gitCloneStatus: 'finish',
         }
     },
@@ -33,7 +33,7 @@ const menuIconButton = {
         cloneCaseObj() {
             this.gitCloneStatus = 'running';
 
-            getRes("./cloneCaseObj", {url: this.gitUrlPrefix}, this.jwtHeader()).then(
+            getRes("./cloneCaseObj", this.gitInfo, this.jwtHeader()).then(
                 json => {
                     this.gitCloneStatus = 'finish';
                     window.location.href = ".";
