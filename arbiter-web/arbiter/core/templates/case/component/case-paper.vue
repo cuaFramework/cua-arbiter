@@ -1,13 +1,19 @@
 {% verbatim %}
 <template id="casePaper">
     <div id="case-paper">
-            <div>
-                 <div  v-for="(value, key) in caseMap">
+        <div>
+            <div v-for="(value, key) in caseMap">
                 <div>
-                    <div class="flex-between"><b title="查看/编辑" class="grey-text paper-pyname"
-                                                 @click="showcode(key,value)">{{
-                        key }}</b>
-                        <mu-icon-button icon="delete" icon-class="red-icon"></mu-icon-button>
+                    <div class="flex-between">
+                        <div style="display: flex;align-items: center;">
+                            <b title="查看/编辑" class="grey-text paper-pyname" @click="showcode(key,value)">{{ key }}</b>
+                            <mu-icon-button icon="content_copy" icon-class="blue-icon"
+                                            @click="openCopyDialog(value)"></mu-icon-button>
+                        </div>
+
+                        <mu-icon-button icon="delete" icon-class="red-icon"
+                                        @click="openDeleteDialog(value)"></mu-icon-button>
+
                     </div>
                 </div>
                 <div v-if="pyname===key">
@@ -25,7 +31,30 @@
                     </mu-paper>
                 </div>
             </div>
-            </div>
+        </div>
+        <div>
+            <mu-dialog :open="copyDialog" :title="'复制'+fileInfo.oldName" @close="closeCopyDialog">
+                <mu-text-field v-if="copyStatus == 'finish'" style="width: 600px;" icon="link"
+                               v-model="fileInfo.newName"
+                               label="新文件名路径"
+                               label-float></mu-text-field>
+                <mu-flat-button v-if="copyStatus == 'finish'" slot="actions" @click="closeCopyDialog" primary
+                                label="取消"></mu-flat-button>
+                <mu-flat-button v-if="copyStatus == 'finish'" slot="actions" @click="copyFile" primary
+                                label="确定"></mu-flat-button>
+                <mu-linear-progress v-if="copyStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
+            </mu-dialog>
+        </div>
+        <div>
+            <mu-dialog :open="deleteDialog" :title="'删除'+deleteFilePath" @close="closeDeleteDialog">
+                <mu-flat-button v-if="deleteStatus == 'finish'" slot="actions" @click="closeDeleteDialog" primary
+                                label="取消"></mu-flat-button>
+                <mu-flat-button v-if="deleteStatus == 'finish'" slot="actions" @click="deleteFile" primary
+                                label="确定"></mu-flat-button>
+                <mu-linear-progress v-if="deleteStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
+            </mu-dialog>
+        </div>
     </div>
+
 </template>
 {% endverbatim %}

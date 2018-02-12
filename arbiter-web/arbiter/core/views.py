@@ -1,6 +1,7 @@
 import codecs
 import json
 import os
+import shutil
 import time
 import git
 from django.core.files import File
@@ -87,6 +88,62 @@ class auth_restful(APIView):
         response_data = {'success': True}
         return JsonResponse(response_data, content_type="application/json")
 
+    # 复制文件方法
+    @api_view(['POST'])
+    def copy_case_file(self):
+        case_path = os.getenv("CASEPATH")
+        # 获取发送的请求
+        json_str = self.body
+        json_obj = json.loads(json_str)
+        git_path = '../arbiter-cases/' + case_path.split("/")[0]
+        root_path = '../arbiter-cases/' + case_path + '/'
+        old_case_path = json_obj.get('oldPath')
+        new_case_path = json_obj.get('newPath')
+        shutil.copyfile(root_path + old_case_path,
+                        root_path + new_case_path)
+        repo = git.Repo(git_path)
+        repo_index = repo.index
+        repo_index.add([case_path.split("/")[1] + "/" + new_case_path])
+        repo_index.commit(self.user.username + "复制文件" + old_case_path + "到" + new_case_path)
+        # 获取远程仓库
+        remote = repo.remote()
+        remote.pull()
+        # 推送本地修改到远程仓库
+        remote.push()
+        # 同步最新用例列表到数据库
+        case_list = Case_List.objects.get()
+        case_list.name = "arbiter_cases"
+        case_list.data = CaseList.getList()
+        case_list.save()
+        return HttpResponse(json.dumps({"result": 'ok'}), content_type="application/json")
+        # 复制文件方法
+
+    @api_view(['POST'])
+    def delete_case_file(self):
+        case_path = os.getenv("CASEPATH")
+        # 获取发送的请求
+        json_str = self.body
+        json_obj = json.loads(json_str)
+        git_path = '../arbiter-cases/' + case_path.split("/")[0]
+        root_path = '../arbiter-cases/' + case_path + '/'
+        delete_case_path = case_path = json_obj.get('deleteFilePath')
+        os.remove(root_path + delete_case_path)
+        repo = git.Repo(git_path)
+        repo.git.add(update=True)
+        repo_index = repo.index
+        repo_index.commit(self.user.username + "删除文件" + delete_case_path)
+        # 获取远程仓库
+        remote = repo.remote()
+        remote.pull()
+        # 推送本地修改到远程仓库
+        remote.push()
+        # 同步最新用例列表到数据库
+        case_list = Case_List.objects.get()
+        case_list.name = "arbiter_cases"
+        case_list.data = CaseList.getList()
+        case_list.save()
+        return HttpResponse(json.dumps({"result": 'ok'}), content_type="application/json")
+
     # 保存文件方法
     @api_view(['POST'])
     def save_case_file(self):
@@ -109,16 +166,18 @@ class auth_restful(APIView):
             mfile.close()
             if mfile.closed:
                 result = 'ok'
-                repo = git.Repo('../arbiter-cases/caseobj')
+                repo = git.Repo('../arbiter-cases/' + case_path_obj)
                 repo.git.add(update=True)
                 repo_index = repo.index
                 repo_index.commit(self.user.username + "修改文件" + case_path)
                 # 获取远程仓库
                 remote = repo.remote()
                 remote.pull()
-                test = os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'util'), 'askpass.py')
                 # 推送本地修改到远程仓库
                 remote.push()
                 # 同步最新用例列表到数据库
-                Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
+                case_list = Case_List.objects.get()
+                case_list.name = "arbiter_cases"
+                case_list.data = CaseList.getList()
+                case_list.save()
                 return HttpResponse(json.dumps({"result": result}), content_type="application/json")

@@ -7,7 +7,19 @@ const CasePaper = {
         'CodeFloatBtn': CodeFloatBtn,
     },
     data() {
-        return {caseMap: {}, cpath: null};
+        return {
+            caseMap: {},
+            cpath: null,
+            copyDialog: false,
+            deleteDialog:false,
+            copyStatus: "finish",
+            deleteStatus: "finish",
+            fileInfo: {
+                oldName: "",
+                newName: "",
+            },
+             deleteFilePath: "",
+        };
     },
     watch: {
         casemodel: function (val) {
@@ -44,19 +56,74 @@ const CasePaper = {
     }
     ,
     methods: {
-        ...Vuex.mapGetters(['getAllCases']),
+        ...Vuex.mapGetters(['getAllCases','jwtHeader']),
         run(testcase) {
             Event.$emit('run-case', testcase);
         },
+        openDeleteDialog(value) {
+            this.deleteDialog = true;
+            this.deleteStatus = 'finish';
+            let caseNamePath = null;
+            for (let [k, v] of Object.entries(value)) {
+                caseNamePath = k;
+            }
+            caseNamePath = caseNamePath.split(":")[0];
+            let deletePath = caseNamePath.split(".").join("/") + ".py";
+            this.deleteFilePath = deletePath.substring(deletePath.indexOf('/')+1);
+
+        },
+        closeDeleteDialog() {
+            this.deleteDialog = false
+        },
+                openCopyDialog(value) {
+            this.copyDialog = true;
+            this.copyStatus = 'finish';
+            let caseNamePath = null;
+            for (let [k, v] of Object.entries(value)) {
+                caseNamePath = k;
+            }
+            caseNamePath = caseNamePath.split(":")[0];
+            let oldpath = caseNamePath.split(".").join("/") + ".py";
+            let newpath = caseNamePath.split(".").join("/") + "_copy.py";
+            this.fileInfo.oldName = oldpath.substring(oldpath.indexOf('/')+1);
+            this.fileInfo.newName = newpath.substring(newpath.indexOf('/')+1);
+        },
+        closeCopyDialog() {
+            this.copyDialog = false
+        },
         showcode(key, value) {
-            this.$router.push({name: 'casepathpy', params: {pyname: key}});
+            if(this.$router.currentRoute.name!=='casepathpy')
+            { this.$router.push({name: 'casepathpy', params: {pyname: key}});}
+            else {
+                this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
+            }
+
             let caseNamePath = null;
             for (let [k, v] of Object.entries(value)) {
                 caseNamePath = k;
             }
             caseNamePath = caseNamePath.split(":")[0];
             this.cpath = caseNamePath.split(".").join("/") + ".py";
-
+        },
+        copyFile() {
+            this.copyStatus = 'running';
+            getRes("/arbiter/copy", {oldPath: this.fileInfo.oldName, newPath: this.fileInfo.newName}, this.jwtHeader()).then(
+                json => {
+                    window.location.href = window.location.href;
+                }).catch((err) => {
+                this.copyStatus = 'fail';
+                console.log("请求错误:" + err);
+            });
+        },
+        deleteFile() {
+            this.deleteStatus = 'running';
+            getRes("/arbiter/delete", {deleteFilePath: this.deleteFilePath}, this.jwtHeader()).then(
+                json => {
+                    window.location.href = window.location.href;
+                }).catch((err) => {
+                this.deleteStatus = 'fail';
+                console.log("请求错误:" + err);
+            });
         },
 
     }

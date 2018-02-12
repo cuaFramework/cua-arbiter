@@ -69,7 +69,7 @@ const menuIconButton = {
             getRes("./cloneCaseObj", {url: this.gitUrlPrefix}, this.jwtHeader()).then(
                 json => {
                     this.gitCloneStatus = 'finish';
-                    window.location.href = ".";
+                    window.location.href = window.location.href;
                 }).catch((err) => {
                 this.gitCloneStatus = 'fail';
                 console.log("请求错误:" + err);

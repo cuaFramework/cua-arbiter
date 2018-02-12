@@ -12,7 +12,7 @@ arbiter_prod_config = \
          pgsql_user='luna',
          pgsql_password='luna',
          elk_url='10.104.104.57:9200',
-         case_path='caseobj/casesx')
+         case_path='caseobj/casex')
 
 arbiter_docker_config = \
     dict(redis_host='redis',
@@ -28,4 +28,4 @@ arbiter_docker_config = \
          pgsql_dbname='arbiter_dj',
          pgsql_password='luna',
          elk_url='elk:9200',
-         case_path='caseobj/casesx')
+         case_path='caseobj/casex')
