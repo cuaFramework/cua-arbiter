@@ -130,6 +130,9 @@ const ArbiterHeader = {
         toLogin() {
             this.openLoginDialog();
         },
+        submit() {
+
+        },
         /*打开和关闭登录对话框*/
         openLoginDialog() {
             this.loginDialog.switch = true;

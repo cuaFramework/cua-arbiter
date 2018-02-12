@@ -112,14 +112,14 @@
                 <div class="flex-query">
                     <mu-flexbox class="mt8" orient="vertical">
                         <mu-flexbox-item order="0">
-                            <span>从</span>
-                            <mu-date-picker mode="landscape" v-model="startDate" :auto-ok="true" hint-text="请选择开始日期"
-                                            container="inline"></mu-date-picker>
+
+                            <mu-date-picker mode="landscape" v-model="startDate"  hint-text="请选择开始日期"
+                                            ></mu-date-picker>
                             <mu-time-picker mode="landscape" v-model="startTime" :auto-ok="false" hint-text="请选择开始时间"
                                             container="inline" format="24hr"></mu-time-picker>
-                            <span>到</span>
-                            <mu-date-picker mode="landscape" v-model="endDate" :auto-ok="true" hint-text="请选择结束日期"
-                                            container="inline"></mu-date-picker>
+
+                            <mu-date-picker mode="landscape" v-model="endDate"  hint-text="请选择结束日期"
+                                            ></mu-date-picker>
                             <mu-time-picker mode="landscape" v-model="endTime" :auto-ok="false" hint-text="请选择结束时间"
                                             container="inline" format="24hr"></mu-time-picker>
                             <br/>
