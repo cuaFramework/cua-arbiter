@@ -16,6 +16,7 @@
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/navbar.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'arbiter/css/wholog/index.css' %}"/>
 
+
     {% block head %}
     {% endblock head %}
 </head>
@@ -33,7 +34,7 @@
     <arbiter-header></arbiter-header>
 
     <div id="root">
-
+        <log-slide></log-slide>
         <router-view name="historyLog"></router-view>
     </div>
 </div>
@@ -142,10 +143,10 @@
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column label="用例名" width="180">
                     <template slot-scope="scope">
-                            <el-button @click.native.prevent="queryDetailData(scope.row.log_id)" type="text"
-                                       size="small">
-                                {{ scope.row.case_name }}
-                            </el-button>
+                        <el-button @click.native.prevent="queryDetailData(scope.row.log_id)" type="text"
+                                   size="small">
+                            {{ scope.row.case_name }}
+                        </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="author" label="执行人" width="180"></el-table-column>
@@ -171,11 +172,13 @@
 
 </template>
 {% endverbatim %}
+{% include "component/log-slide.vue" %}
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/core/store.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/log-slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>

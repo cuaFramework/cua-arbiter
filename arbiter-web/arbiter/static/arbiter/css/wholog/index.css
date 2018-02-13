@@ -32,6 +32,18 @@ body {
     font-size:120%;
  }
 
+ #history-log {
+    position: fixed;
+    left: 256px;
+    top: 60px;
+    right: 0;
+    width: auto;
+    bottom: 0;
+    overflow-y: auto;
+    size: 14px;
+    z-index: -1;
+}
+
 .log-dialog {
     max-height: 360px;
 }

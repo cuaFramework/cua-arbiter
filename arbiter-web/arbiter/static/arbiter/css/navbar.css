@@ -11,6 +11,13 @@
     margin-bottom: 0;
 }
 
+#arbiter-header {
+    position: fixed;
+    left: 256px;
+    right: 0;
+    top: 0;
+    width: auto;
+}
 #arbiter-navbar {
     position: fixed;
     left: 0;

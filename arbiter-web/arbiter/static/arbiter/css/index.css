@@ -2,8 +2,8 @@
 body {
     background-color: #f2f2f2;
 }
-.mu-drawer
-{
+
+.mu-drawer {
     background-color: #f2f2f2;
 }
 
@@ -34,6 +34,8 @@ body {
     bottom: 0;
 }
 
+
+
 #case-paper {
     position: fixed;
     left: 256px;
@@ -50,16 +52,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-        width: 100%;
+    width: 100%;
 
 }
 
 .grey-text {
-    color:#9e9e9e;
+    color: #9e9e9e;
 }
 
 .brown800-text {
-    color:#4e342e;
+    color: #4e342e;
 }
 
 .paper-casename {
@@ -68,23 +70,25 @@ body {
 
 .paper-pyname {
     margin-left: 30px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .red-icon {
-    color:#ff5722;
+    color: #ff5722;
 }
+
 .blue-icon {
     color: #6fa9ff;
 }
 
 .green-icon {
-    color:#8bc34a;
+    color: #8bc34a;
 }
-.long-large-paper
-{margin-right: 100px;
-    margin-left: 20px;}
 
+.long-large-paper {
+    margin-right: 100px;
+    margin-left: 20px;
+}
 
 .long-little-paper {
     height: 45px;
