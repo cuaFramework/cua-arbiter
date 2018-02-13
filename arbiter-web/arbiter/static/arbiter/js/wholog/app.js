@@ -8,6 +8,6 @@ let app = new Vue({
     /*组件集合*/
     components: {
         'ArbiterHeader':ArbiterHeader,
-        'LogApp':LogApp,
+        'historyLog':historyLog,
     },
 });

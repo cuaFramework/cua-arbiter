@@ -426,7 +426,7 @@
         ) {
             console.warn(
                 "[vuex] mutation type: " + type + ". Silent option has been removed. " +
-                'Use the filter functionality in the vue-devtools'
+                'Use the com.zuche.materialmgr.filter functionality in the vue-devtools'
             );
         }
     };

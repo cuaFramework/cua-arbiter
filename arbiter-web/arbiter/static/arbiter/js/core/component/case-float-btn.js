@@ -19,7 +19,7 @@ const CaseFloatBtn = {
 
     },
     methods: {
-
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         openLogDialog() {
             this.logDialog = true;
 
@@ -47,7 +47,7 @@ const CaseFloatBtn = {
 
             };
             run_socket.onopen = () => {
-                run_socket.send("runCase " + this.testcase);
+                run_socket.send("runCase " + this.testcase + " " + this.username());
             };
             // Call onopen directly if socket is already open
             if (run_socket.readyState === WebSocket.OPEN)

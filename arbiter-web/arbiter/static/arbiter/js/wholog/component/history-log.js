@@ -1,7 +1,7 @@
 /*所有组件*/
 /**/
-const LogApp = {
-    template: '#logApp',
+const historyLog = {
+    template: '#historyLog',
     store,
     data: function () {
         let now = new Date();

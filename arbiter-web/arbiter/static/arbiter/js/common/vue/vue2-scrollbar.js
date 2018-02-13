@@ -215,7 +215,7 @@ if (Component.options.functional) {console.error("[vue-loader] vue-scrollbar.vue
 /* hot reload */
 if (false) {(function () {
   var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
+  hotAPI.install(require("arbiter/static/arbiter/js/common/vue/vue"), false)
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
@@ -931,7 +931,7 @@ if (Component.options.functional) {console.error("[vue-loader] horizontal-scroll
 /* hot reload */
 if (false) {(function () {
   var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
+  hotAPI.install(require("arbiter/static/arbiter/js/common/vue/vue"), false)
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
@@ -982,7 +982,7 @@ if (Component.options.functional) {console.error("[vue-loader] vertical-scrollba
 /* hot reload */
 if (false) {(function () {
   var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
+  hotAPI.install(require("arbiter/static/arbiter/js/common/vue/vue"), false)
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {

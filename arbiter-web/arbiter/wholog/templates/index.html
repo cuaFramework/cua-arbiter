@@ -12,24 +12,29 @@
 
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/element/index.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/navbar.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'arbiter/css/wholog/index.css' %}"/>
+
     {% block head %}
     {% endblock head %}
 </head>
 
 <body>
-<script src="{% static 'arbiter/js/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/vue/vuex.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/vue/vue-router.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/vue/vue-resource.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/vue/vue.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/vue/vuex.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/vue/vue-router.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/vue/vue-resource.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/muse/muse-ui.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/common/element/index.js' %}" type="text/javascript" charset="utf-8"></script>
 
 {% verbatim %}
 <div id="app">
     <arbiter-header></arbiter-header>
+
     <div id="root">
-        <router-view name="logApp"></router-view>
+
+        <router-view name="historyLog"></router-view>
     </div>
 </div>
 {% endverbatim %}
@@ -105,21 +110,21 @@
 </template>
 
 <!--日志列表-->
-<template id="logApp">
-    <div id="log-app">
+<template id="historyLog">
+    <div id="history-log">
         <div class="query">
             <div class="query-content">
                 <div class="flex-query">
                     <mu-flexbox class="mt8" orient="vertical">
                         <mu-flexbox-item order="0">
 
-                            <mu-date-picker mode="landscape" v-model="startDate"  hint-text="请选择开始日期"
-                                            ></mu-date-picker>
+                            <mu-date-picker mode="landscape" v-model="startDate" hint-text="请选择开始日期"
+                            ></mu-date-picker>
                             <mu-time-picker mode="landscape" v-model="startTime" :auto-ok="false" hint-text="请选择开始时间"
                                             container="inline" format="24hr"></mu-time-picker>
 
-                            <mu-date-picker mode="landscape" v-model="endDate"  hint-text="请选择结束日期"
-                                            ></mu-date-picker>
+                            <mu-date-picker mode="landscape" v-model="endDate" hint-text="请选择结束日期"
+                            ></mu-date-picker>
                             <mu-time-picker mode="landscape" v-model="endTime" :auto-ok="false" hint-text="请选择结束时间"
                                             container="inline" format="24hr"></mu-time-picker>
                             <br/>
@@ -134,33 +139,24 @@
         </div><!-- query end-->
         <!--log-table begin-->
         <div class="log-table">
-            <mu-table :fixed-header="true" height="540px">
-                <mu-thead slot="header">
-                    <mu-tr>
-                        <mu-th width="25%" tooltip="ID">ID</mu-th>
-                        <mu-th width="25%" tooltip="用例名">用例名</mu-th>
-                        <mu-th width="10%" tooltip="执行人">执行人</mu-th>
-                        <mu-th width="15%" tooltip="运行时间">运行时间</mu-th>
-                        <mu-th width="15%" tooltip="操作">操作</mu-th>
-                    </mu-tr>
-                </mu-thead>
-                <mu-tbody v-if="tableData!=null">
-                    <mu-tr v-for="item,index in tableData" :key="index">
-                        <mu-td width="25%"><a @click="queryDetailData(item.log_id)">{{item.log_id}}</a></mu-td>
-                        <mu-td width="25%">{{item.case_name}}</mu-td>
-                        <mu-td width="10%">{{item.author}}</mu-td>
-                        <mu-td width="15%">{{item.run_time}}</mu-td>
-                        <mu-td width="15%">
-                            <mu-raised-button background-color="#6495ED" label="查看详细" icon="search" primary/>
-                        </mu-td>
-                    </mu-tr>
-                </mu-tbody>
-                <p class="nodata" v-if="tableData==null">暂无数据</p>
-            </mu-table>
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column label="用例名" width="180">
+                    <template slot-scope="scope">
+                            <el-button @click.native.prevent="queryDetailData(scope.row.log_id)" type="text"
+                                       size="small">
+                                {{ scope.row.case_name }}
+                            </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="author" label="执行人" width="180"></el-table-column>
+                <el-table-column prop="run_time" label="运行时间"></el-table-column>
+                <el-table-column prop="result" label="结果"></el-table-column>
+                <el-table-column label="操作"></el-table-column>
+            </el-table>
         </div> <!-- table end-->
         <!--运行详情记录-->
         <div>
-            <mu-dialog dialog-class="log-dialog" :open="logDialog.switch" @close="closeDialog" title="详细运行记录"
+            <mu-dialog dialog-class="log-dialog" :open="logDialog.switch" @close="closeDialog" title="运行记录"
                        scrollable>
                 <p v-for="item, index in logDialog.menus" :key="index">{{ item }}</p>
                 <mu-flat-button primary label="关闭" @click="closeDialog" slot="actions"/>
@@ -168,7 +164,7 @@
         </div>
         <div>
             <mu-popup position="top" :overlay="false" popup-class="login-popup-top" :open="loginPopup">
-                请登录后在操作
+                请登录再操作
             </mu-popup>
         </div>
     </div><!--log-app end-->
@@ -177,9 +173,9 @@
 {% endverbatim %}
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/core/store.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/wholog/components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>
