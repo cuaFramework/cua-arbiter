@@ -31,12 +31,15 @@
 }
 
 #arbiter-navbar h2 {
-
     width: 300px;
 }
 
-#arbiter-navbar .mu-avatar {
+#arbiter-header .mu-avatar {
+    margin: 30px;
+    cursor: pointer;
+}
 
+#arbiter-navbar .mu-avatar {
     margin: 30px;
     cursor: pointer;
 }

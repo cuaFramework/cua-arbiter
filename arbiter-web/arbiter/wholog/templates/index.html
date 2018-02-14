@@ -39,144 +39,15 @@
     </div>
 </div>
 {% endverbatim %}
-{% verbatim %}
-<template id="menuIconButton">
-    <div id="menu-icon-button">
-        <mu-icon-button icon="apps" slot="right" ref="appIcon" @click="appMenuToggle"></mu-icon-button>
-        <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
-                    :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="appMenuTrigger"
-                    :open="appMenuOpen" @close="appMenuHandleClose">
-            <mu-menu>
-                <mu-menu-item title="用例导入" left-icon="add"
-                              @click="openImportDialog"></mu-menu-item>
-                <mu-menu-item href="/arbiter/" title="用例管理" left-icon="mode_edit"></mu-menu-item>
-                <mu-menu-item href="./index.html" title="日志查询" left-icon="history"></mu-menu-item>
-            </mu-menu>
-        </mu-popover>
-        <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
-            <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix"
-                           label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100"
-                           label-float></mu-text-field>
-            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary
-                            label="取消"></mu-flat-button>
-            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="cloneCaseObj" primary
-                            label="导入"></mu-flat-button>
-            <mu-linear-progress v-if="gitCloneStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
-        </mu-dialog>
-    </div>
-</template>
-<template id="userAvatar">
-    <div id="user-avatar">
-        <mu-avatar v-if="usernameAbbreviation!=null" background-color="lime700" ref="UserAvatar" color="black"
-                   :size="40" slot="right" @click="userMenuToggle">{{ usernameAbbreviation }}
-        </mu-avatar>
-        <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
-                    :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="userMenuTrigger"
-                    :open="userMenuOpen" @close="userMenuHandleClose">
-            <mu-menu>
-                <mu-menu-item title="设置" left-icon="settings"></mu-menu-item>
-                <mu-menu-item title="帮助" left-icon="help_outline"></mu-menu-item>
-                <mu-divider></mu-divider>
-                <mu-menu-item title="退出"
-                              @click="logout()" left-icon="power_settings_new"></mu-menu-item>
-            </mu-menu>
-        </mu-popover>
-    </div>
-</template>
-<template id="arbiterHeader">
-    <div id="arbiter-header" :class="{ 'slider-open': sliderIsOpen}">
-        <mu-dialog dialog-class="login-dialog" :open="loginDialog.switch" @close="closeLoginDialog">
-            <mu-text-field icon="account_circle" class="username" name="username" v-model="loginDialog.username"
-                           label="用户名"
-                           label-float></mu-text-field>
-            <mu-text-field icon="vpn_key" name="username" v-model="loginDialog.password" label="密码" type="password"
-                           label-float></mu-text-field>
-            <mu-raised-button @click="submit" class="demo-raised-button login-dialog-btn" name="login-dialog-btn"
-                              label="登录"
-                              primary></mu-raised-button>
-        </mu-dialog>
-        <mu-appbar :z-depth="2">
-            <mu-icon-button icon="extension" @click="toggleSlide()" slot="left"></mu-icon-button>
-            <h2 slot="left">日志查询</h2>
-            <mu-icon-button v-if="usernameAbbreviation!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat"
-                            slot="right"></mu-icon-button>
-            <menu-icon-button slot="right" :username-abbreviation="usernameAbbreviation"></menu-icon-button>
-            <user-avatar slot="right" v-if="usernameAbbreviation!=null"
-                         :username-abbreviation="usernameAbbreviation"></user-avatar>
-            <mu-flat-button v-if="usernameAbbreviation==null" @click="toLogin" label="登陆" icon="account_circle"
-                            class="demo-flat-button" color="lime700" slot="right"></mu-flat-button>
-        </mu-appbar>
-
-    </div>
-</template>
-
-<!--日志列表-->
-<template id="historyLog">
-    <div id="history-log" :class="{ 'slider-open': slideOpen}" >
-        <div class="query">
-            <div class="query-content">
-                <div class="flex-query">
-                    <mu-flexbox class="mt8" orient="vertical">
-                        <mu-flexbox-item order="0">
-
-                            <mu-date-picker mode="landscape" v-model="startDate" hint-text="请选择开始日期"
-                            ></mu-date-picker>
-                            <mu-time-picker mode="landscape" v-model="startTime" :auto-ok="false" hint-text="请选择开始时间"
-                                            container="inline" format="24hr"></mu-time-picker>
-
-                            <mu-date-picker mode="landscape" v-model="endDate" hint-text="请选择结束日期"
-                            ></mu-date-picker>
-                            <mu-time-picker mode="landscape" v-model="endTime" :auto-ok="false" hint-text="请选择结束时间"
-                                            container="inline" format="24hr"></mu-time-picker>
-                            <br/>
-                        </mu-flexbox-item>
-                        <mu-flexbox-item order="2" class="query-button">
-                            <mu-raised-button background-color="#6495ED" label="查询" icon="search" @click="queryData"
-                                              primary/>
-                        </mu-flexbox-item>
-                    </mu-flexbox>
-                </div>
-            </div>
-        </div><!-- query end-->
-        <!--log-table begin-->
-        <div class="log-table">
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column label="用例名" width="180">
-                    <template slot-scope="scope">
-                        <el-button @click.native.prevent="queryDetailData(scope.row.log_id)" type="text"
-                                   size="small">
-                            {{ scope.row.case_name }}
-                        </el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="author" label="执行人" width="180"></el-table-column>
-                <el-table-column prop="run_time" label="运行时间"></el-table-column>
-                <el-table-column prop="result" label="结果"></el-table-column>
-                <el-table-column label="操作"></el-table-column>
-            </el-table>
-        </div> <!-- table end-->
-        <!--运行详情记录-->
-        <div>
-            <mu-dialog dialog-class="log-dialog" :open="logDialog.switch" @close="closeDialog" title="运行记录"
-                       scrollable>
-                <p v-for="item, index in logDialog.menus" :key="index">{{ item }}</p>
-                <mu-flat-button primary label="关闭" @click="closeDialog" slot="actions"/>
-            </mu-dialog>
-        </div>
-        <div>
-            <mu-popup position="top" :overlay="false" popup-class="login-popup-top" :open="loginPopup">
-                请登录再操作
-            </mu-popup>
-        </div>
-    </div><!--log-app end-->
-
-</template>
-{% endverbatim %}
+{% include "component/menu-icon-button.vue" %}
+{% include "component/user-avatar.vue" %}
+{% include "component/history-log.vue" %}
+{% include "component/arbiter-header.vue" %}
 {% include "component/log-slide.vue" %}
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/common/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/log-slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>

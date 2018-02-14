@@ -5,15 +5,17 @@ const CaseFloatBtn = {
         return {
             modalShow: true,
             seen: false,
-            testcase: "",
+            testCase: "",
+            testName: "",
             logDialog: false,
             logContent: [],
         }
     }, mounted() {
         let _this = this;
-        Event.$on('run-case', function (testcase) {
+        Event.$on('run-case', function (value) {
 
-            _this.testcase = testcase;
+            _this.testCase = value.testCase;
+            _this.testName = value.testName;
             _this.run();
         });
 
@@ -47,7 +49,7 @@ const CaseFloatBtn = {
 
             };
             run_socket.onopen = () => {
-                run_socket.send("runCase " + this.testcase + " " + this.username());
+                run_socket.send("runCase " + this.testCase + " " + this.username()+ " " + this.testName);
             };
             // Call onopen directly if socket is already open
             if (run_socket.readyState === WebSocket.OPEN)

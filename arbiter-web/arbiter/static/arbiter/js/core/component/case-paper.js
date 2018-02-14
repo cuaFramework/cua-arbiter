@@ -62,8 +62,8 @@ const CasePaper = {
     ,
     methods: {
         ...Vuex.mapGetters(['getAllCases', 'jwtHeader','getSlideOpen']),
-        run(testcase) {
-            Event.$emit('run-case', testcase);
+        run(testCase,testName) {
+            Event.$emit('run-case', {testCase:testCase,testName:testName,});
         },
         openDeleteDialog(value) {
             this.deleteDialog = true;

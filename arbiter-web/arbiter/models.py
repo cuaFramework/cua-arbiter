@@ -20,7 +20,8 @@ class Case_List(models.Model):
 # 运行日志信息模型
 class Case_Run_Info(models.Model):
     log_id = models.UUIDField()
-    case_name = models.TextField(max_length=200)
+    task_name = models.TextField(max_length=200, default='noName')
+    case_name = models.TextField(max_length=5000)
     run_time = models.DateTimeField()
     author = models.CharField(max_length=50)
     status = models.CharField(max_length=50, default='done')
