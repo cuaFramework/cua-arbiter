@@ -3,38 +3,42 @@ body {
 }
 
 #log-root {
-    background: rgba(0,0,0,0.05);
-    vertical-align:middle;
+    background: rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
     height: 100%;
     width: 100%;
     margin: 10px;
 
 }
+
 .query {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-.query-content  span {
+.query-content span {
     font-weight: 500;
-    font-size:large;
+    font-size: large;
 }
+
 .query-button {
     display: flex;
     justify-content: center;
 }
- a {
-    text-decoration:underline;
+
+a {
+    text-decoration: underline;
     color: #6495ED;
 }
- a:hover {
-    font-size:120%;
- }
 
- #history-log {
+a:hover {
+    font-size: 120%;
+}
+
+#history-log {
     position: fixed;
-    left: 256px;
+    left: 0;
     top: 60px;
     right: 0;
     width: auto;
@@ -47,10 +51,12 @@ body {
 .log-dialog {
     max-height: 360px;
 }
+
 .log-dialog p {
     margin: 5px;
     font-size: 12px;
 }
+
 .login-popup-top {
     width: 80%;
     opacity: .6;
@@ -64,12 +70,15 @@ body {
     color: red;
     background-color: #6495ED;
 }
+
 #arbiter-header {
     background-color: #6495ED;
 }
+
 .mu-appbar {
     background-color: #6495ED;
 }
+
 .login-dialog {
     padding-right: 20px;
     padding-bottom: 20px;

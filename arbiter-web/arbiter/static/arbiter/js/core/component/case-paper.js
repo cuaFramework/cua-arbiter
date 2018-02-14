@@ -11,15 +11,20 @@ const CasePaper = {
             caseMap: {},
             cpath: null,
             copyDialog: false,
-            deleteDialog:false,
+            deleteDialog: false,
             copyStatus: "finish",
             deleteStatus: "finish",
             fileInfo: {
                 oldName: "",
                 newName: "",
             },
-             deleteFilePath: "",
+            deleteFilePath: "",
         };
+    },
+    computed: {
+        slideOpen() {
+            return this.getSlideOpen();
+        },
     },
     watch: {
         casemodel: function (val) {
@@ -56,7 +61,7 @@ const CasePaper = {
     }
     ,
     methods: {
-        ...Vuex.mapGetters(['getAllCases','jwtHeader']),
+        ...Vuex.mapGetters(['getAllCases', 'jwtHeader','getSlideOpen']),
         run(testcase) {
             Event.$emit('run-case', testcase);
         },
@@ -69,13 +74,13 @@ const CasePaper = {
             }
             caseNamePath = caseNamePath.split(":")[0];
             let deletePath = caseNamePath.split(".").join("/") + ".py";
-            this.deleteFilePath = deletePath.substring(deletePath.indexOf('/')+1);
+            this.deleteFilePath = deletePath.substring(deletePath.indexOf('/') + 1);
 
         },
         closeDeleteDialog() {
             this.deleteDialog = false
         },
-                openCopyDialog(value) {
+        openCopyDialog(value) {
             this.copyDialog = true;
             this.copyStatus = 'finish';
             let caseNamePath = null;
@@ -85,15 +90,16 @@ const CasePaper = {
             caseNamePath = caseNamePath.split(":")[0];
             let oldpath = caseNamePath.split(".").join("/") + ".py";
             let newpath = caseNamePath.split(".").join("/") + "_copy.py";
-            this.fileInfo.oldName = oldpath.substring(oldpath.indexOf('/')+1);
-            this.fileInfo.newName = newpath.substring(newpath.indexOf('/')+1);
+            this.fileInfo.oldName = oldpath.substring(oldpath.indexOf('/') + 1);
+            this.fileInfo.newName = newpath.substring(newpath.indexOf('/') + 1);
         },
         closeCopyDialog() {
             this.copyDialog = false
         },
         showcode(key, value) {
-            if(this.$router.currentRoute.name!=='casepathpy')
-            { this.$router.push({name: 'casepathpy', params: {pyname: key}});}
+            if (this.$router.currentRoute.name !== 'casepathpy') {
+                this.$router.push({name: 'casepathpy', params: {pyname: key}});
+            }
             else {
                 this.$router.push({name: 'casepath', params: {casemodel: this.casemodel}});
             }
@@ -107,7 +113,10 @@ const CasePaper = {
         },
         copyFile() {
             this.copyStatus = 'running';
-            getRes("/arbiter/copy", {oldPath: this.fileInfo.oldName, newPath: this.fileInfo.newName}, this.jwtHeader()).then(
+            getRes("/arbiter/copy", {
+                oldPath: this.fileInfo.oldName,
+                newPath: this.fileInfo.newName
+            }, this.jwtHeader()).then(
                 json => {
                     window.location.href = window.location.href;
                 }).catch((err) => {

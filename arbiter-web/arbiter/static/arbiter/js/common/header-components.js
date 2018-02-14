@@ -120,11 +120,11 @@ const ArbiterHeader = {
         });
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken','setSlideOpen']),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         toggleSlide() {
-            this.sliderIsOpen = !this.sliderIsOpen;
-            Event.$emit('toggle-slide');
+             this.sliderIsOpen = !this.sliderIsOpen;
+        this.setSlideOpen();
         },
         /*点击登录*/
         toLogin() {

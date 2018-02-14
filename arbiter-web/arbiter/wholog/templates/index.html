@@ -96,7 +96,7 @@
                               primary></mu-raised-button>
         </mu-dialog>
         <mu-appbar :z-depth="2">
-            <mu-icon-button icon="extension" slot="left"></mu-icon-button>
+            <mu-icon-button icon="extension" @click="toggleSlide()" slot="left"></mu-icon-button>
             <h2 slot="left">日志查询</h2>
             <mu-icon-button v-if="usernameAbbreviation!=null" tooltip="消息" tooltip-position="bottom-right" icon="chat"
                             slot="right"></mu-icon-button>
@@ -112,7 +112,7 @@
 
 <!--日志列表-->
 <template id="historyLog">
-    <div id="history-log">
+    <div id="history-log" :class="{ 'slider-open': slideOpen}" >
         <div class="query">
             <div class="query-content">
                 <div class="flex-query">
@@ -175,7 +175,7 @@
 {% include "component/log-slide.vue" %}
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/core/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/log-slide.js' %}" type="text/javascript" charset="utf-8"></script>

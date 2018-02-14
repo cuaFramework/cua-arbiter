@@ -5,13 +5,12 @@ const historyLog = {
     store,
     data: function () {
         let now = new Date();
-         now.setDate(now.getDate() + 1);
-         let tomorrow = now;
+        now.setDate(now.getDate() + 1);
         return {
             loginPopup: false, /*未登录是提示popup*/
             startDate: new Date().format("yyyy-MM-dd"),
             startTime: '00:00',
-            endDate: tomorrow.format("yyyy-MM-dd"),
+            endDate: now.format("yyyy-MM-dd"),
             endTime: '00:00',
             tableData: [],
             logDialog: {
@@ -21,6 +20,11 @@ const historyLog = {
             }
         }
     },
+    computed: {
+        slideOpen() {
+            return this.getSlideOpen();
+        },
+    },
     mounted() {
         this.refreshJwtToken();
     },
@@ -28,7 +32,7 @@ const historyLog = {
     methods: {
         /*存到vuex map 方便调用store里函数*/
         ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
-        ...Vuex.mapGetters(['username', 'jwtHeader']),
+        ...Vuex.mapGetters(['username', 'jwtHeader', 'getSlideOpen']),
         /*查询运行列表*/
         queryData() {
             startTime = this.startDate + " " + this.startTime;

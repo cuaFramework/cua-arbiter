@@ -59,10 +59,27 @@ const caseModule = {
     // actions: { ... }
 };
 
+//vuex页面状态模块
+const pageModule = {
+    state: {slideOpen: true},
+    mutations: {
+        setSlideOpen(state) {
+            state.slideOpen = !state.slideOpen;
+        },
+    },
+    getters: {
+        getSlideOpen: state => {
+            return state.slideOpen
+        }
+    }
+    // actions: { ... }
+};
+
 //store：所有vuex模块的集合
 const store = new Vuex.Store({
     modules: {
         user: userModule,
-        case: caseModule
+        case: caseModule,
+        page: pageModule
     }
 });

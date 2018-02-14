@@ -1,6 +1,6 @@
 {% verbatim %}
 <template id="casePaper">
-    <div id="case-paper">
+    <div id="case-paper" :class="{ 'slider-open': slideOpen}">
         <div>
             <div v-for="(value, key) in caseMap">
                 <div>

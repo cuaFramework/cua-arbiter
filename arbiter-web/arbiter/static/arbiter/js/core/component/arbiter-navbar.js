@@ -35,11 +35,11 @@ const ArbiterNavbar = {
         });
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setusername', 'refreshJwtToken','setSlideOpen']),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         toggleSlide() {
             this.sliderIsOpen = !this.sliderIsOpen;
-            Event.$emit('toggle-slide');
+            this.setSlideOpen();
         }
     },
     components: {        //要把组件写入到components里面，如果没有放的话在切换的时候就会找不到 组件

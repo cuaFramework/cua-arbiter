@@ -34,11 +34,9 @@ body {
     bottom: 0;
 }
 
-
-
 #case-paper {
     position: fixed;
-    left: 256px;
+    left: 0;
     top: 60px;
     right: 0;
     width: auto;
