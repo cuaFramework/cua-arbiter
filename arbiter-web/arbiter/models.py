@@ -24,6 +24,8 @@ class Case_Run_Info(models.Model):
     case_name = models.TextField(max_length=5000)
     run_time = models.DateTimeField()
     author = models.CharField(max_length=50)
+    num = models.CharField(max_length=50, default='0')
+    duration = models.CharField(max_length=50,default='0')
     status = models.CharField(max_length=50, default='done')
     result = models.CharField(max_length=50, default='done')
     version = models.IntegerField(default='10000000')

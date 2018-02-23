@@ -134,7 +134,7 @@ def queryLogData(request):
                 "logId": log_id
             }
         },
-        "sort": {"creat_time": {"order": "asc"}}
+        "sort": {"create_time": {"order": "asc"}}
     }
 
     res = requests.get('http://' + ES_URL + '/_search', data=json.dumps(querybody))
@@ -176,8 +176,11 @@ def getAllLog(request):
         for res_json in res_jsons:
             response_data_list.append(res_json['fields'])
         response_data_dict['data'] = response_data_list  # 存放到字典中返回给前端
+        response_data_dict['total'] = len(response_data_list)
     else:
         response_data_dict['data'] = None
+        response_data_dict['total'] = 0
+
     return JsonResponse(response_data_dict)
 
 
@@ -220,7 +223,7 @@ def query_api_data(request):
     response_data_dict = {}
     response_data_list = []
     log_id_list = []
-    creat_time_list = []
+    create_time_list = []
     case_name_list = []
     request_type_list = []
     response_code_list = []
@@ -228,7 +231,7 @@ def query_api_data(request):
 
     for i in range(0, result_total):
         result_source_var = res_json['hits']['hits'][i]['_source']
-        # 取查询结果的creat_time
+        # 取查询结果的create_time
         log_id = result_source_var['logId']
         logData = result_source_var['logData']
 
@@ -239,7 +242,7 @@ def query_api_data(request):
         consume_time = result_data["consume_time"]
         # 组装数据到各个类型list
         log_id_list.append(log_id)
-        creat_time_list.append(result_source_var['creat_time'])
+        create_time_list.append(result_source_var['create_time'])
         case_name_list.append(result_source_var['case'])
         request_type_list.append(request_type)
         response_code_list.append(response_code)
@@ -247,7 +250,7 @@ def query_api_data(request):
 
     response_data_dict['total'] = result_total
     response_data_dict["log_id"] = log_id_list
-    response_data_dict["creat_time"] = creat_time_list
+    response_data_dict["create_time"] = create_time_list
     response_data_dict["case_name"] = case_name_list
     response_data_dict["request_type"] = request_type_list
     response_data_dict["response_code"] = response_code_list

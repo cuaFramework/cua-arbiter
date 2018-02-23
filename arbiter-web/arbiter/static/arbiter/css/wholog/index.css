@@ -31,10 +31,27 @@ a {
     text-decoration: underline;
     color: #6495ED;
 }
-
+.red-icon {
+    color: #ff5722;
+}
+.blue-icon {
+    color: #6fa9ff;
+}
 a:hover {
     font-size: 120%;
 }
+  .log-table-expand {
+    font-size: 0;
+  }
+  .log-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .log-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 30%;
+  }
 
 #history-log {
     position: fixed;

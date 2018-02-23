@@ -13,6 +13,7 @@ const historyLog = {
             endDate: now.format("yyyy-MM-dd"),
             endTime: '00:00',
             tableData: [],
+            tableTotal: 0,
             logDialog: {
                 menus: [],
                 content: [],
@@ -64,6 +65,7 @@ const historyLog = {
             }).then((json) => {
                 /*给tableData赋值*/
                 this.tableData = json['data'];
+                this.tableTotal = json['total'];
             }).catch((err) => {
                 console.log("请求wholog/getAllLog出错：" + err);
             });
@@ -106,7 +108,9 @@ const historyLog = {
             });
 
         }, /*queryDetailData end*/
-
+        filterTag(value, row) {
+            return row.result === value;
+        },
         /*打开和关闭日志运行详情对话框*/
         openDialog() {
             this.logDialog.switch = true;

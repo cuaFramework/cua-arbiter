@@ -209,7 +209,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-# 09-11 为支持creat_time查询排序修改为true
+# 09-11 为支持create_time查询排序修改为true
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)

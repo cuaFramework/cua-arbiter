@@ -42,15 +42,19 @@ def ws_message(message):
         run_time = utils.get_now_time(1)
         runcmd = Popen(['nosetests', '-P', '--nologcapture', case_name],
                        bufsize=0, stdout=PIPE, stderr=STDOUT)
-
+        text = None
         while True:
             line = runcmd.stdout.readline()
-            if not line: break
+            if not line:
+                break
             text = line.decode('utf-8')
+            if 'Ran' in text and 'test in' in text:
+                info_text = text
             # 拼接日志内容
             case_name = case_name.lower()
-            creat_time = utils.get_now_time(2)
-            data = {'creat_time': creat_time, 'logId': log_id, 'case': case_name, 'author': user_name, 'logData': text}
+            create_time = utils.get_now_time(2)
+            data = {'create_time': create_time, 'logId': log_id, 'case': case_name, 'author': user_name,
+                    'logData': text}
             # 向redis中发送值
             logData = json.dumps(data)
             re.lpush(logstash_redis_key, logData)
@@ -61,22 +65,25 @@ def ws_message(message):
         message.reply_channel.send({
             "text": "**********************************************结束执行***********************************************"
         }, immediately=True)
+        num = info_text.split("Ran")[1].split("test in")[0].strip()
+        duration = info_text.split("test in")[1].split("s")[0].strip()
         # 存一条logId到mysql
         # 将日志存入mysql
         # mysql 存入格式和内容需要完善
         dic = {'log_id': log_id, 'case_name': case_name, 'run_time': run_time, 'author': user_name,
-               'task_name': task_name, 'result': text.split("(")[0]}
+               'duration': duration, 'num': num,
+               'task_name': task_name, 'result': text.split("(")[0].strip().replace("\n", "")}
         Case_Run_Info.objects.create(**dic)
 
-    if (cmd.split(' ')[0] == 'validateEdit'):
+    if cmd.split(' ')[0] == 'validateEdit':
 
-        if (cmd.split(' ')[1] == '0'):
-            if (cmd.split(' ')[2] in isEditFilesName):
+        if cmd.split(' ')[1] == '0':
+            if cmd.split(' ')[2] in isEditFilesName:
                 message.reply_channel.send({
                     "text": "isBusy"
                 }, immediately=True)
                 isEditFilesName.append(cmd.split(' ')[2])
-        if (cmd.split(' ')[1] == '1'):
+        if cmd.split(' ')[1] == '1':
             isEditFilesName.remove(cmd.split(' ')[2])
 
 

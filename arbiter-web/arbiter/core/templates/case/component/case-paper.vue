@@ -10,10 +10,8 @@
                             <mu-icon-button icon="content_copy" icon-class="blue-icon"
                                             @click="openCopyDialog(value)"></mu-icon-button>
                         </div>
-
-                        <mu-icon-button icon="delete" icon-class="red-icon"
+                        <mu-icon-button icon="delete"
                                         @click="openDeleteDialog(value)"></mu-icon-button>
-
                     </div>
                 </div>
                 <div v-if="pyname===key">

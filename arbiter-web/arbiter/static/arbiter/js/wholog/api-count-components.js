@@ -56,7 +56,7 @@ const ApiCountApp = {
                             result +=
                                 '<p>' + "耗时:" + this.apiData.consume_time[item.dataIndex] + "ms" + '</p>' + '<br/>' +
                                 '<p>' + "用例名:" + this.apiData.case_name[item.dataIndex] + '</p>' + '<br/>' +
-                                '<p>' + "请求时间:" + this.apiData.creat_time[item.dataIndex] + '</p>' + '<br/>' +
+                                '<p>' + "请求时间:" + this.apiData.create_time[item.dataIndex] + '</p>' + '<br/>' +
                                 '<p>' + "请求类型:" + this.apiData.request_type[item.dataIndex] + '</p>' + '<br/>' +
                                 '<p>' + "返回Code:" + this.apiData.response_code[item.dataIndex] + '</p>' + '<br/>'
                             ;
@@ -95,7 +95,7 @@ const ApiCountApp = {
                         name: "时间",
                         type: "category",
                         boundaryGap: false,
-                        data: this.apiData.creat_time,
+                        data: this.apiData.create_time,
                         nameLocation: "end"
                     }
                 ],
