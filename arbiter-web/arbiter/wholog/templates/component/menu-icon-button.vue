@@ -7,7 +7,6 @@
                     :open="appMenuOpen" @close="appMenuHandleClose">
             <mu-menu>
                 <mu-menu-item href="/arbiter/" title="用例管理" left-icon="mode_edit"></mu-menu-item>
-                <mu-menu-item href="/arbiter/wholog/index.html" title="日志查询" left-icon="history"></mu-menu-item>
             </mu-menu>
         </mu-popover>
     </div>

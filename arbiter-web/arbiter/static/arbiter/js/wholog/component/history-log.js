@@ -43,7 +43,6 @@ const historyLog = {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
-                        "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
                         'Authorization': "JWT " + this.jwtHeader(),
@@ -80,7 +79,6 @@ const historyLog = {
                     method: 'POST',
                     credentials: "same-origin",
                     headers: {
-                        "X-CSRFToken": getCookie("csrftoken"),
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
                         'Authorization': "JWT " + this.jwtHeader()
@@ -120,7 +118,7 @@ const historyLog = {
         },
         /*打开登录提示框*/
         openLoginPopup() {
-            this['loginPopup'] = true;
+            this.loginPopup = true;
         },
     }, /*method end*/
 
