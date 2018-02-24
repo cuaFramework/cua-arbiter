@@ -27,7 +27,8 @@ class Case_Run_Info(models.Model):
     num = models.CharField(max_length=50, default='0')
     duration = models.CharField(max_length=50,default='0')
     status = models.CharField(max_length=50, default='done')
-    result = models.CharField(max_length=50, default='done')
+    result = models.CharField(max_length=50, default='FAILED')
+    deleted = models.IntegerField(max_length=50, default=0)
     version = models.IntegerField(default='10000000')
 
 

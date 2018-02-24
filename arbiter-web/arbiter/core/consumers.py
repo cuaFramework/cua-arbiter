@@ -48,10 +48,10 @@ def ws_message(message):
             if not line:
                 break
             text = line.decode('utf-8')
-            if 'Ran' in text and 'test in' in text:
+            if 'Ran' in text and 'test' in text:
                 info_text = text
             # 拼接日志内容
-            case_name = case_name.lower()
+            case_name = case_name
             create_time = utils.get_now_time(2)
             data = {'create_time': create_time, 'logId': log_id, 'case': case_name, 'author': user_name,
                     'logData': text}
@@ -65,8 +65,8 @@ def ws_message(message):
         message.reply_channel.send({
             "text": "**********************************************结束执行***********************************************"
         }, immediately=True)
-        num = info_text.split("Ran")[1].split("test in")[0].strip()
-        duration = info_text.split("test in")[1].split("s")[0].strip()
+        num = info_text.split("Ran")[1].split("test")[0].strip()
+        duration = info_text.split(" in")[1].split("s")[0].strip()
         # 存一条logId到mysql
         # 将日志存入mysql
         # mysql 存入格式和内容需要完善

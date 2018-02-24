@@ -36,6 +36,11 @@
     <div id="root">
         <log-slide></log-slide>
         <router-view name="historyLog"></router-view>
+        <div id="root-case" style="display: block;">
+            <div id="code">
+                <case-float-btn></case-float-btn>
+            </div>
+        </div>
     </div>
 </div>
 {% endverbatim %}
@@ -44,12 +49,15 @@
 {% include "component/history-log.vue" %}
 {% include "component/arbiter-header.vue" %}
 {% include "component/log-slide.vue" %}
+{% include "component/case-float-btn.vue" %}
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/wholog/component/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/header-components.js' %}" type="text/javascript"
+        charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/log-slide.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/core/component/case-float-btn.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/app.js' %}" type="text/javascript" charset="utf-8"></script>
 </body>

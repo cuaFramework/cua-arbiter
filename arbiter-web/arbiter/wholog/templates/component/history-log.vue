@@ -67,8 +67,8 @@
                 </el-table-column>
                 <el-table-column label="操作" fixed="right" width="200">
                     <template slot-scope="scope">
-                        <mu-icon-button title="重新执行" icon="replay" icon-class="blue-icon"></mu-icon-button>
-                        <mu-icon-button title="删除" icon="delete" ></mu-icon-button>
+                        <mu-icon-button title="重新执行" icon="replay" @click="run(scope.row.case_name,scope.row.task_name)" icon-class="blue-icon"></mu-icon-button>
+                        <mu-icon-button title="删除" icon="delete" @click="deleteLog(scope.row.log_id)" ></mu-icon-button>
                     </template>
                 </el-table-column>
             </el-table>

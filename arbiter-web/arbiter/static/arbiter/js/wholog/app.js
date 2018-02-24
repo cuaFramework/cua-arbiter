@@ -8,5 +8,6 @@ let app = new Vue({
         'ArbiterHeader': ArbiterHeader,
         'historyLog': historyLog,
         'logSlide': logSlide,
+         'CaseFloatBtn': CaseFloatBtn,
     },
 });

@@ -83,7 +83,7 @@ def search(id):
     querybody = {
         "size": 1000,
         "query": {
-            "match": {
+            "term": {
                 "logId": id
             }
         },
@@ -154,18 +154,30 @@ def queryLogData(request):
 
 
 @api_view(['POST'])
-def getAllLog(request):
+def delete_log(request):
     # 获取前台发送来的参数
-    if request.method == 'POST':
-        json_str = ((request.body))
-        json_obj = json.loads(json_str)
-        start_time = json_obj.get('startTime')
-        end_time = json_obj.get('endTime')
+    json_str = request.body
+    json_obj = json.loads(json_str)
+    log_id = json_obj.get('log_id')
+    info = Case_Run_Info.objects.get(log_id=log_id)
+    info.deleted = 1
+    info.save()
+    response_data = {"msg": "success", "status": "true"}
+    return JsonResponse(response_data)
+
+
+@api_view(['POST'])
+def get_all_log(request):
+    # 获取前台发送来的参数
+    json_str = request.body
+    json_obj = json.loads(json_str)
+    start_time = json_obj.get('startTime')
+    end_time = json_obj.get('endTime')
     # 将字符串转换成对应数据库日期时间
     date_from = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M')
     date_to = datetime.datetime.strptime(end_time, '%Y-%m-%d %H:%M')
     # 查询时间范围内的数据库结果
-    log_results = Case_Run_Info.objects.filter(run_time__range=(date_from, date_to)).order_by('run_time')
+    log_results = Case_Run_Info.objects.filter(run_time__range=(date_from, date_to),deleted=0).order_by('run_time')
     # 将queryset转成json串
     log_results = serializers.serialize('json', log_results)
     res_jsons = json.loads(log_results)
@@ -182,13 +194,6 @@ def getAllLog(request):
         response_data_dict['total'] = 0
 
     return JsonResponse(response_data_dict)
-
-
-@api_view(['GET'])
-def getDetailLog(request):
-    # 通过logid 获取具体日志
-    log_id = request.GET.get('logId')
-    return JsonResponse(search(log_id))
 
 
 def api_count(request):

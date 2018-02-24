@@ -28,6 +28,7 @@ const historyLog = {
     },
     mounted() {
         this.refreshJwtToken();
+        this.queryData();
     },
     /*方法*/
     methods: {
@@ -36,8 +37,8 @@ const historyLog = {
         ...Vuex.mapGetters(['username', 'jwtHeader', 'getSlideOpen']),
         /*查询运行列表*/
         queryData() {
-            startTime = this.startDate + " " + this.startTime;
-            endTime = this.endDate + " " + this.endTime;
+            let startTime = this.startDate + " " + this.startTime;
+            let endTime = this.endDate + " " + this.endTime;
             fetch('../wholog/getAllLog',
                 {
                     method: 'POST',
@@ -56,7 +57,7 @@ const historyLog = {
                         /*判断未登录时 去打开登录提示*/
                     } else {
                         console.log("请求失败，状态码为：" + response.status);
-                        return;
+
                     }
                 } else {
                     return response.json();
@@ -69,11 +70,20 @@ const historyLog = {
                 console.log("请求wholog/getAllLog出错：" + err);
             });
 
-        }, /*queryData*/
+        },
+        /*删除一条记录*/
+        deleteLog(logId) {
+            getRes("/arbiter/wholog/deleteLog", {
+                log_id: logId,
+            }, this.jwtHeader()).then((json) => {
+                this.queryData()
+            })
+
+        },
         /*查询对应记录下的详细运行日志记录*/
         queryDetailData(logId) {
             /*对logId进行处理兼容es*/
-            logId = logId.replace(/\-/g, "");
+            logId = logId.replace(/-/g, "");
             fetch('../wholog/queryLogData',
                 {
                     method: 'POST',
@@ -93,7 +103,6 @@ const historyLog = {
                     } else {
                         console.log("请求失败，状态码为：" + response.status);
                     }
-                    return;
                 } else {
                     return response.json();
                 }
@@ -119,6 +128,9 @@ const historyLog = {
         /*打开登录提示框*/
         openLoginPopup() {
             this.loginPopup = true;
+        },
+        run(testCase,testName) {
+            Event.$emit('run-case', {testCase:testCase,testName:testName,});
         },
     }, /*method end*/
 
