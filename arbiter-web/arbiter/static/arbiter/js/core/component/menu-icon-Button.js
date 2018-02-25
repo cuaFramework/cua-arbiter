@@ -6,9 +6,6 @@ const menuIconButton = {
         return {
             appMenuTrigger: null,
             appMenuOpen: false,
-            dialog: false,
-            gitInfo:{},
-            gitCloneStatus: 'finish',
         }
     },
     mounted() {
@@ -22,24 +19,6 @@ const menuIconButton = {
         },
         appMenuHandleClose(e) {
             this.appMenuOpen = false
-        },
-        openImportDialog() {
-            this.dialog = true;
-
-        },
-        closeImportDialog() {
-            this.dialog = false
-        },
-        cloneCaseObj() {
-            this.gitCloneStatus = 'running';
-
-            getRes("./cloneCaseObj", this.gitInfo, this.jwtHeader()).then(
-                json => {
-                    window.location.href = window.location.href;
-                }).catch((err) => {
-                this.gitCloneStatus = 'fail';
-                console.log("请求错误:" + err);
-            });
         },
     }
 };

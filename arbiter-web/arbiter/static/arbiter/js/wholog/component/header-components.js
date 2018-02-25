@@ -56,10 +56,6 @@ const menuIconButton = {
         appMenuHandleClose(e) {
             this.appMenuOpen = false
         },
-        openImportDialog() {
-            this.dialog = true;
-
-        },
         closeImportDialog() {
             this.dialog = false
         },

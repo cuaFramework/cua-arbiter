@@ -7,6 +7,7 @@ import django.utils.timezone as timezone
 
 # GIT权限信息
 class Git_Info(models.Model):
+    git_url = models.CharField(max_length=200, default='null')
     user_name = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
 
@@ -28,7 +29,7 @@ class Case_Run_Info(models.Model):
     duration = models.CharField(max_length=50,default='0')
     status = models.CharField(max_length=50, default='done')
     result = models.CharField(max_length=50, default='FAILED')
-    deleted = models.IntegerField(max_length=50, default=0)
+    deleted = models.IntegerField(default=0)
     version = models.IntegerField(default='10000000')
 
 

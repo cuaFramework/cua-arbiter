@@ -1,6 +1,7 @@
 import codecs
 import json
 import os
+import stat
 import shutil
 import time
 import git
@@ -51,14 +52,30 @@ class restful(APIView):
         json_obj = json.loads(self.body)
         if Git_Info.objects.count() > 0:
             info = Git_Info.objects.get()
+            info.git_url = json_obj.get('url')
             info.user_name = json_obj.get("git_username")
             info.password = json_obj.get("git_password")
             info.save()
+
+            def set_rw(operation, name, exc):
+                os.chmod(name, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+                os.remove(name)
+                return True
+
+            shutil.rmtree('../arbiter-cases', onerror=set_rw)
         else:
-            Git_Info.objects.create(user_name=json_obj.get("git_username"), password=json_obj.get("git_password"))
+            Git_Info.objects.create(user_name=json_obj.get("git_username"), password=json_obj.get("git_password"),
+                                    git_url=json_obj.get('url'))
+
         repo = git.Repo.clone_from(json_obj.get('url'), '../arbiter-cases/' + case_path.split('/')[0], branch='master')
         response_data = {'success': True}
-        Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
+        if Case_List.objects.count() > 0:
+            case_list = Case_List.objects.get()
+            case_list.name = "arbiter_cases"
+            case_list.data = CaseList.getList()
+            case_list.save()
+        else:
+            Case_List.objects.create(name="arbiter_cases", data=CaseList.getList())
         return JsonResponse(response_data)
 
 

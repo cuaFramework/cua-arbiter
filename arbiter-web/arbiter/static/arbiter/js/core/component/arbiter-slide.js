@@ -7,7 +7,10 @@ const ArbiterSlide = {
         return {
             open: true,
             docked: true,
-            value: ""
+            value: "",
+            dialog: false,
+            gitInfo: {},
+            gitCloneStatus: 'finish',
         }
     },
     computed: {
@@ -22,9 +25,27 @@ const ArbiterSlide = {
 
     },
     methods: {
-        ...Vuex.mapGetters(['getSlideOpen']),
+        ...Vuex.mapGetters(['getSlideOpen', 'jwtHeader']),
         handleChange(val) {
             this.value = val;
+        },
+        openImportDialog() {
+            this.dialog = true;
+
+        },
+        closeImportDialog() {
+            this.dialog = false
+        },
+        cloneCaseObj() {
+            this.gitCloneStatus = 'running';
+
+            getRes("./cloneCaseObj", this.gitInfo, this.jwtHeader()).then(
+                json => {
+                    window.location.href = window.location.href;
+                }).catch((err) => {
+                this.gitCloneStatus = 'finish';
+                console.log("请求错误:" + err);
+            });
         },
 
         toggle() {
