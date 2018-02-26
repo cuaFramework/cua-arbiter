@@ -22,7 +22,7 @@
                 </div>
                 <div v-else v-for="(v, k) in value">
                     <mu-paper class="long-little-paper" :z-depth="1" :key="key">
-                        <div class="flex-between"><i class="brown800-text paper-casename">{{ v }}</i>
+                        <div class="flex-between"><mu-checkbox :label="v" class="brown800-text paper-casename"></mu-checkbox>
                             <mu-icon-button icon="play_arrow" icon-class="green-icon"
                                             @click="run(k,v)"></mu-icon-button>
                         </div>

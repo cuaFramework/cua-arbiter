@@ -26,8 +26,8 @@ const ArbiterNavbar = {
                 let storage = window.localStorage;
                 storage["username"] = json["username"];
                 storage["role"] = json["role"];
-                // this.$store.commit('setusername', json["username"]);
-                this.setusername(json["username"]);
+                // this.$store.commit('setUserName', json["username"]);
+                this.setUserName(json["username"]);
 
             }
         ).catch((err) => {
@@ -35,7 +35,7 @@ const ArbiterNavbar = {
         });
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken','setSlideOpen']),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken','setSlideOpen']),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         toggleSlide() {
             this.sliderIsOpen = !this.sliderIsOpen;

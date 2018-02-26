@@ -13,7 +13,7 @@ const userModule = {
         settings: {}
     },
     mutations: {
-        setusername(state, username) {
+        setUserName(state, username) {
             state.username = username;
         },
         refreshJwtToken(state) {
@@ -36,19 +36,24 @@ const userModule = {
 };
 //vuex用例模块：管理当前项目的所有用例
 const caseModule = {
-    state: {allCases: null, packageList: null, caseList: null, currentPyPath: null},
+    state: {
+        allCases: null,
+        packageList: null,
+        caseList: null,
+        checkedCases: ,
+        currentPyPath: null
+    },
     mutations: {
         setAllCases(state, allCases) {
             state.allCases = allCases;
         },
     },
     actions: {
-        flushAllCases({ state, commit, rootState,rootGetters }) {
-            return getRes("/arbiter/getCaseList",null,rootGetters.jwtHeader).then( (json) => {
+        flushAllCases({state, commit, rootState, rootGetters}) {
+            return getRes("/arbiter/getCaseList", null, rootGetters.jwtHeader).then((json) => {
                 commit("setAllCases", json);
                 return json;
             });
-
         }
     },
     getters: {

@@ -16,7 +16,7 @@ const userAvatar = {
         this.userMenuTrigger = this.$refs.UserAvatar.$el;
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         userMenuToggle() {
             this.userMenuOpen = !this.userMenuOpen
         },
@@ -26,7 +26,7 @@ const userAvatar = {
             deleteAllCookies();
             let storage = window.localStorage;
             storage.clear();
-            this.setusername(null);
+            this.setUserName(null);
             this.refreshJwtToken();
         },
     }
@@ -48,7 +48,7 @@ const menuIconButton = {
         this.appMenuTrigger = this.$refs.appIcon.$el;
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         appMenuToggle() {
             this.appMenuOpen = !this.appMenuOpen
@@ -108,15 +108,15 @@ const ArbiterHeader = {
                 let storage = window.localStorage;
                 storage["username"] = json["username"];
                 storage["role"] = json["role"];
-                // this.$store.commit('setusername', json["username"]);
-                this.setusername(json["username"]);
+                // this.$store.commit('setUserName', json["username"]);
+                this.setUserName(json["username"]);
             }
         ).catch((err) => {
             console.log("请求错误:" + err);
         });
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken','setSlideOpen']),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken','setSlideOpen']),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         toggleSlide() {
              this.sliderIsOpen = !this.sliderIsOpen;

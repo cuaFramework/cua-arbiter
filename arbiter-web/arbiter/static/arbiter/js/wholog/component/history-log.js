@@ -33,7 +33,7 @@ const historyLog = {
     /*方法*/
     methods: {
         /*存到vuex map 方便调用store里函数*/
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         ...Vuex.mapGetters(['username', 'jwtHeader', 'getSlideOpen']),
         /*查询运行列表*/
         queryData() {

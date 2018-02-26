@@ -13,7 +13,7 @@ const userAvatar = {
         this.userMenuTrigger = this.$refs.UserAvatar.$el;
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         userMenuToggle() {
             this.userMenuOpen = !this.userMenuOpen
         },
@@ -23,7 +23,7 @@ const userAvatar = {
             deleteAllCookies();
             let storage = window.localStorage;
             storage.clear();
-            this.setusername(null);
+            this.setUserName(null);
             this.refreshJwtToken();
         },
     }

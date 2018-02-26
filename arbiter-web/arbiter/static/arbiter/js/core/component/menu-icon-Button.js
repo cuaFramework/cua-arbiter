@@ -12,7 +12,7 @@ const menuIconButton = {
         this.appMenuTrigger = this.$refs.appIcon.$el;
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         appMenuToggle() {
             this.appMenuOpen = !this.appMenuOpen

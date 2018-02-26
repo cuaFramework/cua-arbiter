@@ -22,7 +22,7 @@ const CodeFloatBtn = {
 
     },
     methods: {
-        ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
         ...Vuex.mapGetters(['username', 'jwtHeader']),
         openSaveDialog() {
             this.saveDialog = true;
