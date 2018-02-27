@@ -40,7 +40,7 @@ const caseModule = {
         allCases: null,
         packageList: null,
         caseList: null,
-        checkedCases: ,
+        checkedCases: [],
         currentPyPath: null
     },
     mutations: {
