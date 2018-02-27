@@ -10,7 +10,7 @@ Twisted[tls,http2]==17.9.0
 ####### db #######
 psycopg2==2.7.3.2
 asgi_redis==1.4.3
-redis==
+redis==2.10.6
 ####### elk #######
 elasticsearch==5.4.0
 ####### git #######
