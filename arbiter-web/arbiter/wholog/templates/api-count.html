@@ -31,49 +31,10 @@
         <router-view name="apiCountApp"></router-view>
     </div>
 </div>
-<template id="menuIconButton">
-    <div id="menu-icon-button">
-                   <mu-icon-button icon="apps" slot="right" ref="appIcon" @click="appMenuToggle"></mu-icon-button>
-            <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
-                        :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="appMenuTrigger"
-                        :open="appMenuOpen" @close="appMenuHandleClose">
-                <mu-menu>
-                    <mu-menu-item title="用例导入" left-icon="add"
-                                  @click="openImportDialog"></mu-menu-item>
-                    <mu-menu-item href="/arbiter/"title="用例管理" left-icon="mode_edit"></mu-menu-item>
-                    <mu-menu-item href="./index.html" title="日志查询" left-icon="history"></mu-menu-item>
-                </mu-menu>
-            </mu-popover>
-        <mu-dialog :open="dialog" title="用例导入" @close="closeImportDialog">
-            <mu-text-field v-if="gitCloneStatus == 'finish'" icon="link" v-model="gitUrlPrefix"
-                           label="git仓库的URL（例：https://github.com/shimine/cua-caseobjdemo.git）" :width="100"
-                           label-float></mu-text-field>
-            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="closeImportDialog" primary
-                            label="取消"></mu-flat-button>
-            <mu-flat-button v-if="gitCloneStatus == 'finish'" slot="actions" @click="cloneCaseObj" primary
-                            label="导入"></mu-flat-button>
-            <mu-linear-progress v-if="gitCloneStatus == 'running'" :size="10" color="blue"></mu-linear-progress>
-        </mu-dialog>
-    </div>
-</template>
-<template id="userAvatar">
-    <div id="user-avatar">
-        <mu-avatar v-if="usernameAbbreviation!=null" background-color="lime700" ref="UserAvatar" color="black"
-                   :size="40" slot="right" @click="userMenuToggle">{{ usernameAbbreviation }}
-        </mu-avatar>
-        <mu-popover v-if="usernameAbbreviation!=null" :anchor-origin='{"vertical":"bottom","horizontal":"middle"}'
-                    :target-origin='{"vertical":"top","horizontal":"middle"}' :trigger="userMenuTrigger"
-                    :open="userMenuOpen" @close="userMenuHandleClose">
-            <mu-menu>
-                <mu-menu-item title="设置" left-icon="settings"></mu-menu-item>
-                <mu-menu-item title="帮助" left-icon="help_outline"></mu-menu-item>
-                <mu-divider></mu-divider>
-                <mu-menu-item title="退出"
-                              @click="logout()" left-icon="power_settings_new"></mu-menu-item>
-            </mu-menu>
-        </mu-popover>
-    </div>
-</template>
+{% endverbatim %}
+{% include "component/menu-icon-button.vue" %}
+{% include "component/user-avatar.vue" %}
+{% verbatim %}
 <template id="arbiterHeader">
     <div id="arbiter-header" :class="{ 'slider-open': sliderIsOpen}">
         <mu-dialog dialog-class="login-dialog" :open="loginDialog.switch" @close="closeLoginDialog">
@@ -105,9 +66,6 @@
             <mu-flat-button label="查询" class="demo-flat-button" icon="search" v-on:click="queryData" primary></mu-flat-button>
         </div>
         <div id="result">
-            <div id="result-header">
-                <span>共请求{{ total }}</span>
-            </div>
             <div id="result-content">
                <div id="main-chart">
                </div>
@@ -124,10 +82,11 @@
     </div>
 </template>
  {% endverbatim %}
+<script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/core/../../static/arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/common/../../static/arbiter/js/wholog/component/header-components.js' %}" type="text/javascript" charset="utf-8"></script>
-
+<script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/header-components.js' %}" type="text/javascript"
+        charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/api-count-components.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/api-count-route.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/api-count-app.js' %}" type="text/javascript" charset="utf-8"></script>

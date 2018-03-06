@@ -19,6 +19,9 @@ const ApiCountApp = {
         }
     },
     methods: {
+         /*存到vuex map 方便调用store里函数*/
+         ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader']),
         queryData() {
             if (this.api_name !== null) {
                 fetch('../wholog/query-api-data/?api_name=' + this.api_name, {
@@ -185,6 +188,7 @@ const ApiCountApp = {
         }
     },
     mounted() {
+         this.refreshJwtToken();
         this.$nextTick(() => {
             this.myChart = echarts.init(document.getElementById('main-chart'));  //初始化echarts实例
             this.draw();

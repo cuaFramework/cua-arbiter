@@ -8,12 +8,7 @@ body {
     width: 1000px;
     height: auto;
 }
-#result-header {
-    margin: 0 auto;
-    width: 200px;
-    height: 180px;
-    background: #00838f;
-}
+
 
 #result-content {
     margin: 0 auto;
