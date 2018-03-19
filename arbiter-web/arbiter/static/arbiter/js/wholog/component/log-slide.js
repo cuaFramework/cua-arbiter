@@ -22,14 +22,24 @@ const logSlide = {
     },
 
     methods: {
-                ...Vuex.mapGetters(['getSlideOpen']),
+        ...Vuex.mapGetters(['getSlideOpen']),
         handleChange(val) {
-            this.value = val;
+            this.typeList = val;
         },
 
         toggle() {
             this.open = !this.open;
         },
+        //路由跳转
+        routerToHistoryLog() {
+            //this.$router.push({name: 'casepath', params: {casemodel: casemodel}});
+            this.$router.push({name: 'historyLog'});
+        },
+        routerToLogCount() {
+            //this.$router.push({name: 'casepath', params: {casemodel: casemodel}});
+            this.$router.push({name: 'logCount'});
+        }
+
 
     }
 };

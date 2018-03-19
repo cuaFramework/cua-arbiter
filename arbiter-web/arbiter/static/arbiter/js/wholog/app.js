@@ -7,7 +7,9 @@ let app = new Vue({
     components: {
         'ArbiterHeader': ArbiterHeader,
         'historyLog': historyLog,
+        'logCount':logCount,
         'logSlide': logSlide,
          'CaseFloatBtn': CaseFloatBtn,
+
     },
 });

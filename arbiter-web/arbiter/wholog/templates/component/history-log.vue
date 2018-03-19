@@ -89,7 +89,6 @@
                 请登录再操作
             </mu-popup>
         </div>
-    </div><!--log-app end-->
-
+    </div><!--history-log-app end-->
 </template>
 {% endverbatim %}

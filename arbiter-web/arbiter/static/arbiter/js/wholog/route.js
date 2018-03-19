@@ -4,8 +4,19 @@ const router = new VueRouter({
     routes: [
 
         {
-            path: '/index.html',
+            path: '/index',
+            name:'',
             components: {historyLog:historyLog},
+        },
+         {
+            path: '/historyLog',
+             name:'historyLog',
+            components: {historyLog:historyLog},
+        },
+         {
+            path: '/logCount',
+             name:'logCount',
+            components: {logCount:logCount},
         },
 
     ]

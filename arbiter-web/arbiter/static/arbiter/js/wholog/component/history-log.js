@@ -7,6 +7,8 @@ const historyLog = {
         let now = new Date();
         now.setDate(now.getDate() + 1);
         return {
+            isShow:false,
+            typeList:'log-count',
             loginPopup: false, /*未登录是提示popup*/
             startDate: new Date().format("yyyy-MM-dd"),
             startTime: '00:00',
