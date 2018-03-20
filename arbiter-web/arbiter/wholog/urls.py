@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^queryLogData', views.queryLogData, name='queryLogData'),
     url(r'^home', views.home, name='home'),
     url(r'^index', views.index, name='index'),
+    url(r'^.*$', views.index),
 
 ]

@@ -16,7 +16,7 @@ const router = new VueRouter({
          {
             path: '/logCount',
              name:'logCount',
-            components: {logCount:logCount},
+            components: {historyLog:logCount},
         },
 
     ]
