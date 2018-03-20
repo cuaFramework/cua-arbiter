@@ -30,14 +30,18 @@ const logSlide = {
         toggle() {
             this.open = !this.open;
         },
-        //路由跳转
+        //路由跳转-index
+        routerToIndex() {
+            this.$router.push({name: 'index'});
+        },
+        //路由跳转-历史日志
         routerToHistoryLog() {
             //this.$router.push({name: 'casepath', params: {casemodel: casemodel}});
             this.$router.push({name: 'historyLog'});
         },
-        routerToLogCount() {
-            //this.$router.push({name: 'casepath', params: {casemodel: casemodel}});
-            this.$router.push({name: 'logCount'});
+        //路由跳转-图表日志
+        routerToStatisticLog() {
+            this.$router.push({name: 'statisticLog'});
         }
 
 

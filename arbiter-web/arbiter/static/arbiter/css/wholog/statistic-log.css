@@ -1,14 +1,26 @@
 body {
 
-    background: rgba(0,0,0,0.05);
-    vertical-align:middle;
+    background: rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
 }
+
+#statistic-log {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    right: 0;
+    width: auto;
+    bottom: 0;
+    overflow-y: auto;
+    size: 14px;
+    z-index: -1;
+}
+
 #main {
     margin: 0 auto;
     width: 1000px;
     height: auto;
 }
-
 
 #result-content {
     margin: 0 auto;
@@ -20,6 +32,7 @@ body {
     width: 1000px;
     height: 600px;
 }
+
 .login-dialog {
     padding-right: 20px;
     padding-bottom: 20px;
@@ -33,9 +46,11 @@ body {
     margin-top: 25px;
     width: 90%;
 }
+
 .log-dialog {
     max-height: 360px;
 }
+
 .log-dialog p {
     margin: 5px;
     font-size: 12px;

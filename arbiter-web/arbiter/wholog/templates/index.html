@@ -13,9 +13,10 @@
     <link href="{% static 'arbiter/css/material-icons.css' %}" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/muse/muse-ui.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/element/index.css' %}">
+
     <link type="text/css" rel="stylesheet" href="{% static 'arbiter/css/navbar.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'arbiter/css/wholog/index.css' %}"/>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'arbiter/css/wholog/statistic-log.css' %}"/>
 
     {% block head %}
     {% endblock head %}
@@ -35,7 +36,7 @@
 
     <div id="root">
         <log-slide></log-slide>
-        <router-view name="historyLog"></router-view>
+        <router-view name="rootView"></router-view>
         <div id="root-case" style="display: block;">
             <div id="code">
                 <case-float-btn></case-float-btn>
@@ -47,18 +48,19 @@
 {% include "component/menu-icon-button.vue" %}
 {% include "component/user-avatar.vue" %}
 {% include "component/history-log.vue" %}
-{% include "component/log-count.vue" %}
+{% include "component/statistic-log.vue" %}
 {% include "component/arbiter-header.vue" %}
 {% include "component/log-slide.vue" %}
 
 {% include "component/case-float-btn.vue" %}
+<script src="{% static 'arbiter/js/echarts.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/get-res.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/common/common.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/store.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/header-components.js' %}" type="text/javascript"
         charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/history-log.js' %}" type="text/javascript" charset="utf-8"></script>
-<script src="{% static 'arbiter/js/wholog/component/log-count.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'arbiter/js/wholog/component/statistic-log.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/component/log-slide.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/core/component/case-float-btn.js' %}" type="text/javascript" charset="utf-8"></script>
 <script src="{% static 'arbiter/js/wholog/route.js' %}" type="text/javascript" charset="utf-8"></script>

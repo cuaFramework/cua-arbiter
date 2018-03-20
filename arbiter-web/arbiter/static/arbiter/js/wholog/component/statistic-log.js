@@ -1,10 +1,7 @@
-/**
- * 接口统计
- */
-
-const ApiCountApp = {
-    template: '#apiCountApp',
-    store,
+/*所有组件*/
+/**/
+const statisticLog = {
+    template: '#statisticLog', store,
     data: function () {
         return {
             api_name: null,
@@ -15,13 +12,17 @@ const ApiCountApp = {
                 content: [],
                 switch: false,
             }
-
         }
     },
+    computed: {
+        slideOpen() {
+            return this.getSlideOpen();
+        },
+    },
     methods: {
-         /*存到vuex map 方便调用store里函数*/
-         ...Vuex.mapMutations(['setusername', 'refreshJwtToken',]),
-        ...Vuex.mapGetters(['username', 'jwtHeader']),
+        /*存到vuex map 方便调用store里函数*/
+        ...Vuex.mapMutations(['setUserName', 'refreshJwtToken',]),
+        ...Vuex.mapGetters(['username', 'jwtHeader', 'getSlideOpen']),
         queryData() {
             if (this.api_name !== null) {
                 fetch('../wholog/query-api-data/?api_name=' + this.api_name, {
@@ -145,7 +146,7 @@ const ApiCountApp = {
                     headers: {
                         'Accept': 'application/json, text/plain, */*',
                         'Content-Type': 'application/json',
-                        'Authorization': "JWT "+this.jwtHeader()
+                        'Authorization': "JWT " + this.jwtHeader()
                     },
                     body: JSON.stringify({logId: logId})
                 }).then((response) => {
@@ -188,7 +189,7 @@ const ApiCountApp = {
         }
     },
     mounted() {
-         this.refreshJwtToken();
+        this.refreshJwtToken();
         this.$nextTick(() => {
             this.myChart = echarts.init(document.getElementById('main-chart'));  //初始化echarts实例
             this.draw();
@@ -200,4 +201,6 @@ const ApiCountApp = {
         })
     },
 
+
 };
+
