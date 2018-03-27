@@ -5,18 +5,18 @@ const router = new VueRouter({
 
         {
             path: '/index',
-            name:'',
-            components: {historyLog:historyLog},
+            name:'index',
+            components: {rootView:historyLog},
         },
          {
             path: '/historyLog',
              name:'historyLog',
-            components: {historyLog:historyLog},
+            components: {mainView:historyLog},
         },
          {
-            path: '/logCount',
-             name:'logCount',
-            components: {historyLog:logCount},
+            path: '/statisticLog',
+             name:'statisticLog',
+            components: {mainView:statisticLog},
         },
 
     ]
