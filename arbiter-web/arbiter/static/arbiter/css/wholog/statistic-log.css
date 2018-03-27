@@ -24,13 +24,13 @@ body {
 
 #result-content {
     margin: 0 auto;
-    width: 800px;
-    height: 600px;
+    width: 1400px;
+    height: 680px;
 }
 
 #main-chart {
-    width: 1000px;
-    height: 600px;
+    width: 1400px;
+    height: 680px;
 }
 
 .login-dialog {
@@ -54,4 +54,8 @@ body {
 .log-dialog p {
     margin: 5px;
     font-size: 12px;
+}
+.log-chart-tooltip {
+   word-wrap: break-word;
+    word-break: break-all;
 }

@@ -11,7 +11,7 @@
                         </mu-list-item>
 
                         <mu-list-item slot="nested" value="统计图表"  title="统计图表" v-on:click="routerToStatisticLog" inset>
-                            <mu-icon slot="left" value="books"></mu-icon>
+                            <mu-icon slot="left" value="show_chart"></mu-icon>
 
                         </mu-list-item>
                     </mu-list-item>

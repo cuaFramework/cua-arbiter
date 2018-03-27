@@ -49,8 +49,8 @@ const statisticLog = {
             // 指定图表的配置项和数据
             var option = {
                 title: {
-                    text: "api请求情况",
-                    subtext: "纯属虚构"
+                    text: "Api请求信息",
+                    subtext: "每个接口请求的统计"
                 },
                 tooltip: {
                     trigger: "axis",
@@ -58,11 +58,11 @@ const statisticLog = {
                         var result = '';
                         params.forEach((item) => {
                             result +=
-                                '<p>' + "耗时:" + this.apiData.consume_time[item.dataIndex] + "ms" + '</p>' + '<br/>' +
-                                '<p>' + "用例名:" + this.apiData.case_name[item.dataIndex] + '</p>' + '<br/>' +
-                                '<p>' + "请求时间:" + this.apiData.create_time[item.dataIndex] + '</p>' + '<br/>' +
-                                '<p>' + "请求类型:" + this.apiData.request_type[item.dataIndex] + '</p>' + '<br/>' +
-                                '<p>' + "返回Code:" + this.apiData.response_code[item.dataIndex] + '</p>' + '<br/>'
+                                '<p class="log-chart-tooltip">' + "耗时:" + this.apiData.consume_time[item.dataIndex] + "ms" + '</p>' +
+                                '<p class="log-chart-tooltip">' + "用例名:" + this.apiData.case_name[item.dataIndex] + '</p>' +
+                                '<p class="log-chart-tooltip">' + "请求时间:" + this.apiData.create_time[item.dataIndex] + '</p>' +
+                                '<p class="log-chart-tooltip">' + "请求类型:" + this.apiData.request_type[item.dataIndex] + '</p>' +
+                                '<p class="log-chart-tooltip">' + "返回Code:" + this.apiData.response_code[item.dataIndex] + '</p>'
                             ;
                         });
                         return result;
@@ -96,10 +96,10 @@ const statisticLog = {
                 calculable: true,
                 xAxis: [
                     {
-                        name: "时间",
+                        name: "运行次数",
                         type: "category",
                         boundaryGap: false,
-                        data: this.apiData.create_time,
+                        data: this.apiData.num,
                         nameLocation: "end"
                     }
                 ],

@@ -233,7 +233,7 @@ def query_api_data(request):
     request_type_list = []
     response_code_list = []
     consume_time_list = []
-
+    num_list = []
     for i in range(0, result_total):
         result_source_var = res_json['hits']['hits'][i]['_source']
         # 取查询结果的create_time
@@ -252,8 +252,10 @@ def query_api_data(request):
         request_type_list.append(request_type)
         response_code_list.append(response_code)
         consume_time_list.append(consume_time)
+        num_list.append(i+1)
 
     response_data_dict['total'] = result_total
+    response_data_dict["num"] = num_list
     response_data_dict["log_id"] = log_id_list
     response_data_dict["create_time"] = create_time_list
     response_data_dict["case_name"] = case_name_list
